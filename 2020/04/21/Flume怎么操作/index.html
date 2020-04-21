@@ -1,0 +1,1829 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Flume怎么操作, BearBo">
+    <meta name="description" content="先来个小简例我们将本地文件的内容用flume搞到HDFS上面去。直接上配置文件吧
+# example.conf: A single-node Flume configuration
+
+# Name the components on thi">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Flume怎么操作 | BearBo</title>
+    <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/favicon.ico">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+        <!-- <div id="navContainer" class="nav-wrapper head-container"> -->
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
+                    <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BearBo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/articles" class="waves-effect waves-light">
+
+      
+      <i class="fa fa-bars" style="zoom: 0.6;"></i>
+      
+      <span>文章</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/tags">
+          
+          <i class="fas fa-tags" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>标签</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/categories">
+          
+          <i class="fas fa-bookmark" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>分类</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/data">
+          
+          <i class="fa fa-list-alt" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>统计</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/archives">
+          
+          <i class="fa fa-tasks" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>简约风</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/timeline">
+          
+          <i class="fa fa-ellipsis-v" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>时间轴</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友链</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>Medias</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/Musics">
+          
+          <i class="fas fa-music" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Musics</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Movies</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Books</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/galleries">
+          
+          <i class="fas fa-image" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Galleries</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
+        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BearBo</div>
+        <div class="logo-desc">
+            
+            这是BearBo搏兄，如货币般流通
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fa fa-bars"></i>
+			
+			文章
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/tags " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-tags" style="position: absolute;left:50px" ></i>
+			      
+		          <span>标签</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/categories " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-bookmark" style="position: absolute;left:50px" ></i>
+			      
+		          <span>分类</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/data " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-list-alt" style="position: absolute;left:50px" ></i>
+			      
+		          <span>统计</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-archive"></i>
+			
+			归档
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/archives " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-tasks" style="position: absolute;left:50px" ></i>
+			      
+		          <span>简约风</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/timeline " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-ellipsis-v" style="position: absolute;left:50px" ></i>
+			      
+		          <span>时间轴</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友链
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			Medias
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/Musics " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-music" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Musics</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/movies " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Movies</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/books " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Books</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/galleries " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-image" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Galleries</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+</header>
+
+    
+
+
+
+<!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')"> -->
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/16.jpg')">    
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Flume怎么操作</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 110px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h3 id="先来个小简例"><a href="#先来个小简例" class="headerlink" title="先来个小简例"></a>先来个小简例</h3><p>我们将本地文件的内容用flume搞到HDFS上面去。<br>直接上配置文件吧</p>
+<pre class=" language-java"><code class="language-java"># example<span class="token punctuation">.</span>conf<span class="token operator">:</span> A single<span class="token operator">-</span>node Flume configuration
+
+# Name the components on <span class="token keyword">this</span> agent
+a1<span class="token punctuation">.</span>sources <span class="token operator">=</span> r1
+a1<span class="token punctuation">.</span>sinks <span class="token operator">=</span> k1
+a1<span class="token punctuation">.</span>channels <span class="token operator">=</span> c1
+
+# 我们Source定义了从本地文件secure末尾读取数据
+# Describe<span class="token operator">/</span>configure the source
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>type <span class="token operator">=</span> exec
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>command <span class="token operator">=</span> tail <span class="token operator">-</span>F <span class="token operator">/</span>root<span class="token operator">/</span>secure
+
+#这个Sink定义将数据送到hdfs
+# Describe the sink
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>k1<span class="token punctuation">.</span>type <span class="token operator">=</span> hdfs
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>k1<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>path <span class="token operator">=</span> hdfs<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">114.116</span><span class="token punctuation">.</span><span class="token number">206.19</span><span class="token operator">:</span><span class="token number">5009</span><span class="token operator">/</span>flumehdfs<span class="token operator">/</span>data
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>filePrefix             <span class="token operator">=</span> alert<span class="token operator">-</span>
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>useLocalTimeStamp <span class="token operator">=</span> <span class="token boolean">true</span>
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>rollInterval      <span class="token operator">=</span> <span class="token number">60</span>
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>rollSize          <span class="token operator">=</span> <span class="token number">10485760</span>
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>rollCount         <span class="token operator">=</span> <span class="token number">0</span>
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>codeC             <span class="token operator">=</span> snappy
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>fileType          <span class="token operator">=</span> DataStream
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>hdfssink<span class="token punctuation">.</span>hdfs<span class="token punctuation">.</span>writeFormat       <span class="token operator">=</span> Text
+
+# Use a channel which buffers events in memory
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>type <span class="token operator">=</span> memory
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>capacity <span class="token operator">=</span> <span class="token number">1000</span>
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>transactionCapacity <span class="token operator">=</span> <span class="token number">100</span>
+
+# Bind the source and sink to the channel
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>channels <span class="token operator">=</span> c1
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>k1<span class="token punctuation">.</span>channel <span class="token operator">=</span> c1</code></pre>
+<h4 id="然后在我们的HDFS就可以看到数据了"><a href="#然后在我们的HDFS就可以看到数据了" class="headerlink" title="然后在我们的HDFS就可以看到数据了"></a>然后在我们的HDFS就可以看到数据了</h4><p><img src="https://img-blog.csdnimg.cn/20200217164041819.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>关于Flume-HDFS</p>
+<pre class=" language-shell"><code class="language-shell">hdfs.filePrefix    默认值FlumeData，Flume在hdfs创建的文件名前缀
+hdfs.fileSuffix    默认为空，文件名后缀
+hdfs.inUsePrefix 默认为空，临时文件的前缀。
+hdfs.inUseSuffix    默认为.tmp，临时文件的后缀
+hdfs.emptyInUseSuffix    默认为false    ，不重要，就用false把
+
+
+hdfs.rollInterval    默认为30秒，文件滚动时间间隔。如果设置为0，则表示永远不滚动。
+hdfs.rollSize    默认1024字节，文件滚动的大小间隔。如果设置为0，则表示永远不滚动。
+hdfs.rollCount    默认为10，滚动前Event的个数。
+这三个可以用来解决HDFS小文件问题
+
+hdfs.idleTimeout    默认0，关闭交互文件的超时时间，为0则为永不超时。
+hdfs.batchSize    默认100，100Evnet刷写一次Hdfs。    
+hdfs.codeC    默认为空，压缩格式，例如: gzip, bzip2, lzo, lzop, snappy
+hdfs.fileType    默认为SequenceFile。当前SequenceFile, DataStream或CompressedStream (1)DataStream不会压缩输出文件，
+请不要设置codeC (2)CompressedStream需要设置hdfs。带有可用编解码器的编解码器。
+
+hdfs.maxOpenFiles    默认5000，最大允许同时打开的文件，超过了则踢掉最先打开的文件。    
+hdfs.minBlockReplicas    默认为空，指定最小的hdfs块数量。
+hdfs.writeFormat    默认为Writable。    
+hdfs.threadsPoolSize    默认10，对hdfs IO读写的线程池大小。
+hdfs.rollTimerPoolSize    默认1，每个HDFS接收器用于调度定时文件滚动的线程数
+hdfs.kerberosPrincipal 默认为空，认证系统，可以不用管。
+hdfs.kerberosKeytab    默认为空。
+hdfs.round    默认false，是否按照时间戳进行四舍五入。
+hdfs.roundValue    默认1，四舍五入到该值的最高倍数(在使用hdfs.roundUnit配置的单元中)，小于当前时间。.
+hdfs.roundUnit    默认second，下舍入值的单位——秒、分或小时。
+hdfs.timeZone    默认为Local Time    
+hdfs.useLocalTimeStamp    默认false，
+serializer    默认TEXT，序列化工具    </code></pre>
+<p>挺不错的，这个工具。<br>我写的另一片博客关于flume的不是很好，很笼统，现在来详细说明一下Flume吧。</p>
+<h5 id="其实Flume的核心就是利用source将数据收集过来，然后通过channel缓存在本地，然后通过Sink传出去，传出去之后就可以删除本地缓存了。"><a href="#其实Flume的核心就是利用source将数据收集过来，然后通过channel缓存在本地，然后通过Sink传出去，传出去之后就可以删除本地缓存了。" class="headerlink" title="其实Flume的核心就是利用source将数据收集过来，然后通过channel缓存在本地，然后通过Sink传出去，传出去之后就可以删除本地缓存了。"></a>其实Flume的核心就是利用source将数据收集过来，然后通过channel缓存在本地，然后通过Sink传出去，传出去之后就可以删除本地缓存了。</h5><h3 id="传输数据的形式：Event"><a href="#传输数据的形式：Event" class="headerlink" title="传输数据的形式：Event"></a>传输数据的形式：Event</h3><p>我们吧传输的一个数据叫做一个Event，你可以实践一下这个小例子</p>
+<pre class=" language-java"><code class="language-java"># example<span class="token punctuation">.</span>conf<span class="token operator">:</span> A single<span class="token operator">-</span>node Flume configuration
+
+# Name the components on <span class="token keyword">this</span> agent
+a1<span class="token punctuation">.</span>sources <span class="token operator">=</span> r1
+a1<span class="token punctuation">.</span>sinks <span class="token operator">=</span> k1
+a1<span class="token punctuation">.</span>channels <span class="token operator">=</span> c1
+
+# Describe<span class="token operator">/</span>configure the source
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>type <span class="token operator">=</span> exec
+#a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>bind <span class="token operator">=</span> <span class="token number">114.55</span><span class="token punctuation">.</span><span class="token number">37.70</span>
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>command <span class="token operator">=</span> tail <span class="token operator">-</span>F <span class="token operator">/</span>root<span class="token operator">/</span>secure
+#a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>port <span class="token operator">=</span> <span class="token number">5000</span>
+
+# Describe the sink
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>k1<span class="token punctuation">.</span>type <span class="token operator">=</span> logger
+
+# Use a channel which buffers events in memory
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>type <span class="token operator">=</span> memory
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>capacity <span class="token operator">=</span> <span class="token number">1000</span>
+a1<span class="token punctuation">.</span>channels<span class="token punctuation">.</span>c1<span class="token punctuation">.</span>transactionCapacity <span class="token operator">=</span> <span class="token number">100</span>
+
+# Bind the source and sink to the channel
+a1<span class="token punctuation">.</span>sources<span class="token punctuation">.</span>r1<span class="token punctuation">.</span>channels <span class="token operator">=</span> c1
+a1<span class="token punctuation">.</span>sinks<span class="token punctuation">.</span>k1<span class="token punctuation">.</span>channel <span class="token operator">=</span> c1</code></pre>
+<p>然后使用这个命令，我们就可以将数据传输了OK</p>
+<pre class=" language-shell"><code class="language-shell">bin/flume-ng agent --name a1 --conf conf --conf-file flumeconfigure/example.conf Dflume.root.logger=INFO,console
+
+指令传参解释
+
+agent 表示启动一个agent
+
+--conf 指定flume启动的配置文件夹，比如log4j，flume-env.sh
+
+--conf-file 指定agent配置文件地址
+
+--name 指定启动的agent名字，也就是在刚刚的example.conf文件中，可以定义两个agent，并通过命令行，指定启动其中之一。
+
+-D 指定其他配置参数，上面命令制定了logger级别，和流向。</code></pre>
+<p>然后向secure文件添加数据<br><img src="https://img-blog.csdnimg.cn/2020021716495050.png" alt="在这里插入图片描述"><br>可以看到Event的形式就是这样子的，用图来形象化<br><img src="https://img-blog.csdnimg.cn/20200217165100653.png" alt="在这里插入图片描述"><br>body才是我们需要的内容，key-value可以用来分流，整个flume其实就是一个水管一样，一个槽Sink配置一个Channel，但是一个Source可以流向多个Channel，而分流就是根据Event的key来分流的。<br>然后body是字节数组的形式，那才是我们真正的数据，不要弄错了，header你就想象成平常我们所说的协议吧，比如HTTP，都有一个头对吧，传输正文以外的其他东西。</p>
+<h3 id="Flume的可靠性，恢复性"><a href="#Flume的可靠性，恢复性" class="headerlink" title="Flume的可靠性，恢复性"></a>Flume的可靠性，恢复性</h3><p>Flume的Event只有通过Sink传输到下一个Agent或者被持久化到HDFS才可以被删除。第二点非常容易疏忽，就是所有的数据都是基于事务的，这就是可靠性。<br>而可恢复性，肯定就是Channel缓存形式了，它有两种缓存形式，分别是file-Chinnel和In-Memory Channel。可想而知，哪个恢复性好。file-Channel的形式明显可以持久化到磁盘，当宕机或者出错了都可以从磁盘恢复过来对吧，但是如果是In-Memory Channel的话，就不行了，只要断电啥都没有了。其实还有一种叫Kafka-Channel，以后将两者连起来的时候再来看看吧。</p>
+<h3 id="Taildir-Source应用"><a href="#Taildir-Source应用" class="headerlink" title="Taildir Source应用"></a>Taildir Source应用</h3><h5 id="这个就非常重要了，其实就是Flume可以读取到上次读取的位置，观察指定的文件，一旦检测到添加到每个文件中的新行，就几乎实时跟踪它们。它定期将每个文件的最后读取位置以JSON格式写入给定位置文件。如果Flume由于某种原因停止或关闭，它可以从现有位置文件上的位置重新启动。在其他用例中，该源还可以使用给定的位置文件从每个文件的任意位置开始跟踪。当指定路径上没有位置文件时，默认情况下它将从每个文件的第一行开始跟踪。文件将按修改时间顺序使用。修改时间最长的文件将首先被使用。此源不会重命名、删除或对跟踪的文件进行任何修改。目前，该源代码不支持跟踪二进制文件。它逐行读取文本文件。"><a href="#这个就非常重要了，其实就是Flume可以读取到上次读取的位置，观察指定的文件，一旦检测到添加到每个文件中的新行，就几乎实时跟踪它们。它定期将每个文件的最后读取位置以JSON格式写入给定位置文件。如果Flume由于某种原因停止或关闭，它可以从现有位置文件上的位置重新启动。在其他用例中，该源还可以使用给定的位置文件从每个文件的任意位置开始跟踪。当指定路径上没有位置文件时，默认情况下它将从每个文件的第一行开始跟踪。文件将按修改时间顺序使用。修改时间最长的文件将首先被使用。此源不会重命名、删除或对跟踪的文件进行任何修改。目前，该源代码不支持跟踪二进制文件。它逐行读取文本文件。" class="headerlink" title="这个就非常重要了，其实就是Flume可以读取到上次读取的位置，观察指定的文件，一旦检测到添加到每个文件中的新行，就几乎实时跟踪它们。它定期将每个文件的最后读取位置以JSON格式写入给定位置文件。如果Flume由于某种原因停止或关闭，它可以从现有位置文件上的位置重新启动。在其他用例中，该源还可以使用给定的位置文件从每个文件的任意位置开始跟踪。当指定路径上没有位置文件时，默认情况下它将从每个文件的第一行开始跟踪。文件将按修改时间顺序使用。修改时间最长的文件将首先被使用。此源不会重命名、删除或对跟踪的文件进行任何修改。目前，该源代码不支持跟踪二进制文件。它逐行读取文本文件。"></a>这个就非常重要了，其实就是Flume可以读取到上次读取的位置，观察指定的文件，一旦检测到添加到每个文件中的新行，就几乎实时跟踪它们。它定期将每个文件的最后读取位置以JSON格式写入给定位置文件。如果Flume由于某种原因停止或关闭，它可以从现有位置文件上的位置重新启动。在其他用例中，该源还可以使用给定的位置文件从每个文件的任意位置开始跟踪。当指定路径上没有位置文件时，默认情况下它将从每个文件的第一行开始跟踪。文件将按修改时间顺序使用。修改时间最长的文件将首先被使用。此源不会重命名、删除或对跟踪的文件进行任何修改。目前，该源代码不支持跟踪二进制文件。它逐行读取文本文件。</h5><p>首先我们要知道Flume有三种监控文件或者目录的方式：</p>
+<ul>
+<li><p>Exec Source<br>  Exec Source可通过tail -f命令去tail住一个文件，然后实时同步日志到sink。但存在的问题是，当agent进程挂掉重启后，会有重复消费的问题。可以通过增加UUID来解决，或通过改进ExecSource来解决。</p>
+</li>
+<li><p>Spooling Directory Source<br> Spooling Directory Source可监听一个目录，同步目录中的新文件到sink,被同步完的文件可被立即删除或被打上标记。适合用于同步新文件，但不适合对实时追加日志的文件进行监听并同步。如果需要实时监听追加内容的文件，可对SpoolDirectorySource进行改进。</p>
+</li>
+</ul>
+<ul>
+<li>taildir Source<br>  Taildir Source可实时监控一批文件，并记录每个文件最新消费位置，agent进程重启后不会有重复消费的问题。<br>使用时建议用1.8.0版本的flume，1.8.0版本中解决了Taildir Source一个可能会丢数据的bug。</li>
+</ul>
+<p>总而言之Taildir Source就是不管Flume怎么停止任务，只要那个位置文件在，Flume重启相同任务时就可以根据这个位置来继续读取。可以不用重复读取以前读过的。</p>
+<pre class=" language-bash"><code class="language-bash">channels    channel名     
+<span class="token function">type</span>     必须是TAILDIR.
+filegroups 指定一个文件组名
+filegroups.<span class="token operator">&lt;</span>filegroupName<span class="token operator">></span>    文件组中文件名描述正则字符串。比如 fliegroups.f3<span class="token operator">=</span>/usr/tmp/net.+，定义了f3文件组为/usr/tmp目录下所有以net开头的文件。
+
+可选的配置：这个官网也有，不同版本不知道想不相同
+positionFile    默认~/.flume/taildir_position.json，Flume进程Json元数据信息存储地址.
+headers.<span class="token operator">&lt;</span>filegroupName<span class="token operator">></span>.<span class="token operator">&lt;</span>headerKey<span class="token operator">></span>    默认为空，对于header key的赋值，可以赋值多个。
+byteOffsetHeader    默认false，是否将尾行的字节偏移量添加到名为“byteoffset”的标头中。
+skipToEnd    默认false，如果PositionFile文件上没有写文件，是否跳过位置到EOF。.
+idleTimeout    默认120000毫秒，关闭非活动文件的时间<span class="token punctuation">(</span>ms<span class="token punctuation">)</span>。如果关闭的文件附加了新行，这个Source将自动重新打开它。
+writePosInterval    默认3000，将每个文件的最后一个位置写入positionFile的间隔时间<span class="token punctuation">(</span>ms<span class="token punctuation">)</span>。
+batchSize    默认100，每次读取和发送到通道的最大行数。使用默认值通常没有问题。
+maxBatchCount    默认Long.MAX_VALUE，控制从同一文件中连续读取的批数。如果源跟踪多个文件，
+并且其中一个文件以较快的速度写入，则可以防止处理其他文件，因为繁忙的文件将在无休止的循环中读取。在这种情况下，降低这个值
+
+backoffSleepIncrement    默认1000，重新尝试轮询新数据<span class="token punctuation">(</span>上次尝试没有发现任何新数据<span class="token punctuation">)</span>之前的时间延迟增量。
+maxBackoffSleep    默认5000，每次重新尝试轮询新数据之间的最大时间延迟，当上次尝试没有发现任何新数据时。    
+cachePatternMatching    默认true，对于包含数千个文件的目录，列出目录并应用文件名regex模式可能会耗费时间。
+缓存匹配文件列表可以提高性能。文件的使用顺序也将被缓存。要求文件系统至少以1秒的粒度跟踪修改时间
+fileHeader    默认false，是否添加存储绝对路径文件名到header。
+fileHeaderKey    默认file，fileHeader对应的key名。</code></pre>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><pre class=" language-Bash"><code class="language-Bash"># Name the components on this agent
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+# Describe/configure the source
+a1.sources.r1.type = taildir
+a1.sources.r1.positionFile = /root/flume/flumedata/taildir_position.json
+a1.sources.r1.filegroups = f1
+a1.sources.r1.filegroups.f1 = /root/flume/flumedata/log/.*log
+a1.sources.r1.fileHeader = true
+# Channel类型
+a1.channels.c1.type = file
+# 数据存放路径
+a1.channels.c1.dataDirs = /root/flume/flumedata/dataDirs
+#检查点路径
+a1.channels.c1.checkpointDir = /root/flume/flumedata/checkpoint
+#Channel中最多缓存多少
+a1.channels.c1.capacity = 1000
+#channel一次给sink多少
+a1.channels.c1.transactionCapacity = 100
+# Sink
+a1.sinks.k1.type = hdfs
+a1.sinks.k1.hdfs.path = hdfs://114.116.206.19:5009/flumehdfs/data
+a1.sinks.hdfssink.filePrefix             = alert-
+a1.sinks.hdfssink.hdfs.useLocalTimeStamp = true
+a1.sinks.hdfssink.hdfs.rollInterval      = 60
+a1.sinks.hdfssink.hdfs.rollSize          = 10485760
+a1.sinks.hdfssink.hdfs.rollCount         = 0
+a1.sinks.hdfssink.hdfs.codeC             = snappy
+a1.sinks.hdfssink.hdfs.fileType          = DataStream
+a1.sinks.hdfssink.hdfs.writeFormat       = Text
+
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1</code></pre>
+<p>先往我们监控的目录写东西<br><img src="https://img-blog.csdnimg.cn/20200217183204892.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200217183251315.png" alt="在这里插入图片描述"><br>数据也成功到达。<br>然后将flume停掉<br><img src="https://img-blog.csdnimg.cn/20200217183503824.png" alt="在这里插入图片描述"><br>这时候的位置信息这样子<br>往flume添加新消息<br><img src="https://img-blog.csdnimg.cn/20200217183430930.png" alt="在这里插入图片描述"><br>重启flume<br><img src="https://img-blog.csdnimg.cn/20200217183539119.png" alt="在这里插入图片描述"><br>这时候位置信息这样子，那么看看hdfs里面有没有重复数据呢<br>可以看到一共生成了两个文件，说明没有问题的<br><img src="https://img-blog.csdnimg.cn/20200217184003955.png" alt="在这里插入图片描述"></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/">http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                       版权声明: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<!-- <script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'VtflbWzMEy8YMRyJlDtxYv1p-gzGzoHsz',
+        appKey: 'LSBh2zUTu4qeRQNL3FWDkelb',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mp',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Flink行走江湖Operators：底层API-Process Function"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="Flink行走江湖Operators：底层API-Process Function">
+                        
+                        <span class="card-title">Flink行走江湖Operators：底层API-Process Function</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            我们知道，Flink把API分成了好几层，每一层所能够看到的都各不相同。最底层的就是Process Function，它能够
+
+访问events
+访问状态State（容错，一致性，但是仅仅是在keyed流上）
+计时器，也仅仅在keyed流上
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-21
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            ongbo
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="java中泛型的使用（一）"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="java中泛型的使用（一）">
+                        
+                        <span class="card-title">java中泛型的使用（一）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            泛型，顾名思义，广泛的使用呗，所以不确定用到的是哪一块了，是具体的哪一个东西，给你一个范围一个东西自己去选
+泛型，即“参数化类型”。一提到参数，最熟悉的就是定义方法时有形参，然后调用此方法时传递实参。那么参数化类型怎么理解呢？，就是将类型由
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            ongbo
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+   
+        
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Design by&nbsp;<a href="https://blog.csdn.net/weixin_43272605" target="_blank">ongbo</a>
+            &nbsp|&nbsp&nbsp; You can add me QQ：1308161085
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
+                class="white-color">91.1k</span>&nbsp;字
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;点击量:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            <br>
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>&nbsp&nbsp|
+            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "4";
+                    var startDate = "10";
+                    var startHour = "13";
+                    var startMinute = "08";
+                    var startSecond = "11";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffDays + " 天 " + diffHours +
+                        //     " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                        //     " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="" target="_blank">湘ICP备19024234号-1</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ongbo" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="访问我的GitHub">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1308161085@qq.com" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="邮件联系我">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1308161085" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="QQ 联系我: 1308161085">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <!-- <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-tooltip="关注我的CSDN博客: https://blog.csdn.net/weixin_43272605" data-position="top" data-delay="50"> -->
+    <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="关注我的CSDN博客" >
+        <i class="fa fa-bold"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="RSS 订阅">
+        <i class="fas fa-rss"></i>
+    </a>
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<!-- <script src="/js/search.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <!-- <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/matery.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+        <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        <!-- src="/libs/background/canvas-nest.js"></script> -->
+        src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <script type="text/javascript"> 
+        var OriginTitile=document.title,st; 
+        document.addEventListener("visibilitychange",function(){ 
+            document.hidden?(document.title="ヽ(●-`Д´-)ノ风里雨里我在等你~",clearTimeout(st)):(document.title="(๑•̀ㅂ•́) ✧ 欢迎回来~~！",st=setTimeout(function(){document.title=OriginTitile},3e3)) 
+            })
+    </script>
+
+    <div id="he-plugin-simple"></div>
+    <script>
+    WIDGET = {
+    CONFIG: {
+        "modules": "01234",
+        "background": 5,
+        "tmpColor": "FFFFFF",
+        "tmpSize": 16,
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiSize": 16,
+        "weatherIconSize": "20",
+        "alertIconSize": 18,
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "fixed": "true",
+        "vertical": "top",
+        "horizontal": "right",
+        "right": 10,
+        "top": "60",
+        "key": "2ccd90212a1d41dea248662765a0fb9c"
+    }
+    }
+    </script>
+    <script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>

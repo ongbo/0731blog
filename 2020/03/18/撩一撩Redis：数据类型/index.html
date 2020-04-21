@@ -1,0 +1,1820 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="撩一撩Redis：数据类型, BearBo">
+    <meta name="description" content="Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>撩一撩Redis：数据类型 | BearBo</title>
+    <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/favicon.ico">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+        <!-- <div id="navContainer" class="nav-wrapper head-container"> -->
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
+                    <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BearBo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/articles" class="waves-effect waves-light">
+
+      
+      <i class="fa fa-bars" style="zoom: 0.6;"></i>
+      
+      <span>文章</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/tags">
+          
+          <i class="fas fa-tags" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>标签</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/categories">
+          
+          <i class="fas fa-bookmark" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>分类</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/data">
+          
+          <i class="fa fa-list-alt" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>统计</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/archives">
+          
+          <i class="fa fa-tasks" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>简约风</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/timeline">
+          
+          <i class="fa fa-ellipsis-v" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>时间轴</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友链</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>Medias</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/Musics">
+          
+          <i class="fas fa-music" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Musics</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Movies</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Books</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/galleries">
+          
+          <i class="fas fa-image" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Galleries</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
+        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BearBo</div>
+        <div class="logo-desc">
+            
+            这是BearBo搏兄，如货币般流通
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fa fa-bars"></i>
+			
+			文章
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/tags " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-tags" style="position: absolute;left:50px" ></i>
+			      
+		          <span>标签</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/categories " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-bookmark" style="position: absolute;left:50px" ></i>
+			      
+		          <span>分类</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/data " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-list-alt" style="position: absolute;left:50px" ></i>
+			      
+		          <span>统计</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-archive"></i>
+			
+			归档
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/archives " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-tasks" style="position: absolute;left:50px" ></i>
+			      
+		          <span>简约风</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/timeline " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-ellipsis-v" style="position: absolute;left:50px" ></i>
+			      
+		          <span>时间轴</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友链
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			Medias
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/Musics " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-music" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Musics</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/movies " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Movies</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/books " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Books</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/galleries " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-image" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Galleries</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+</header>
+
+    
+
+
+
+<!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')"> -->
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/15.jpg')">    
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">撩一撩Redis：数据类型</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 110px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Redis/">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">
+                                <span class="chip bg-color">分布式存储</span>
+                            </a>
+                        
+                            <a href="/tags/%E7%BC%93%E5%AD%98/">
+                                <span class="chip bg-color">缓存</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Redis/" class="post-category">
+                                Redis
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-03-18
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    15 分
+                </div>
+                
+
+                
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h5 id="Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。"><a href="#Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。" class="headerlink" title="Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。"></a>Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。</h5><h5 id="在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来的数据又是反序列化。key是作为唯一的键存在，但是value根据不同的基础数据类型就会有不同的数据结构。"><a href="#在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来的数据又是反序列化。key是作为唯一的键存在，但是value根据不同的基础数据类型就会有不同的数据结构。" class="headerlink" title="在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来的数据又是反序列化。key是作为唯一的键存在，但是value根据不同的基础数据类型就会有不同的数据结构。"></a>在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来的数据又是反序列化。key是作为唯一的键存在，但是value根据不同的基础数据类型就会有不同的数据结构。</h5><h5 id="Redis-key值是二进制安全的，这意味着可以用任何二进制序列作为key值，从形如”foo”的简单字符串到一个JPEG文件的内容都可以。空字符串也是有效key值。"><a href="#Redis-key值是二进制安全的，这意味着可以用任何二进制序列作为key值，从形如”foo”的简单字符串到一个JPEG文件的内容都可以。空字符串也是有效key值。" class="headerlink" title="Redis key值是二进制安全的，这意味着可以用任何二进制序列作为key值，从形如”foo”的简单字符串到一个JPEG文件的内容都可以。空字符串也是有效key值。"></a>Redis key值是二进制安全的，这意味着可以用任何二进制序列作为key值，从形如”foo”的简单字符串到一个JPEG文件的内容都可以。空字符串也是有效key值。</h5><h3 id="设置key值需要注意："><a href="#设置key值需要注意：" class="headerlink" title="设置key值需要注意："></a>设置key值需要注意：</h3><blockquote>
+<p><strong>•    太长的键值不是个好主意，例如1024字节的键值就不是个好主意，不仅因为消耗内存，而且在数据中查找这类键值的计算成本很高。</strong><br><strong>•    太短的键值通常也不是好主意，如果你要用”u:1000:pwd”来代替”user:1000:password”，这没有什么问题，但后者更易阅读，并且由此增加的空间消耗相对于key object和value object本身来说很小。当然，没人阻止您一定要用更短的键值节省一丁点儿空间。</strong><br><strong>•    最好坚持一种模式。例如：”object-type<span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f194.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f194.png?v8">🆔</span>field”就是个不错的注意，像这样”user:1000:password”。</strong></p>
+</blockquote>
+<h1 id="string"><a href="#string" class="headerlink" title="string"></a>string</h1><h5 id="redis的字符串是一种动态字符串，是可以修改的"><a href="#redis的字符串是一种动态字符串，是可以修改的" class="headerlink" title="redis的字符串是一种动态字符串，是可以修改的"></a>redis的字符串是一种动态字符串，是可以修改的</h5><h6 id="内部机构类似于java中的ArrayList，有预分配空间来减少内存的冗余分配。类似于这样。但是最高的字符串大小为512M。而且这种字符串比较特殊，它其实也可以是一张图片。"><a href="#内部机构类似于java中的ArrayList，有预分配空间来减少内存的冗余分配。类似于这样。但是最高的字符串大小为512M。而且这种字符串比较特殊，它其实也可以是一张图片。" class="headerlink" title="内部机构类似于java中的ArrayList，有预分配空间来减少内存的冗余分配。类似于这样。但是最高的字符串大小为512M。而且这种字符串比较特殊，它其实也可以是一张图片。"></a>内部机构类似于java中的ArrayList，有预分配空间来减少内存的冗余分配。类似于这样。但是最高的字符串大小为512M。而且这种字符串比较特殊，它其实也可以是一张图片。</h6><p><img src="https://img-blog.csdnimg.cn/20200215133552168.png" alt="在这里插入图片描述"></p>
+<h5 id="通常采用Set和Get来创建和获取字符串"><a href="#通常采用Set和Get来创建和获取字符串" class="headerlink" title="通常采用Set和Get来创建和获取字符串"></a>通常采用Set和Get来创建和获取字符串</h5><h5 id="pattern匹配："><a href="#pattern匹配：" class="headerlink" title="pattern匹配："></a>pattern匹配：</h5><blockquote>
+<ul>
+<li><strong>表示任意长度字符</strong></li>
+<li><strong>？表示一个字符</strong></li>
+<li><strong>[]表示可以是集合中的任意一个</strong></li>
+</ul>
+</blockquote>
+<h4 id="基本操作：字符串操作，追加，截取，即set，get，append"><a href="#基本操作：字符串操作，追加，截取，即set，get，append" class="headerlink" title="基本操作：字符串操作，追加，截取，即set，get，append"></a>基本操作：字符串操作，追加，截取，即set，get，append</h4><h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><img src="https://img-blog.csdnimg.cn/20200215135503649.png" alt="在这里插入图片描述"></p>
+<p>在后面会有语法提示<br> <img src="https://img-blog.csdnimg.cn/20200215135511419.png" alt="在这里插入图片描述"></p>
+<p> <img src="https://img-blog.csdnimg.cn/20200215135536409.png" alt="在这里插入图片描述"><br> <img src="https://img-blog.csdnimg.cn/20200215135541216.png" alt="在这里插入图片描述"></p>
+<p>即ex代表秒倒计时，px代表毫秒倒计时，设置了在内存中的过期时间<br> <img src="https://img-blog.csdnimg.cn/20200215135551320.png" alt="在这里插入图片描述"><br> <img src="https://img-blog.csdnimg.cn/20200215135558988.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>set后有nx即在not exist情况下添加，即意思时不修改原值<br>xx即在存在的情况下才可以添加，即修改的意思。</p>
+</blockquote>
+<p>虽然字符串是Redis的基本值类型，但你仍然能通过它完成一些有趣的操作。例如：原子递增：</p>
+<blockquote>
+<p>set counter 100<br>OK<br>incr counter<br>(integer) 101<br>incr counter<br>(integer) 102<br>incrby counter 50<br>(integer) 152</p>
+</blockquote>
+<p>INCR 命令将字符串值解析成整型，将其加一，最后将结果保存为新的字符串值，类似的命令有INCRBY, DECR 和 DECRBY。实际上他们在内部就是同一个命令，只是看上去有点儿不同。</p>
+<p><strong>INCR是原子操作</strong>意味着什么呢？就是说即使多个客户端对同一个key发出INCR命令，也决不会导致竞争的情况。例如如下情况永远不可能发生：<br>『客户端1和客户端2同时读出“10”，他们俩都对其加到11，然后将新值设置为11』。最终的值一定是12，read-increment-set操作完成时，<strong>其他客户端不会在同一时间执行任何命令。</strong><br>对字符串，另一个的令人感兴趣的操作是GETSET命令，行如其名：他为key设置新值并且返回原值。这有什么用处呢？例如：你的系统每当有新用户访问时就用INCR命令操作一个Redis key。你希望每小时对这个信息收集一次。你就可以GETSET这个key并给其赋值0并读取原值。<br>为减少等待时间，也可以一次存储或获取多个key对应的值，使用MSET和MGET命令:</p>
+<blockquote>
+<p>mset a 10 b 20 c 30<br>OK<br>mget a b c</p>
+</blockquote>
+<p>1) “10”<br>2) “20”<br>3) “30”</p>
+<p>修改或查询键空间<br>有些指令不是针对任何具体的类型定义的，而是用于和整个键空间交互的。因此，它们可被用于任何类型的键。<br>使用EXISTS命令返回1或0标识给定key的值是否存在，使用DEL命令可以删除key对应的值，DEL命令返回1或0标识值是被删除(值存在)或者没被删除(key对应的值不存在)。</p>
+<blockquote>
+<p>set mykey hello<br>OK<br>exists mykey<br>(integer) 1<br>del mykey<br>(integer) 1<br>exists mykey<br>(integer) 0</p>
+</blockquote>
+<p>数据类型计算：<br>位图bitmap：底层位运算</p>
+<h2 id="列表：lists"><a href="#列表：lists" class="headerlink" title="列表：lists"></a>列表：lists</h2><p>要说清楚列表数据类型，最好先讲一点儿理论背景，在信息技术界List这个词常常被使用不当。例如”Python Lists”就名不副实（名为Linked Lists），但他们实际上是数组（同样的数据类型在Ruby中叫数组）<br>一般意义上讲，列表就是有序元素的序列：10,20,1,2,3就是一个列表。但用数组实现的List和用Linked List实现的List，在属性方面大不相同。</p>
+<h4 id="Redis-lists基于Linked-Lists实现。这意味着即使在一个list中有数百万个元素，在头部或尾部添加一个元素的操作，其时间复杂度也是常数级别的。用LPUSH-命令在十个元素的list头部添加新元素，和在千万元素list头部添加新元素的速度相同。就和java里的LinkList差不多。"><a href="#Redis-lists基于Linked-Lists实现。这意味着即使在一个list中有数百万个元素，在头部或尾部添加一个元素的操作，其时间复杂度也是常数级别的。用LPUSH-命令在十个元素的list头部添加新元素，和在千万元素list头部添加新元素的速度相同。就和java里的LinkList差不多。" class="headerlink" title="Redis lists基于Linked Lists实现。这意味着即使在一个list中有数百万个元素，在头部或尾部添加一个元素的操作，其时间复杂度也是常数级别的。用LPUSH 命令在十个元素的list头部添加新元素，和在千万元素list头部添加新元素的速度相同。就和java里的LinkList差不多。"></a>Redis lists基于Linked Lists实现。这意味着即使在一个list中有数百万个元素，在头部或尾部添加一个元素的操作，其时间复杂度也是常数级别的。用LPUSH 命令在十个元素的list头部添加新元素，和在千万元素list头部添加新元素的速度相同。就和java里的LinkList差不多。</h4><p>那么，坏消息是什么？在数组实现的list中利用索引访问元素的速度极快，而同样的操作在linked list实现的list上没有那么快。<br>Redis Lists用linked list实现的原因是：对于数据库系统来说，至关重要的特性是：能非常快的在很大的列表上添加元素。另一个重要因素是，正如你将要看到的：Redis lists能在常数时间取得常数长度。<br>如果快速访问集合元素很重要，建议使用可排序集合(sorted sets)。可排序集合我们会随后介绍。</p>
+<p>LPUSH 命令可向list的左边（头部）添加一个新元素，而RPUSH命令可向list的右边（尾部）添加一个新元素。最后LRANGE 命令可从list中取出一定范围的元素:</p>
+<blockquote>
+<p>rpush mylist A<br>(integer) 1<br>rpush mylist B<br>(integer) 2<br>lpush mylist first<br>(integer) 3<br>lrange mylist 0 -1</p>
+</blockquote>
+<p>1) “first”<br>2) “A”<br>3) “B”<br>注意:LRANGE 带有两个索引，一定范围的第一个和最后一个元素。这两个索引都可以为负来告知Redis从尾部开始计数，因此-1表示最后一个元素，-2表示list中的倒数第二个元素，以此类推。<br>上面的所有命令的参数都可变，方便你一次向list存入多个值。</p>
+<blockquote>
+<p>rpush mylist 1 2 3 4 5 “foo bar”<br>(integer) 9<br>lrange mylist 0 -1</p>
+</blockquote>
+<p>1) “first”<br>2) “A”<br>3) “B”<br>4) “1”<br>5) “2”<br>6) “3”<br>7) “4”<br>8) “5”<br>9) “foo bar”<br>还有一个重要的命令是pop,它从list中删除元素并同时返回删除的值。可以在左边或右边操作。</p>
+<blockquote>
+<p>rpush mylist a b c<br>(integer) 3<br>rpop mylist<br>“c”<br>rpop mylist<br>“b”<br>rpop mylist<br>“a”<br>我们增加了三个元素，并弹出了三个元素，因此，在这最后 列表中的命令序列是空的，没有更多的元素可以被弹出。如果我们尝试弹出另一个元素，这是我们得到的结果：<br>rpop mylist<br>(nil)<br>当list没有元素时，Redis 返回了一个NULL。</p>
+</blockquote>
+<h5 id="List的常用案例"><a href="#List的常用案例" class="headerlink" title="List的常用案例"></a>List的常用案例</h5><p>正如你可以从上面的例子中猜到的，list可被用来实现聊天系统。还可以作为不同进程间传递消息的队列。关键是，你可以每次都以原先添加的顺序访问数据。这不需要任何SQL ORDER BY 操作，将会非常快，也会很容易扩展到百万级别元素的规模。<br>例如在评级系统中，比如社会化新闻网站 reddit.com，你可以把每个新提交的链接添加到一个list，用LRANGE可简单的对结果分页。<br>在博客引擎实现中，你可为每篇日志设置一个list，在该list中推入博客评论，等等。</p>
+<blockquote>
+</blockquote>
+<h5 id="List上的阻塞操作"><a href="#List上的阻塞操作" class="headerlink" title="List上的阻塞操作"></a>List上的阻塞操作</h5><p>可以使用Redis来实现生产者和消费者模型，如使用LPUSH和RPOP来实现该功能。但会遇到这种情景：list是空，这时候消费者就需要轮询来获取数据，这样就会增加redis的访问压力、增加消费端的cpu时间，而很多访问都是无用的。为此redis提供了阻塞式访问 BRPOP 和 BLPOP 命令。 消费者可以在获取数据时指定如果数据不存在阻塞的时间，如果在时限内获得数据则立即返回，如果超时还没有数据则返回null, 0表示一直阻塞。<br>同时redis还会为所有阻塞的消费者以先后顺序排队。<br>如需了解详细信息请查看 RPOPLPUSH 和 BRPOPLPUSH。</p>
+<h5 id="key-的自动创建和删除"><a href="#key-的自动创建和删除" class="headerlink" title="key 的自动创建和删除"></a>key 的自动创建和删除</h5><p>目前为止，在我们的例子中，我们没有在推入元素之前创建空的 list，或者在 list 没有元素时删除它。在 list 为空时删除 key，并在用户试图添加元素（比如通过 LPUSH）而键不存在时创建空 list，是 Redis 的职责。<br>这不光适用于 lists，还适用于所有包括多个元素的 Redis 数据类型 – Sets, Sorted Sets 和 Hashes。<br>基本上，我们可以用三条规则来概括它的行为：</p>
+<ol>
+<li>当我们向一个聚合数据类型中添加元素时，如果目标键不存在，就在添加元素前创建空的聚合数据类型。</li>
+<li>当我们从聚合数据类型中移除元素时，如果值仍然是空的，键自动被销毁。</li>
+<li>对一个空的 key 调用一个只读的命令，比如 LLEN （返回 list 的长度），或者一个删除元素的命令，将总是产生同样的结果。该结果和对一个空的聚合类型做同个操作的结果是一样的。</li>
+</ol>
+<h2 id="散列：Hash"><a href="#散列：Hash" class="headerlink" title="散列：Hash"></a>散列：Hash</h2><p>Redis hash 看起来就像一个 “hash” 的样子，由键值对组成：</p>
+<blockquote>
+<p>hmset user:1000 username antirez birthyear 1977 verified 1<br>OK<br>hget user:1000 username<br>“antirez”<br>hget user:1000 birthyear<br>“1977”<br>hgetall user:1000</p>
+</blockquote>
+<p>1) “username”<br>2) “antirez”<br>3) “birthyear”<br>4) “1977”<br>5) “verified”<br>6) “1”<br>Hash 便于表示 objects，实际上，你可以放入一个 hash 的域数量实际上没有限制（除了可用内存以外）。所以，你可以在你的应用中以不同的方式使用 hash。<br>HMSET 指令设置 hash 中的多个域，而 HGET 取回单个域。HMGET 和 HGET 类似，但返回一系列值：</p>
+<blockquote>
+<p>hmget user:1000 username birthyear no-such-field</p>
+</blockquote>
+<p>1) “antirez”<br>2) “1977”<br>3) (nil)<br>也有一些指令能够对单独的域执行操作，比如 HINCRBY：</p>
+<blockquote>
+<p>hincrby user:1000 birthyear 10<br>(integer) 1987<br>hincrby user:1000 birthyear 10<br>(integer) 1997<br> hash 指令的完整列表。<br>值得注意的是，小的 hash 被用特殊方式编码，非常节约内存。</p>
+</blockquote>
+<h2 id="集合：set"><a href="#集合：set" class="headerlink" title="集合：set"></a>集合：set</h2><p>Redis Set 是 String 的无序排列。SADD 指令把新的元素添加到 set 中。对 set 也可做一些其他的操作，比如测试一个给定的元素是否存在，对不同 set 取交集，并集或差，等等。</p>
+<blockquote>
+<p>sadd myset 1 2 3<br>(integer) 3<br>smembers myset</p>
+</blockquote>
+<ol>
+<li>3</li>
+<li>1</li>
+<li>2<br>现在我已经把三个元素加到我的 set 中，并告诉 Redis 返回所有的元素。可以看到，它们没有被排序 —— Redis 在每次调用时可能按照任意顺序返回元素，因为对于元素的顺序并没有规定。<br>Redis 有检测成员的指令。一个特定的元素是否存在？<blockquote>
+<p>sismember myset 3<br>(integer) 1<br>sismember myset 30<br>(integer) 0<br>“3” 是 set 的一个成员，而 “30” 不是。<br>Sets 适合用于表示对象间的关系。 例如，我们可以轻易使用 set 来表示标记。<br>一个简单的建模方式是，对每一个希望标记的对象使用 set。这个 set 包含和对象相关联的标签的 ID。<br>假设我们想要给新闻打上标签。 假设新闻 ID 1000 被打上了 1,2,5 和 77 四个标签，我们可以使用一个 set 把 tag ID 和新闻条目关联起来：<br>sadd news:1000:tags 1 2 5 77<br>(integer) 4<br>但是，有时候我可能也会需要相反的关系：所有被打上相同标签的新闻列表：<br>sadd tag:1:news 1000<br>(integer) 1<br>sadd tag:2:news 1000<br>(integer) 1<br>sadd tag:5:news 1000<br>(integer) 1<br>sadd tag:77:news 1000<br>(integer) 1<br>获取一个对象的所有 tag 是很方便的：<br>smembers news:1000:tags</p>
+</blockquote>
+</li>
+<li>5</li>
+<li>1</li>
+<li>77</li>
+<li>2<br>注意：在这个例子中，我们假设你有另一个数据结构，比如一个 Redis hash，把标签 ID 对应到标签名称。<br>使用 Redis 命令行，我们可以轻易实现其它一些有用的操作。比如，我们可能需要一个含有 1, 2, 10, 和 27 标签的对象的列表。我们可以用 SINTER 命令来完成这件事。它获取不同 set 的交集。我们可以用：<blockquote>
+<p>sinter tag:1:news tag:2:news tag:10:news tag:27:news<br>… results here …<br>不光可以取交集，还可以取并集，差集，获取随机元素，等等。<br>获取一个元素的命令是 SPOP，它很适合对特定问题建模。比如，要实现一个基于 web 的扑克游戏，你可能需要用 set 来表示一副牌。假设我们用一个字符的前缀来表示不同花色：<br> sadd deck C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 CJ CQ CK<br>D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 DJ DQ DK H1 H2 H3<br>H4 H5 H6 H7 H8 H9 H10 HJ HQ HK S1 S2 S3 S4 S5 S6<br>S7 S8 S9 S10 SJ SQ SK<br>(integer) 52<br>现在，我们想要给每个玩家 5 张牌。SPOP 命令删除一个随机元素，把它返回给客户端，因此它是完全合适的操作。<br>但是，如果我们对我们的牌直接调用它，在下一盘我们就需要重新充满这副牌。开始，我们可以复制 deck 键中的内容，并放入 game:1:deck 键中。<br>这是通过 SUNIONSTORE 实现的，它通常用于对多个集合取并集，并把结果存入另一个 set 中。但是，因为一个 set 的并集就是它本身，我可以这样复制我的牌：<br>sunionstore game:1:deck deck<br>(integer) 52<br>现在，我已经准备好给 1 号玩家发五张牌：<br>spop game:1:deck<br>“C6”<br>spop game:1:deck<br>“CQ”<br>spop game:1:deck<br>“D1”<br>spop game:1:deck<br>“CJ”<br>spop game:1:deck<br>“SJ”</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="排序集数据类型"><a href="#排序集数据类型" class="headerlink" title="排序集数据类型"></a>排序集数据类型</h1><p>排序集类似于集：元素集合。但是，在“排序集”中，每个元素都与一个称为元素得分的浮点值相关联 。由于存在得分，因此排序集中的元素是有序的，因为我们始终可以按得分比较两个元素（如果得分恰好相同，则可以将两个元素作为字符串进行比较）。<br>与“排序集中的集合”一样，不可能添加重复的元素，每个元素都是唯一的。但是，可以更新元素的分数。<br>排序集命令的前缀为Z。以下是“排序集”用法的示例：<br>ZADD zset 10 a<br>ZADD zset 5 b<br>ZADD zset 12.55 c<br>ZRANGE zset 0 -1 =&gt; b,a,c<br>在上面的示例中，我们使用添加了一些元素ZADD，随后使用检索了元素ZRANGE。如您所见，元素按照其得分顺序返回。为了检查给定元素是否存在，并检索其分数（如果存在），我们使用以下ZSCORE命令：<br>ZSCORE zset a =&gt; 10<br>ZSCORE zset non_existing_element =&gt; NULL<br>排序集是一个非常强大的数据结构，您可以按分数范围，字典顺序，反向顺序等查询元素</p>
+<p>HyperLogLog</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io/2020/03/18/%E6%92%A9%E4%B8%80%E6%92%A9Redis%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">http://ongbo.github.io/2020/03/18/%E6%92%A9%E4%B8%80%E6%92%A9Redis%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                       版权声明: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Redis/">
+                                    <span class="chip bg-color">Redis</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">
+                                    <span class="chip bg-color">分布式存储</span>
+                                </a>
+                            
+                                <a href="/tags/%E7%BC%93%E5%AD%98/">
+                                    <span class="chip bg-color">缓存</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<!-- <script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'VtflbWzMEy8YMRyJlDtxYv1p-gzGzoHsz',
+        appKey: 'LSBh2zUTu4qeRQNL3FWDkelb',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mp',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/03/19/%E6%92%A9%E4%B8%80%E6%92%A9Redis%EF%BC%9A%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="撩一撩Redis：它是怎么持久化的"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="撩一撩Redis：它是怎么持久化的">
+                        
+                        <span class="card-title">撩一撩Redis：它是怎么持久化的</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+Redis 提供了两种不同级别的持久化方式:
+
+RDB持久化方式能够在指定的时间间隔能对你的数据进行快照存储.
+AOF持久化方式记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据,AOF命令以redis协议追加
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-19
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Redis/" class="post-category">
+                                    Redis
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">
+                        <span class="chip bg-color">分布式存储</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BC%93%E5%AD%98/">
+                        <span class="chip bg-color">缓存</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%8C%81%E4%B9%85%E5%8C%96/">
+                        <span class="chip bg-color">持久化</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/03/13/%E6%89%8B%E6%92%95%E7%BA%A2%E9%BB%91%E6%A0%91RedBlackTree%20%20%20%20Right%EF%BC%9F%E5%B8%A6%E5%8A%A8%E7%94%BB%E7%9A%84%E5%93%A6/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="手撕红黑树RedBlackTree    Right？带动画的哦"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="手撕红黑树RedBlackTree    Right？带动画的哦">
+                        
+                        <span class="card-title">手撕红黑树RedBlackTree    Right？带动画的哦</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            首先这篇博客花了一点时间才总结出来，肯定还有错误，希望各位读者能够小心翼翼的看。尽量理解吧，因为我自己水平也很菜哈哈。还有就是因为看了很多篇博客其实图片都有问题，所以自己就在RedBlackTree上动手实验，然后搞成了gif图片，供大家参
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-13
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
+                                    数据结构与算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                        <span class="chip bg-color">数据结构</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">
+                        <span class="chip bg-color">红黑树</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E7%BB%84/">
+                        <span class="chip bg-color">数组</span>
+                    </a>
+                    
+                    <a href="/tags/%E9%93%BE%E8%A1%A8/">
+                        <span class="chip bg-color">链表</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+   
+        
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Design by&nbsp;<a href="https://blog.csdn.net/weixin_43272605" target="_blank">ongbo</a>
+            &nbsp|&nbsp&nbsp; You can add me QQ：1308161085
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
+                class="white-color">91.1k</span>&nbsp;字
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;点击量:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            <br>
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>&nbsp&nbsp|
+            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "4";
+                    var startDate = "10";
+                    var startHour = "13";
+                    var startMinute = "08";
+                    var startSecond = "11";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffDays + " 天 " + diffHours +
+                        //     " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                        //     " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="" target="_blank">湘ICP备19024234号-1</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ongbo" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="访问我的GitHub">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1308161085@qq.com" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="邮件联系我">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1308161085" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="QQ 联系我: 1308161085">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <!-- <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-tooltip="关注我的CSDN博客: https://blog.csdn.net/weixin_43272605" data-position="top" data-delay="50"> -->
+    <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="关注我的CSDN博客" >
+        <i class="fa fa-bold"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="RSS 订阅">
+        <i class="fas fa-rss"></i>
+    </a>
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<!-- <script src="/js/search.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <!-- <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/matery.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+        <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        <!-- src="/libs/background/canvas-nest.js"></script> -->
+        src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <script type="text/javascript"> 
+        var OriginTitile=document.title,st; 
+        document.addEventListener("visibilitychange",function(){ 
+            document.hidden?(document.title="ヽ(●-`Д´-)ノ风里雨里我在等你~",clearTimeout(st)):(document.title="(๑•̀ㅂ•́) ✧ 欢迎回来~~！",st=setTimeout(function(){document.title=OriginTitile},3e3)) 
+            })
+    </script>
+
+    <div id="he-plugin-simple"></div>
+    <script>
+    WIDGET = {
+    CONFIG: {
+        "modules": "01234",
+        "background": 5,
+        "tmpColor": "FFFFFF",
+        "tmpSize": 16,
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiSize": 16,
+        "weatherIconSize": "20",
+        "alertIconSize": 18,
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "fixed": "true",
+        "vertical": "top",
+        "horizontal": "right",
+        "right": 10,
+        "top": "60",
+        "key": "2ccd90212a1d41dea248662765a0fb9c"
+    }
+    }
+    </script>
+    <script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>

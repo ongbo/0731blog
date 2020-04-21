@@ -1,0 +1,2436 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="网站日志实时分析（一）：flume+kafka+Flink连通, BearBo">
+    <meta name="description" content="
+这里flume+kafka+Flink Cluster总体架构就是这个样子。我们将多个Tomcat Server的Web服务器，或者其他的网站服务器都看你而定，没台节点上都配置了Flume Agent，用来收集本地日志目录。然后在另一台节">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>网站日志实时分析（一）：flume+kafka+Flink连通 | BearBo</title>
+    <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/favicon.ico">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+        <!-- <div id="navContainer" class="nav-wrapper head-container"> -->
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
+                    <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BearBo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/articles" class="waves-effect waves-light">
+
+      
+      <i class="fa fa-bars" style="zoom: 0.6;"></i>
+      
+      <span>文章</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/tags">
+          
+          <i class="fas fa-tags" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>标签</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/categories">
+          
+          <i class="fas fa-bookmark" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>分类</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/data">
+          
+          <i class="fa fa-list-alt" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>统计</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/archives">
+          
+          <i class="fa fa-tasks" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>简约风</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/timeline">
+          
+          <i class="fa fa-ellipsis-v" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>时间轴</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友链</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>Medias</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/Musics">
+          
+          <i class="fas fa-music" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Musics</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Movies</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Books</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/galleries">
+          
+          <i class="fas fa-image" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Galleries</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
+        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BearBo</div>
+        <div class="logo-desc">
+            
+            这是BearBo搏兄，如货币般流通
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fa fa-bars"></i>
+			
+			文章
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/tags " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-tags" style="position: absolute;left:50px" ></i>
+			      
+		          <span>标签</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/categories " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-bookmark" style="position: absolute;left:50px" ></i>
+			      
+		          <span>分类</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/data " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-list-alt" style="position: absolute;left:50px" ></i>
+			      
+		          <span>统计</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-archive"></i>
+			
+			归档
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/archives " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-tasks" style="position: absolute;left:50px" ></i>
+			      
+		          <span>简约风</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/timeline " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-ellipsis-v" style="position: absolute;left:50px" ></i>
+			      
+		          <span>时间轴</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友链
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			Medias
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/Musics " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-music" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Musics</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/movies " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Movies</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/books " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Books</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/galleries " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-image" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Galleries</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+</header>
+
+    
+
+
+
+<!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')"> -->
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/2.jpg')">    
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">网站日志实时分析（一）：flume+kafka+Flink连通</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 110px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Flink/">
+                                <span class="chip bg-color">Flink</span>
+                            </a>
+                        
+                            <a href="/tags/Kafka/">
+                                <span class="chip bg-color">Kafka</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%AE%9E%E6%97%B6%E5%A4%84%E7%90%86/">
+                                <span class="chip bg-color">实时处理</span>
+                            </a>
+                        
+                            <a href="/tags/Flume/">
+                                <span class="chip bg-color">Flume</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Flink/" class="post-category">
+                                Flink
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-03-31
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    23 分
+                </div>
+                
+
+                
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><img src="https://img-blog.csdnimg.cn/20200302115732588.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h6 id="这里flume-kafka-Flink-Cluster总体架构就是这个样子。"><a href="#这里flume-kafka-Flink-Cluster总体架构就是这个样子。" class="headerlink" title="这里flume+kafka+Flink Cluster总体架构就是这个样子。"></a>这里flume+kafka+Flink Cluster总体架构就是这个样子。</h6><h6 id="我们将多个Tomcat-Server的Web服务器，或者其他的网站服务器都看你而定，没台节点上都配置了Flume-Agent，用来收集本地日志目录。然后在另一台节点配置了Flume-Consolidation-Agent，用来收集各个Web服务器的Flume-Agent的数据，然后送入Kafka-Cluster。然后Kafka-Cluster的数据交由Flink-Cluster消费，从而将数据展示在Web前端"><a href="#我们将多个Tomcat-Server的Web服务器，或者其他的网站服务器都看你而定，没台节点上都配置了Flume-Agent，用来收集本地日志目录。然后在另一台节点配置了Flume-Consolidation-Agent，用来收集各个Web服务器的Flume-Agent的数据，然后送入Kafka-Cluster。然后Kafka-Cluster的数据交由Flink-Cluster消费，从而将数据展示在Web前端" class="headerlink" title="我们将多个Tomcat Server的Web服务器，或者其他的网站服务器都看你而定，没台节点上都配置了Flume Agent，用来收集本地日志目录。然后在另一台节点配置了Flume Consolidation Agent，用来收集各个Web服务器的Flume Agent的数据，然后送入Kafka Cluster。然后Kafka Cluster的数据交由Flink Cluster消费，从而将数据展示在Web前端"></a>我们将多个Tomcat Server的Web服务器，或者其他的网站服务器都看你而定，没台节点上都配置了Flume Agent，用来收集本地日志目录。然后在另一台节点配置了Flume Consolidation Agent，用来收集各个Web服务器的Flume Agent的数据，然后送入Kafka Cluster。然后Kafka Cluster的数据交由Flink Cluster消费，从而将数据展示在Web前端</h6><h5 id="flume1"><a href="#flume1" class="headerlink" title="flume1"></a>flume1</h5><pre class=" language-bash"><code class="language-bash">ZooKeeper -server host:port cmd args
+<span class="token comment" spellcheck="true">#主要作用是监听文件中的新增数据，采集到数据之后，输出到avro</span>
+<span class="token comment" spellcheck="true">#    注意：Flume agent的运行，主要就是配置source channel sink</span>
+<span class="token comment" spellcheck="true">#  下面的a1就是agent的代号，source叫r1 channel叫c1 sink叫k1</span>
+a1.sources <span class="token operator">=</span> r1
+a1.sinks <span class="token operator">=</span> k1
+a1.channels <span class="token operator">=</span> c1
+
+<span class="token comment" spellcheck="true">#对于source的配置描述 监听文件中的新增数据 exec</span>
+a1.sources.r1.type <span class="token operator">=</span> <span class="token function">exec</span>
+a1.sources.r1.command  <span class="token operator">=</span> <span class="token function">tail</span> -F /home/uplooking/data/data-clean/data-access.log
+
+<span class="token comment" spellcheck="true">#对于sink的配置描述 使用avro日志做数据的消费</span>
+a1.sinks.k1.type <span class="token operator">=</span> avro
+a1.sinks.k1.hostname <span class="token operator">=</span> localhost
+a1.sinks.k1.port <span class="token operator">=</span> 9000
+
+<span class="token comment" spellcheck="true">#对于channel的配置描述 使用文件做数据的临时缓存 这种的安全性要高</span>
+a1.channels.c1.type <span class="token operator">=</span> <span class="token function">file</span>
+a1.channels.c1.checkpointDir <span class="token operator">=</span> /home/uplooking/data/flume/checkpoint
+a1.channels.c1.dataDirs <span class="token operator">=</span> /home/uplooking/data/flume/data
+
+<span class="token comment" spellcheck="true">#通过channel c1将source r1和sink k1关联起来</span>
+a1.sources.r1.channels <span class="token operator">=</span> c1
+a1.sinks.k1.channel <span class="token operator">=</span> c1</code></pre>
+<pre class=" language-bash"><code class="language-bash"> 执行命令
+flume-ng agent --conf conf -n a1 -f 上面这个文件的位置 <span class="token operator">></span>/dev/null 2<span class="token operator">></span><span class="token operator">&amp;</span>1 <span class="token operator">&amp;</span></code></pre>
+<h5 id="flume2同上，都是一台web服务器"><a href="#flume2同上，都是一台web服务器" class="headerlink" title="flume2同上，都是一台web服务器"></a>flume2同上，都是一台web服务器</h5><h5 id="flume3"><a href="#flume3" class="headerlink" title="flume3"></a>flume3</h5><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#主要作用是监听目录中的新增文件，采集到数据之后，输出到kafka</span>
+<span class="token comment" spellcheck="true">#    注意：Flume agent的运行，主要就是配置source channel sink</span>
+<span class="token comment" spellcheck="true">#  下面的a1就是agent的代号，source叫r1 channel叫c1 sink叫k1</span>
+a1.sources <span class="token operator">=</span> r1
+a1.sinks <span class="token operator">=</span> k1
+a1.channels <span class="token operator">=</span> c1
+
+<span class="token comment" spellcheck="true">#对于source的配置描述 监听avro</span>
+a1.sources.r1.type <span class="token operator">=</span> avro
+a1.sources.r1.bind <span class="token operator">=</span> 0.0.0.0
+a1.sources.r1.port <span class="token operator">=</span> 9000
+
+<span class="token comment" spellcheck="true">#对于sink的配置描述 使用kafka做数据的消费</span>
+a1.sinks.k1.type <span class="token operator">=</span> org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.k1.topic <span class="token operator">=</span> f-k-s
+a1.sinks.k1.brokerList <span class="token operator">=</span> 114.116.219.197:5008,114.116.220.98:5008,114.116.199.154:5008
+a1.sinks.k1.requiredAcks <span class="token operator">=</span> 1
+a1.sinks.k1.batchSize <span class="token operator">=</span> 20
+
+<span class="token comment" spellcheck="true">#对于channel的配置描述 使用内存缓冲区域做数据的临时缓存</span>
+a1.channels.c1.type <span class="token operator">=</span> memory
+a1.channels.c1.capacity <span class="token operator">=</span> 1000
+a1.channels.c1.transactionCapacity <span class="token operator">=</span> 100
+
+<span class="token comment" spellcheck="true">#通过channel c1将source r1和sink k1关联起来</span>
+a1.sources.r1.channels <span class="token operator">=</span> c1
+a1.sinks.k1.channel <span class="token operator">=</span> c1</code></pre>
+<pre class=" language-bash"><code class="language-bash">flume-ng agent --conf conf -n a1 -f 上面这个文件的位置 <span class="token operator">></span>/dev/null 2<span class="token operator">></span><span class="token operator">&amp;</span>1 <span class="token operator">&amp;</span></code></pre>
+<h5 id="前面所有的过程都需要你能够把kafka，flume搭建好，这里就做一下flume-kafka-flink的整合"><a href="#前面所有的过程都需要你能够把kafka，flume搭建好，这里就做一下flume-kafka-flink的整合" class="headerlink" title="前面所有的过程都需要你能够把kafka，flume搭建好，这里就做一下flume+kafka+flink的整合"></a>前面所有的过程都需要你能够把kafka，flume搭建好，这里就做一下flume+kafka+flink的整合</h5><h6 id="由于Web暂时还没写，我们直接往日志目录里面写数据，先看看flink代码是怎么样的，这是一段关于电商的热门商品统计的实时数据分析"><a href="#由于Web暂时还没写，我们直接往日志目录里面写数据，先看看flink代码是怎么样的，这是一段关于电商的热门商品统计的实时数据分析" class="headerlink" title="由于Web暂时还没写，我们直接往日志目录里面写数据，先看看flink代码是怎么样的，这是一段关于电商的热门商品统计的实时数据分析"></a>由于Web暂时还没写，我们直接往日志目录里面写数据，先看看flink代码是怎么样的，这是一段关于电商的热门商品统计的实时数据分析</h6><pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>ongbo<span class="token punctuation">.</span>hotAnalysis
+
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Timestamp
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Properties
+
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>functions<span class="token punctuation">.</span>AggregateFunction
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>serialization<span class="token punctuation">.</span>SimpleStringSchema
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>state<span class="token punctuation">.</span><span class="token punctuation">{</span>ListState<span class="token punctuation">,</span> ListStateDescriptor<span class="token punctuation">}</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>java<span class="token punctuation">.</span>tuple<span class="token punctuation">.</span>Tuple
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>configuration<span class="token punctuation">.</span>Configuration
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>TimeCharacteristic
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>functions<span class="token punctuation">.</span>KeyedProcessFunction
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>_
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>function<span class="token punctuation">.</span>WindowFunction
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>windowing<span class="token punctuation">.</span>time<span class="token punctuation">.</span>Time
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>windowing<span class="token punctuation">.</span>windows<span class="token punctuation">.</span>TimeWindow
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>connectors<span class="token punctuation">.</span>kafka<span class="token punctuation">.</span>FlinkKafkaConsumer
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Collector
+
+<span class="token keyword">import</span> scala<span class="token punctuation">.</span>collection<span class="token punctuation">.</span>mutable<span class="token punctuation">.</span>ListBuffer
+
+<span class="token comment" spellcheck="true">/*
+*定义输入数据的样例类
+ */</span>
+<span class="token keyword">case</span> <span class="token keyword">class</span> <span class="token class-name">UserBehavior</span><span class="token punctuation">(</span>userId<span class="token operator">:</span> Long<span class="token punctuation">,</span> itemId<span class="token operator">:</span> Long<span class="token punctuation">,</span> cateGoryId<span class="token operator">:</span> Int<span class="token punctuation">,</span>behavior<span class="token operator">:</span> String<span class="token punctuation">,</span> timestamp<span class="token operator">:</span> Long<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//定义窗口聚合结果样例类</span>
+<span class="token keyword">case</span> <span class="token keyword">class</span> <span class="token class-name">ItemViewCount</span><span class="token punctuation">(</span>itemId<span class="token operator">:</span> Long<span class="token punctuation">,</span> windowEnd<span class="token operator">:</span> Long<span class="token punctuation">,</span> count<span class="token operator">:</span> Long<span class="token punctuation">)</span>
+
+object HotItems <span class="token punctuation">{</span>
+  def <span class="token function">main</span><span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span>String<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> Unit <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//1:创建执行环境</span>
+    val env <span class="token operator">=</span> StreamExecutionEnvironment<span class="token punctuation">.</span>getExecutionEnvironment
+    env<span class="token punctuation">.</span><span class="token function">setParallelism</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">//设置为事件事件</span>
+    env<span class="token punctuation">.</span><span class="token function">setStreamTimeCharacteristic</span><span class="token punctuation">(</span>TimeCharacteristic<span class="token punctuation">.</span>EventTime<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">//2:读取数据</span>
+
+    <span class="token comment" spellcheck="true">/*kafka源*/</span>
+    val properties <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Properties</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    properties<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"bootstrap.servers"</span><span class="token punctuation">,</span><span class="token string">"114.116.219.197:5008,114.116.220.98:5008,114.116.199.154:5008"</span><span class="token punctuation">)</span>
+    properties<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"group.id"</span><span class="token punctuation">,</span><span class="token string">"web-consumer-group"</span><span class="token punctuation">)</span>
+    properties<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"key.deserializer"</span><span class="token punctuation">,</span><span class="token string">"org.apache.kafka.common.serialization.StringDeserializer"</span><span class="token punctuation">)</span>
+    properties<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"value.deserializer"</span><span class="token punctuation">,</span><span class="token string">"org.apache.kafka.common.serialization.StringDeserializer"</span><span class="token punctuation">)</span>
+    properties<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">"auto.offset.reset"</span><span class="token punctuation">,</span><span class="token string">"latest"</span><span class="token punctuation">)</span>
+    val dataStream <span class="token operator">=</span> env<span class="token punctuation">.</span><span class="token function">addSource</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FlinkKafkaConsumer</span><span class="token punctuation">[</span>String<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"weblog"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">SimpleStringSchema</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>properties<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//    val dataStream = env.readTextFile("/Users/ongbo/Maven/bin/UserBehaviorAnalysis/HotItemAnalysis/src/main/resources/UserBehavior.csv")</span>
+      <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>data <span class="token operator">=</span><span class="token operator">></span><span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"data:"</span><span class="token operator">+</span>data<span class="token punctuation">)</span>
+        val dataArray <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//        if(dataArray(0).equals("ij"))</span>
+        <span class="token function">UserBehavior</span><span class="token punctuation">(</span><span class="token function">dataArray</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">.</span>toLong<span class="token punctuation">,</span> <span class="token function">dataArray</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">.</span>toLong<span class="token punctuation">,</span> <span class="token function">dataArray</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">.</span>toInt<span class="token punctuation">,</span> <span class="token function">dataArray</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">,</span> <span class="token function">dataArray</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">.</span>toLong<span class="token punctuation">)</span>
+
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">assignAscendingTimestamps</span><span class="token punctuation">(</span>_<span class="token punctuation">.</span>timestamp <span class="token operator">*</span> 1000L<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">//3:transform处理数据</span>
+    val processStream <span class="token operator">=</span> dataStream
+      <span class="token comment" spellcheck="true">//筛选出埋点pv数据</span>
+      <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>_<span class="token punctuation">.</span>behavior<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"pv"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token comment" spellcheck="true">//先对itemID进行分组</span>
+      <span class="token punctuation">.</span><span class="token function">keyBy</span><span class="token punctuation">(</span>_<span class="token punctuation">.</span>itemId<span class="token punctuation">)</span>
+      <span class="token comment" spellcheck="true">//然后设置timeWindow，size为1小时，步长为5分钟的滑动窗口</span>
+      <span class="token punctuation">.</span><span class="token function">timeWindow</span><span class="token punctuation">(</span>Time<span class="token punctuation">.</span><span class="token function">seconds</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span> Time<span class="token punctuation">.</span><span class="token function">seconds</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token comment" spellcheck="true">//窗口聚合</span>
+      <span class="token punctuation">.</span><span class="token function">aggregate</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CountAgg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">WindowResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">keyBy</span><span class="token punctuation">(</span>_<span class="token punctuation">.</span>windowEnd<span class="token punctuation">)</span>      <span class="token comment" spellcheck="true">//按照窗口分组</span>
+
+      <span class="token punctuation">.</span><span class="token function">process</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TopNHotItems</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+    <span class="token comment" spellcheck="true">//sink：输出数据</span>
+    processStream<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"processStream::"</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//    dataStream.print()</span>
+    <span class="token comment" spellcheck="true">//执行</span>
+    env<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token string">"hot Items Job"</span><span class="token punctuation">)</span>
+
+
+
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">/*自定义预聚合函数*/</span>
+<span class="token keyword">class</span> <span class="token class-name">CountAgg</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">extends</span> <span class="token class-name">AggregateFunction</span><span class="token punctuation">[</span>UserBehavior<span class="token punctuation">,</span> Long<span class="token punctuation">,</span> Long<span class="token punctuation">]</span><span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">//累加器初始值</span>
+  override def <span class="token function">createAccumulator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Long <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token comment" spellcheck="true">//每来一次就加一</span>
+  override def <span class="token function">add</span><span class="token punctuation">(</span>in<span class="token operator">:</span> UserBehavior<span class="token punctuation">,</span> acc<span class="token operator">:</span> Long<span class="token punctuation">)</span><span class="token operator">:</span> Long <span class="token operator">=</span> acc<span class="token operator">+</span><span class="token number">1</span>
+  <span class="token comment" spellcheck="true">//</span>
+  override def <span class="token function">getResult</span><span class="token punctuation">(</span>acc<span class="token operator">:</span> Long<span class="token punctuation">)</span><span class="token operator">:</span> Long <span class="token operator">=</span> acc
+
+  override def <span class="token function">merge</span><span class="token punctuation">(</span>acc<span class="token operator">:</span> Long<span class="token punctuation">,</span> acc1<span class="token operator">:</span> Long<span class="token punctuation">)</span><span class="token operator">:</span> Long <span class="token operator">=</span> acc <span class="token operator">+</span> acc1
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//自定义窗口函数，输出ItemViewCount</span>
+<span class="token keyword">class</span> <span class="token class-name">WindowResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">extends</span> <span class="token class-name">WindowFunction</span><span class="token punctuation">[</span>Long<span class="token punctuation">,</span>ItemViewCount<span class="token punctuation">,</span> Long<span class="token punctuation">,</span> TimeWindow<span class="token punctuation">]</span><span class="token punctuation">{</span>
+  override def <span class="token function">apply</span><span class="token punctuation">(</span>key<span class="token operator">:</span> Long<span class="token punctuation">,</span> window<span class="token operator">:</span> TimeWindow<span class="token punctuation">,</span> input<span class="token operator">:</span> Iterable<span class="token punctuation">[</span>Long<span class="token punctuation">]</span><span class="token punctuation">,</span> out<span class="token operator">:</span> Collector<span class="token punctuation">[</span>ItemViewCount<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> Unit <span class="token operator">=</span>  <span class="token punctuation">{</span>
+    out<span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token function">ItemViewCount</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span>window<span class="token punctuation">.</span>getEnd<span class="token punctuation">,</span>input<span class="token punctuation">.</span>iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//自定义处理函数</span>
+<span class="token keyword">class</span> <span class="token class-name">TopNHotItems</span><span class="token punctuation">(</span>topsize<span class="token operator">:</span> Int<span class="token punctuation">)</span> <span class="token keyword">extends</span> <span class="token class-name">KeyedProcessFunction</span><span class="token punctuation">[</span>Long<span class="token punctuation">,</span> ItemViewCount<span class="token punctuation">,</span> String<span class="token punctuation">]</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> var itemState<span class="token operator">:</span> ListState<span class="token punctuation">[</span>ItemViewCount<span class="token punctuation">]</span> <span class="token operator">=</span> _
+
+  override def <span class="token function">open</span><span class="token punctuation">(</span>parameters<span class="token operator">:</span> Configuration<span class="token punctuation">)</span><span class="token operator">:</span> Unit <span class="token operator">=</span> <span class="token punctuation">{</span>
+    itemState <span class="token operator">=</span> getRuntimeContext<span class="token punctuation">.</span><span class="token function">getListState</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ListStateDescriptor</span><span class="token punctuation">[</span>ItemViewCount<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"item-state"</span><span class="token punctuation">,</span> classOf<span class="token punctuation">[</span>ItemViewCount<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token punctuation">}</span>
+  override def <span class="token function">processElement</span><span class="token punctuation">(</span>value<span class="token operator">:</span> ItemViewCount<span class="token punctuation">,</span> ctx<span class="token operator">:</span> KeyedProcessFunction<span class="token punctuation">[</span>Long<span class="token punctuation">,</span> ItemViewCount<span class="token punctuation">,</span> String<span class="token punctuation">]</span>#Context<span class="token punctuation">,</span> out<span class="token operator">:</span> Collector<span class="token punctuation">[</span>String<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> Unit <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//把每条数据存入状态列表</span>
+    itemState<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">//注册一个定时器</span>
+    ctx<span class="token punctuation">.</span><span class="token function">timerService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">registerEventTimeTimer</span><span class="token punctuation">(</span>value<span class="token punctuation">.</span>windowEnd <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">//定时器触发时，对所有的数据排序，并输出结果</span>
+  override def <span class="token function">onTimer</span><span class="token punctuation">(</span>timestamp<span class="token operator">:</span> Long<span class="token punctuation">,</span> ctx<span class="token operator">:</span> _root_<span class="token punctuation">.</span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>functions<span class="token punctuation">.</span>KeyedProcessFunction<span class="token punctuation">[</span>Long<span class="token punctuation">,</span> _root_<span class="token punctuation">.</span>com<span class="token punctuation">.</span>ongbo<span class="token punctuation">.</span>hotAnalysis<span class="token punctuation">.</span>ItemViewCount<span class="token punctuation">,</span> _root_<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>Predef<span class="token punctuation">.</span>String<span class="token punctuation">]</span>#OnTimerContext<span class="token punctuation">,</span> out<span class="token operator">:</span> _root_<span class="token punctuation">.</span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Collector<span class="token punctuation">[</span>_root_<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>Predef<span class="token punctuation">.</span>String<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> Unit <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//将所有state中的数据取出，放到一个list Buffer中</span>
+    val allItems<span class="token operator">:</span> ListBuffer<span class="token punctuation">[</span>ItemViewCount<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ListBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">import</span> scala<span class="token punctuation">.</span>collection<span class="token punctuation">.</span>JavaConversions<span class="token punctuation">.</span>_
+    <span class="token keyword">for</span><span class="token punctuation">(</span>item <span class="token operator">&lt;</span><span class="token operator">-</span> itemState<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      allItems <span class="token operator">+=</span> item
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">//按照点计量count大小排序,sortBy默认是升序,并且取前三个</span>
+    val sortedItems <span class="token operator">=</span> allItems<span class="token punctuation">.</span><span class="token function">sortBy</span><span class="token punctuation">(</span>_<span class="token punctuation">.</span>count<span class="token punctuation">)</span><span class="token punctuation">(</span>Ordering<span class="token punctuation">.</span>Long<span class="token punctuation">.</span>reverse<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">take</span><span class="token punctuation">(</span>topsize<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">//清空状态</span>
+    itemState<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">//格式化输出排名结果</span>
+    val result <span class="token operator">:</span> StringBuilder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span>
+    result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"时间："</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Timestamp</span><span class="token punctuation">(</span>timestamp <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">//输出每一个商品信息</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">&lt;</span><span class="token operator">-</span> sortedItems<span class="token punctuation">.</span>indices<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      val currentItem <span class="token operator">=</span> <span class="token function">sortedItems</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+      result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"No"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">":"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"  商品ID："</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>currentItem<span class="token punctuation">.</span>itemId<span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"  浏览量："</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>currentItem<span class="token punctuation">.</span>count<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"============================\n"</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">//控制输出频率</span>
+    Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span>
+    out<span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+
+
+
+<span class="token comment" spellcheck="true">/*自定义预聚合函数计算平均数*/</span>
+<span class="token keyword">class</span> <span class="token class-name">AverageAgg</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">extends</span> <span class="token class-name">AggregateFunction</span><span class="token punctuation">[</span>UserBehavior<span class="token punctuation">,</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span>Int<span class="token punctuation">)</span><span class="token punctuation">,</span> Double<span class="token punctuation">]</span><span class="token punctuation">{</span>
+  override def <span class="token function">createAccumulator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span>0L<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+  override def <span class="token function">add</span><span class="token punctuation">(</span>in<span class="token operator">:</span> UserBehavior<span class="token punctuation">,</span> acc<span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span>acc<span class="token punctuation">.</span>_1<span class="token operator">+</span>in<span class="token punctuation">.</span>timestamp<span class="token punctuation">,</span> acc<span class="token punctuation">.</span>_2<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+  override def <span class="token function">getResult</span><span class="token punctuation">(</span>acc<span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">:</span> Double <span class="token operator">=</span> acc<span class="token punctuation">.</span>_1 <span class="token operator">/</span>acc<span class="token punctuation">.</span>_2
+
+  override def <span class="token function">merge</span><span class="token punctuation">(</span>acc<span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span><span class="token punctuation">,</span> acc1<span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">(</span>Long<span class="token punctuation">,</span> Int<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">(</span>acc<span class="token punctuation">.</span>_1<span class="token operator">+</span>acc1<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> acc<span class="token punctuation">.</span>_2<span class="token operator">+</span>acc1<span class="token punctuation">.</span>_2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h6 id="下面往日志目录里面写日志"><a href="#下面往日志目录里面写日志" class="headerlink" title="下面往日志目录里面写日志"></a>下面往日志目录里面写日志</h6><pre class=" language-bash"><code class="language-bash">543462,1715,1464116,pv,1511658000
+662867,2244074,1575622,pv,1511658000
+561558,3611281,965809,pv,1511658000
+894923,3076029,1879194,pv,1511658000
+834377,4541270,3738615,pv,1511658000
+315321,942195,4339722,pv,1511658000
+625915,1162383,570735,pv,1511658000
+578814,176722,982926,pv,1511658000
+873335,1256540,1451783,pv,1511658000
+429984,4625350,2355072,pv,1511658000
+866796,534083,4203730,pv,1511658000
+937166,321683,2355072,pv,1511658000
+156905,2901727,3001296,pv,1511658000
+758810,5109495,1575622,pv,1511658000
+107304,111477,4173315,pv,1511658000
+452437,3255022,5099474,pv,1511658000
+813974,1332724,2520771,buy,1511658000
+524395,3887779,2366905,pv,1511658000
+470572,3760258,1299190,pv,1511658001
+543789,3110556,4558987,cart,1511658001
+354759,2191348,4756105,pv,1511658001
+382009,2123538,4801426,pv,1511658001
+677046,1598945,4145813,pv,1511658001
+946161,3021357,1506018,pv,1511658001
+464646,2512167,2733371,pv,1511658001
+1007641,5046581,2355072,pv,1511658001
+723938,4719377,1464116,pv,1511658001
+513008,3472922,401357,pv,1511658001
+769215,22738,2355072,pv,1511658002
+652863,4967749,1320293,pv,1511658002
+801610,900305,634390,pv,1511658002
+411478,3259235,2667323,pv,1511658002
+431664,764155,2520377,pv,1511658002
+487768,4125503,2465336,pv,1511658002
+223813,4104826,2042400,pv,1511658002
+672849,1822977,4801426,fav,1511658002
+550127,4602135,65362,pv,1511658002
+205752,1467139,171529,pv,1511658002
+64419,2029769,2729260,pv,1511658002
+756093,2881426,2520377,pv,1511658002
+48353,4362292,583014,pv,1511658002
+355509,4712764,4082778,pv,1511658003
+826492,4016552,2735466,pv,1511658003
+624915,2243311,2520377,pv,1511658003
+682317,655740,982926,fav,1511658003
+677621,1051389,4801426,pv,1511658003
+422974,4649255,4818107,pv,1511658003
+86512,563566,4756105,pv,1511658003
+565218,2331370,3607361,pv,1511658003
+232313,4182588,1730376,pv,1511658003
+436966,1329977,3607361,cart,1511658003
+561158,269170,2342116,fav,1511658003
+344379,3318242,2920476,cart,1511658003
+858204,2450718,235534,pv,1511658004
+833924,3190176,1051370,pv,1511658004
+992993,1900968,3794706,fav,1511658004
+911930,1150136,2131531,pv,1511658004
+736959,319911,4756105,pv,1511658004
+82170,3588374,2465336,pv,1511658004
+587599,2067643,4818107,cart,1511658004
+367451,15775,4756105,pv,1511658004
+428316,2478780,4284875,pv,1511658004
+284910,3680091,3829657,pv,1511658004
+345119,737662,4357323,pv,1511658004
+551442,1762997,1879194,pv,1511658004
+550384,3908776,1029459,pv,1511658004
+677500,4534693,2640118,pv,1511658004
+398626,2791489,1467750,pv,1511658004
+118053,3545571,2433095,pv,1511658005
+457401,4063698,4801426,pv,1511658005
+45105,3234847,3141941,fav,1511658005
+604760,2661651,3738615,pv,1511658005
+905383,2064903,2939262,cart,1511658005
+740788,3657484,4936889,pv,1511658005
+456838,1242724,4756105,fav,1511658005
+585217,215764,2640118,pv,1511658006
+658185,4025021,4048584,fav,1511658006
+210431,2035568,2328673,pv,1511658006
+602619,1838725,2247787,pv,1511658006
+860388,3797303,4357323,pv,1511658006
+175334,2624960,801221,pv,1511658006
+72403,4249007,1320293,pv,1511658006
+307385,2551880,4050612,pv,1511658006
+819283,2094785,2520377,pv,1511658006
+801272,565658,1158475,pv,1511658006
+344680,3224461,4789432,pv,1511658006
+125206,1102775,622168,pv,1511658006
+59131,1960832,154040,pv,1511658006
+252339,2455388,3745824,pv,1511658006
+794780,4465604,4242717,pv,1511658007
+388283,4701157,1457367,pv,1511658007
+416261,2101120,1299190,pv,1511658007
+231758,3622677,4758477,pv,1511658007
+92253,642337,4135185,pv,1511658007
+297958,1762578,4801426,pv,1511658007
+786771,1940649,1320293,pv,1511658007
+789048,3144191,2355072,pv,1511658007
+895384,1138468,1602288,pv,1511658007
+578800,1324176,4135836,pv,1511658007
+886777,4606952,996587,pv,1511658008
+364036,2340632,2924150,pv,1511658008
+783973,3935641,982926,pv,1511658008
+483113,1158047,2030976,pv,1511658008
+321087,3987903,149192,fav,1511658008
+986762,2704613,4217906,pv,1511658008
+1003495,3717164,535180,pv,1511658008
+32983,1445878,2030976,pv,1511658008
+580912,1837669,4263418,pv,1511658008
+498371,980167,3607361,cart,1511658008
+14830,3878488,3002561,pv,1511658008
+457499,4796667,2355072,pv,1511658008
+879381,881945,3004853,pv,1511658008
+606403,1404468,781315,pv,1511658008
+543832,3007018,2735466,pv,1511658009
+824188,161847,4801426,pv,1511658009
+750784,4727562,1286537,cart,1511658009
+87479,5157294,2158079,pv,1511658009
+147730,1278040,4801426,pv,1511658009
+865088,3924907,411153,pv,1511658009
+1006129,1993506,2939262,pv,1511658009
+401750,3127850,2640118,pv,1511658009
+501335,2005713,1092085,pv,1511658009
+266486,1777124,4672807,cart,1511658009
+23125,4680673,1756314,buy,1511658009
+309473,3665543,2640118,pv,1511658009
+547966,693058,2129666,pv,1511658009
+599118,2771420,4159072,pv,1511658010
+684544,2335709,1451814,pv,1511658010
+130320,2469137,4756105,pv,1511658010
+464365,1474058,3794706,pv,1511658010
+522088,4170363,149192,pv,1511658010
+402626,3244134,4801426,pv,1511658010
+19445,2183531,4756105,pv,1511658010
+44670,5140156,2131531,fav,1511658010
+522815,2092266,2355072,pv,1511658010
+105757,4175185,3191556,cart,1511658010
+585344,1858802,267209,pv,1511658010
+412009,3422566,2355072,pv,1511658010
+872433,1984468,2520377,pv,1511658010
+463780,3377720,745134,pv,1511658010
+359932,5035793,3002561,pv,1511658011
+742048,3851196,4051859,pv,1511658011
+778656,559998,4874384,pv,1511658011
+326402,2103118,846990,pv,1511658011
+453328,2158281,2920476,pv,1511658011
+362515,1892018,883960,pv,1511658011
+763534,2402567,3496816,pv,1511658011
+935169,55330,4339722,pv,1511658011
+361299,1505783,982926,pv,1511658011
+628949,4210587,903809,cart,1511658011
+989894,3419383,1474371,fav,1511658012
+200517,4670782,4181361,cart,1511658012
+664416,2941436,1789614,pv,1511658012
+348706,2605837,4163659,pv,1511658012
+959846,5083345,479837,pv,1511658012
+848070,988062,2342116,pv,1511658012
+897594,4298799,4173315,pv,1511658012
+951961,1221785,4756105,pv,1511658012
+549488,2423996,4022701,pv,1511658012
+524655,1925334,2033408,pv,1511658013
+738256,496639,3247211,pv,1511658013
+778173,1032031,784897,cart,1511658013
+990673,1476503,3102419,pv,1511658013
+700498,1993845,4173315,pv,1511658013
+905860,2369381,1158475,pv,1511658013
+893832,1153119,982926,pv,1511658013
+602895,3538101,4756105,pv,1511658013
+542932,1360737,903809,pv,1511658013
+283950,3179868,3171095,pv,1511658013
+789348,3841875,737184,pv,1511658013
+756750,3534407,4129924,fav,1511658013
+196825,4765909,2885642,pv,1511658013
+20676,2875398,2885642,pv,1511658013
+228104,2062543,2355072,pv,1511658013
+773198,4200289,982926,pv,1511658014
+677896,2165635,1029459,pv,1511658014
+158600,3312738,1697889,fav,1511658014
+287521,972793,1194737,pv,1511658014
+549674,625283,3767409,pv,1511658014
+631139,4364531,384755,pv,1511658014
+375063,4069076,3607361,pv,1511658014
+306072,1966569,285583,pv,1511658014
+643526,282851,1575622,pv,1511658014
+764411,4580986,982926,pv,1511658014
+976200,3266415,2355072,pv,1511658014
+918987,298223,1859277,pv,1511658014
+18430,1882195,1080785,pv,1511658014
+629115,3093045,1320293,pv,1511658014
+332520,5026647,2355072,pv,1511658014
+476980,2311313,4801426,pv,1511658014
+157636,4858109,672001,pv,1511658015
+798555,1295731,2800021,pv,1511658015
+494300,4333209,3002561,cart,1511658015
+122406,2059276,4801426,pv,1511658015
+437344,4061918,4558987,pv,1511658015
+220037,2939369,3720767,buy,1511658015
+537712,2563909,3100759,pv,1511658015
+520145,4465657,1320293,pv,1511658015
+38574,1201477,3125533,pv,1511658015
+1014253,2963034,1464116,pv,1511658015
+915638,4800478,2629787,pv,1511658015
+768844,2116634,4757812,pv,1511658015
+74745,2231297,323851,fav,1511658015
+326607,3693156,2066955,pv,1511658015
+651189,4000666,886203,pv,1511658015
+778396,3607696,5012555,pv,1511658016
+493284,127403,359388,pv,1511658016
+254349,4445002,2355072,pv,1511658016
+415381,3520931,2419959,pv,1511658016
+516789,18479,4145813,pv,1511658016
+644777,987403,982926,pv,1511658016
+317457,1546479,3776866,pv,1511658016
+156905,4377552,1168596,pv,1511658016
+740608,2405231,4173315,pv,1511658016
+341260,5034946,4756105,pv,1511658016
+806318,3525976,3299155,pv,1511658016
+674989,4568242,4284875,fav,1511658016
+889043,5015057,1281171,pv,1511658017
+912390,2303733,2735466,pv,1511658017
+393656,3569818,3738615,pv,1511658017
+225763,480292,500212,pv,1511658017
+334506,3722390,411153,pv,1511658017
+273314,4973721,4611962,pv,1511658017
+663193,2108019,2003083,pv,1511658017
+1000034,800784,982926,pv,1511658018
+391116,1962121,4145813,pv,1511658018
+40793,4153899,1320293,pv,1511658018
+280358,2654723,2520377,pv,1511658018
+344240,3712088,2390349,pv,1511658018
+691026,4022625,1126526,pv,1511658018
+688090,1502018,1879194,pv,1511658018
+947196,2259297,1406426,pv,1511658018
+518479,576777,411153,pv,1511658018
+789309,5136896,2981856,pv,1511658018
+248568,3349768,1045172,buy,1511658018
+392176,3742963,2066955,pv,1511658018
+460076,79067,4145813,fav,1511658018
+415381,98283,1104384,pv,1511658018
+104698,2500376,4159072,pv,1511658018
+854096,4858377,4145813,pv,1511658018
+587129,4427761,3776866,cart,1511658019
+58778,630815,2355072,pv,1511658019
+250968,2335179,2355072,pv,1511658019
+380976,3933325,982926,pv,1511658019
+904253,1055751,471212,pv,1511658019
+907231,3686874,2812445,buy,1511658019
+377042,3549064,2355072,pv,1511658019
+356507,3220081,578983,pv,1511658019
+753856,2167638,4048584,fav,1511658019
+929073,1324319,1879194,pv,1511658019
+43863,918139,982926,pv,1511658019
+41109,4133170,3835723,buy,1511658020
+108015,4751201,411153,pv,1511658020
+285636,4130380,2355072,pv,1511658020
+395049,4346219,570735,cart,1511658020
+949647,4427447,4756105,pv,1511658020
+306072,1296281,3720767,pv,1511658020
+69580,3928745,2671397,pv,1511658020
+735110,40025,2974419,cart,1511658020
+365717,1391888,2030976,pv,1511658020
+587754,4762986,3002561,pv,1511658020
+183966,1424015,4672807,pv,1511658020
+874905,876411,2465336,pv,1511658020
+789333,3383623,344833,pv,1511658020
+323387,1699578,982926,pv,1511658021
+530376,205888,5071267,pv,1511658021
+770137,1031049,154040,pv,1511658021
+732889,283410,3607361,pv,1511658021
+170558,3144143,2465336,pv,1511658021
+1004611,201201,3419760,cart,1511658021
+121442,5073040,2355072,pv,1511658021
+511424,1078256,440901,pv,1511658021
+810879,4042749,3607361,pv,1511658021
+889013,1023293,634390,pv,1511658021
+641439,183845,4357323,pv,1511658021
+607188,3590098,2885642,pv,1511658021
+789271,5057422,245312,buy,1511658021
+350999,3956368,2945933,pv,1511658021
+974720,4838031,2072473,cart,1511658021
+460076,2147027,1320293,fav,1511658022
+956539,3937435,4801426,pv,1511658022
+682283,102982,1080785,pv,1511658022
+133319,2817626,4801426,pv,1511658022
+82010,2788503,1216617,pv,1511658022
+417933,4159217,4756105,pv,1511658022
+719252,2161152,4145813,pv,1511658022
+386729,4115033,3343095,pv,1511658022
+460076,3268126,737184,fav,1511658022
+764871,564499,2640118,pv,1511658022
+599118,2335010,4159072,pv,1511658022
+463780,341543,820364,pv,1511658022
+377108,493618,3975787,cart,1511658022
+266094,3871120,2465336,pv,1511658022
+392064,4974340,4558987,pv,1511658022
+858761,5042307,4357323,pv,1511658023
+266992,3559268,4869428,pv,1511658023
+208833,3716643,383530,pv,1511658023
+244463,5059853,4145813,pv,1511658023
+874809,1024295,4466876,pv,1511658023
+87520,1318574,4606718,pv,1511658023
+483594,1088111,2827444,pv,1511658023
+29206,4448187,4756105,pv,1511658023
+186556,4070367,74446,pv,1511658023
+190940,833331,4604594,pv,1511658023
+201971,962676,2355072,pv,1511658023
+180695,1716295,2565857,pv,1511658023
+670681,4511840,846990,pv,1511658024
+843075,3665269,1080785,fav,1511658024
+409463,4443612,1722855,pv,1511658024
+145550,3900777,4993094,pv,1511658024
+608599,1097682,4082778,cart,1511658024
+997866,3002287,4082778,pv,1511658024
+436457,1884224,4915680,pv,1511658024
+517112,4526678,2520377,pv,1511658024
+659269,1605934,982926,pv,1511658025
+195725,5000029,4450414,pv,1511658025
+563203,1849653,4298656,pv,1511658025
+669210,4843772,570735,pv,1511658025
+445656,2581505,3381583,pv,1511658025
+16103,3494764,2640118,pv,1511658025
+175769,776327,2465336,pv,1511658025
+960997,2649870,4756105,pv,1511658025
+995188,3017896,2355072,pv,1511658025
+475656,361127,3673049,pv,1511658025
+940124,176753,4411949,pv,1511658025
+538101,1732433,1787510,pv,1511658025
+416871,4981228,2858794,pv,1511658025
+256758,3889295,3800818,pv,1511658026
+511279,4601104,4868797,pv,1511658026
+880462,2780737,1859277,cart,1511658026
+163323,258231,1029459,pv,1511658026
+425634,4018832,4159072,pv,1511658026
+932384,2428269,982926,pv,1511658026
+565980,2988776,3075521,pv,1511658026
+551219,281111,350027,pv,1511658026
+65944,4309207,3159480,pv,1511658026
+118861,512107,4145813,pv,1511658026
+15696,1015021,3454970,pv,1511658027
+425200,2455388,3745824,pv,1511658027
+55330,465280,2355072,pv,1511658027
+664146,1030747,3194735,fav,1511658027
+587248,1384198,634390,pv,1511658027
+472221,2895550,982926,pv,1511658027
+173290,416572,360294,pv,1511658027
+735750,2456660,1080785,pv,1511658027
+420860,1949459,1288487,pv,1511658027
+248955,229653,2195789,pv,1511658027
+745774,4756886,800581,pv,1511658027
+179889,2041935,2520377,pv,1511658027
+287035,3836534,625430,pv,1511658028
+196980,3445269,3108882,pv,1511658028
+550480,974291,869231,pv,1511658028
+585870,291358,4174942,pv,1511658028
+165889,4364728,2615163,pv,1511658028
+193922,4800535,3607361,pv,1511658028
+660013,1364114,4801426,pv,1511658028
+813479,158169,2355072,pv,1511658028
+261948,4698781,2520377,pv,1511658028
+120608,131099,876318,pv,1511658029
+268407,584693,3158249,pv,1511658029
+411536,2563526,4663501,pv,1511658029
+502196,936753,4145813,pv,1511658029
+652954,1362503,4284875,pv,1511658029
+70758,3011543,2926020,pv,1511658029
+684074,2288156,377676,pv,1511658029
+515661,680174,2355072,pv,1511658029
+322508,2466347,2465336,pv,1511658030
+643826,4545733,873792,pv,1511658030
+447146,1436416,4331400,pv,1511658030
+646259,418486,119741,pv,1511658030
+288397,1926504,149192,pv,1511658030
+337203,1253410,405755,pv,1511658030
+219642,2704585,4148053,pv,1511658030
+992351,1452966,2303546,pv,1511658030
+860477,4319079,149192,pv,1511658030
+680394,2772093,3720767,pv,1511658030
+667912,1047955,1320293,pv,1511658030
+938116,2134897,2735466,pv,1511658030
+276252,3465909,1299190,pv,1511658030
+1004505,4048232,145519,pv,1511658031
+954492,4932087,1320293,pv,1511658031
+271586,151399,578983,pv,1511658031
+629913,1014006,3702593,pv,1511658031
+879398,2473922,4756105,pv,1511658031
+644883,4961929,1573465,pv,1511658032
+62574,169041,1807416,pv,1511658032
+643095,5119949,4357323,pv,1511658032
+14391,2367378,2920476,pv,1511658032
+840495,3013895,2926020,pv,1511658032
+846863,1607283,1132429,pv,1511658032
+463414,4937993,3607361,pv,1511658032
+743967,491563,4244487,pv,1511658032
+571930,2104387,1646753,pv,1511658032
+337203,2407315,4715650,pv,1511658032
+87004,3581433,690811,pv,1511658032
+808466,3209415,2355072,pv,1511658032
+834242,2646442,4357323,pv,1511658032
+5855,1547334,1120543,pv,1511658032
+861315,4512645,3361496,fav,1511658032
+128765,1897815,4756105,pv,1511658033
+677500,4690832,3504022,pv,1511658033
+594637,3443787,3747017,pv,1511658033
+958078,952967,3177877,pv,1511658033
+455903,1725977,3904106,pv,1511658033
+441977,177176,50601,pv,1511658033
+391280,4307461,982926,pv,1511658033
+873094,2044886,2355072,pv,1511658033
+664177,1293088,5053508,pv,1511658034
+302778,3781391,1528133,pv,1511658034
+475563,4841577,1275696,cart,1511658034
+208142,3139742,4756105,pv,1511658034
+138026,3709805,3672452,pv,1511658034
+534394,3020956,2355072,pv,1511658034
+387963,1177970,2885642,pv,1511658034
+334506,2951108,411153,pv,1511658034
+274331,2394590,1464116,pv,1511658034
+356279,829406,1102540,pv,1511658034
+775853,3788823,4217906,pv,1511658034
+156203,4938048,2383838,pv,1511658034
+572844,1438423,2520377,pv,1511658035
+987111,2263608,245312,pv,1511658035
+231038,708261,1964754,fav,1511658035
+81884,2437934,753984,pv,1511658035
+942856,4215633,4756105,pv,1511658035
+208061,2916548,4692440,pv,1511658035
+495163,5100809,1879194,pv,1511658035
+43237,2393443,2355072,pv,1511658036
+750878,4729766,4672807,pv,1511658036
+882734,4273237,1540741,pv,1511658036
+400141,1714043,237446,pv,1511658036
+585344,646781,267209,pv,1511658036
+227633,3498188,4476428,pv,1511658036
+284584,2019640,3607361,cart,1511658036
+988694,3542016,982926,pv,1511658036
+164332,3158500,235534,pv,1511658036
+945934,2793460,3720767,pv,1511658036
+691649,437087,223690,pv,1511658036
+128816,2803125,3637084,pv,1511658036
+715158,1448525,1842993,pv,1511658036
+606841,4290041,3299155,cart,1511658037
+655163,3409614,4357323,pv,1511658037
+337203,1253410,405755,pv,1511658037
+169609,4290998,4731191,pv,1511658037
+515001,4142409,2735466,pv,1511658037
+525614,4397050,3738615,pv,1511658037
+48008,3043421,4239038,pv,1511658037
+1015928,2849670,2735466,pv,1511658037
+408783,703194,2885642,pv,1511658037
+42364,3978662,611849,pv,1511658037
+790128,4946853,2096639,pv,1511658038
+226081,689681,4756105,pv,1511658038
+774686,96790,2188684,pv,1511658038
+317012,1665474,2355072,pv,1511658038
+211077,990967,570735,pv,1511658038
+879481,3523697,2154867,pv,1511658038
+24625,5074681,2465336,pv,1511658038
+638709,3848680,1575622,pv,1511658038
+178232,1413610,149192,pv,1511658038
+19742,4388000,200278,pv,1511658038
+216011,2678565,1548278,pv,1511658038
+709957,1969563,4606718,pv,1511658038
+106526,856738,1080785,pv,1511658038
+325562,363858,2735466,pv,1511658038
+979063,2452027,4022701,pv,1511658038
+451072,1035375,1320293,pv,1511658038
+374336,3615843,4801426,pv,1511658038
+466049,140210,1132429,pv,1511658038
+38369,1780938,4357323,pv,1511658038
+27948,1190005,1320293,pv,1511658038
+212574,321621,4756105,pv,1511658039
+793295,2941339,149192,pv,1511658039
+971953,1503702,4756105,pv,1511658039
+270332,1751547,4718907,pv,1511658039
+261666,5141180,2355072,pv,1511658039
+79249,1336042,2465336,pv,1511658039
+743689,3161594,4181361,pv,1511658039
+187936,1209195,4145813,pv,1511658039
+954462,2653229,2448593,pv,1511658039
+505372,3578525,702060,pv,1511658039
+492876,2648336,35290,pv,1511658039
+572164,4818203,1464116,fav,1511658039
+204115,3552080,2477357,pv,1511658039
+342902,679860,4756105,pv,1511658039
+</code></pre>
+<h6 id="上面就是模拟Web日志都一条条写入了Flume，然后flume就将其导入了Kafka，然后Flink作为消费者就会去消费数据，然后利用各种窗口操作就可以了OK。"><a href="#上面就是模拟Web日志都一条条写入了Flume，然后flume就将其导入了Kafka，然后Flink作为消费者就会去消费数据，然后利用各种窗口操作就可以了OK。" class="headerlink" title="上面就是模拟Web日志都一条条写入了Flume，然后flume就将其导入了Kafka，然后Flink作为消费者就会去消费数据，然后利用各种窗口操作就可以了OK。"></a>上面就是模拟Web日志都一条条写入了Flume，然后flume就将其导入了Kafka，然后Flink作为消费者就会去消费数据，然后利用各种窗口操作就可以了OK。</h6><p><img src="https://img-blog.csdnimg.cn/202003021550541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h6 id="上面就是实验结果，然后我们可以将这些数据提供给前台，或者可以给后台开发提供数据，可以作为热门商品推荐之类的。"><a href="#上面就是实验结果，然后我们可以将这些数据提供给前台，或者可以给后台开发提供数据，可以作为热门商品推荐之类的。" class="headerlink" title="上面就是实验结果，然后我们可以将这些数据提供给前台，或者可以给后台开发提供数据，可以作为热门商品推荐之类的。"></a>上面就是实验结果，然后我们可以将这些数据提供给前台，或者可以给后台开发提供数据，可以作为热门商品推荐之类的。</h6><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io/2020/03/31/%E7%BD%91%E7%AB%99%E6%97%A5%E5%BF%97%E5%AE%9E%E6%97%B6%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9Aflume+kafka+Flink%E8%BF%9E%E9%80%9A/">http://ongbo.github.io/2020/03/31/%E7%BD%91%E7%AB%99%E6%97%A5%E5%BF%97%E5%AE%9E%E6%97%B6%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9Aflume+kafka+Flink%E8%BF%9E%E9%80%9A/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                       版权声明: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Flink/">
+                                    <span class="chip bg-color">Flink</span>
+                                </a>
+                            
+                                <a href="/tags/Kafka/">
+                                    <span class="chip bg-color">Kafka</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%AE%9E%E6%97%B6%E5%A4%84%E7%90%86/">
+                                    <span class="chip bg-color">实时处理</span>
+                                </a>
+                            
+                                <a href="/tags/Flume/">
+                                    <span class="chip bg-color">Flume</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<!-- <script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'VtflbWzMEy8YMRyJlDtxYv1p-gzGzoHsz',
+        appKey: 'LSBh2zUTu4qeRQNL3FWDkelb',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mp',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/04/02/Flink%E6%B0%B4%E6%B6%A8%E8%88%B9%E9%AB%98%EF%BC%9AEventTime%E5%92%8CWaterMark/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Flink水涨船高：EventTime和WaterMark"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="Flink水涨船高：EventTime和WaterMark">
+                        
+                        <span class="card-title">Flink水涨船高：EventTime和WaterMark</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            之前对于ProcessingTime，作为一种当前计算机的处理时间，我们不用在意它数据到来的顺序，一切以我当前计算机的时间为准，不用协调其他的计算机节点。但是呢对于EventTime，拿我们Web网站的日志来说，EventTime即是日志中
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Flink/" class="post-category">
+                                    Flink
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Flink/">
+                        <span class="chip bg-color">Flink</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BB%B6%E8%BF%9F%E6%97%B6%E9%97%B4/">
+                        <span class="chip bg-color">延迟时间</span>
+                    </a>
+                    
+                    <a href="/tags/WaterMark/">
+                        <span class="chip bg-color">WaterMark</span>
+                    </a>
+                    
+                    <a href="/tags/EventTime/">
+                        <span class="chip bg-color">EventTime</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/03/29/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="排序算法-归并排序及其优化"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="排序算法-归并排序及其优化">
+                        
+                        <span class="card-title">排序算法-归并排序及其优化</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            普通版本public class MergeSortTopDown extends BaseSort{
+
+    private static Comparable[] backarray;
+    //自顶向下递归归并排序
+    pub
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-29
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
+                                    数据结构与算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%8E%92%E5%BA%8F/">
+                        <span class="chip bg-color">排序</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/">
+                        <span class="chip bg-color">归并排序</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+   
+        
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Design by&nbsp;<a href="https://blog.csdn.net/weixin_43272605" target="_blank">ongbo</a>
+            &nbsp|&nbsp&nbsp; You can add me QQ：1308161085
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
+                class="white-color">91.1k</span>&nbsp;字
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;点击量:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            <br>
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>&nbsp&nbsp|
+            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "4";
+                    var startDate = "10";
+                    var startHour = "13";
+                    var startMinute = "08";
+                    var startSecond = "11";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffDays + " 天 " + diffHours +
+                        //     " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                        //     " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="" target="_blank">湘ICP备19024234号-1</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ongbo" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="访问我的GitHub">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1308161085@qq.com" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="邮件联系我">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1308161085" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="QQ 联系我: 1308161085">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <!-- <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-tooltip="关注我的CSDN博客: https://blog.csdn.net/weixin_43272605" data-position="top" data-delay="50"> -->
+    <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="关注我的CSDN博客" >
+        <i class="fa fa-bold"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="RSS 订阅">
+        <i class="fas fa-rss"></i>
+    </a>
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<!-- <script src="/js/search.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <!-- <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/matery.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+        <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        <!-- src="/libs/background/canvas-nest.js"></script> -->
+        src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <script type="text/javascript"> 
+        var OriginTitile=document.title,st; 
+        document.addEventListener("visibilitychange",function(){ 
+            document.hidden?(document.title="ヽ(●-`Д´-)ノ风里雨里我在等你~",clearTimeout(st)):(document.title="(๑•̀ㅂ•́) ✧ 欢迎回来~~！",st=setTimeout(function(){document.title=OriginTitile},3e3)) 
+            })
+    </script>
+
+    <div id="he-plugin-simple"></div>
+    <script>
+    WIDGET = {
+    CONFIG: {
+        "modules": "01234",
+        "background": 5,
+        "tmpColor": "FFFFFF",
+        "tmpSize": 16,
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiSize": 16,
+        "weatherIconSize": "20",
+        "alertIconSize": 18,
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "fixed": "true",
+        "vertical": "top",
+        "horizontal": "right",
+        "right": 10,
+        "top": "60",
+        "key": "2ccd90212a1d41dea248662765a0fb9c"
+    }
+    }
+    </script>
+    <script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>

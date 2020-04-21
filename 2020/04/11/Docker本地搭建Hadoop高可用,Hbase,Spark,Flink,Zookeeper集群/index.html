@@ -1,0 +1,2335 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Docker本地搭建Hadoop高可用,Hbase,Spark,Flink,Zookeeper集群, BearBo">
+    <meta name="description" content="前期准备
+安装dockeryum安装#安装 Docker
+$ yum -y install docker
+#启动 Docker 后台服务
+$ service docker start
+脚本安装$ sudo yum update
+$ curl">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Docker本地搭建Hadoop高可用,Hbase,Spark,Flink,Zookeeper集群 | BearBo</title>
+    <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/favicon.ico">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+        <!-- <div id="navContainer" class="nav-wrapper head-container"> -->
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
+                    <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BearBo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/articles" class="waves-effect waves-light">
+
+      
+      <i class="fa fa-bars" style="zoom: 0.6;"></i>
+      
+      <span>文章</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/tags">
+          
+          <i class="fas fa-tags" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>标签</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/categories">
+          
+          <i class="fas fa-bookmark" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>分类</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/data">
+          
+          <i class="fa fa-list-alt" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>统计</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/archives">
+          
+          <i class="fa fa-tasks" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>简约风</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/timeline">
+          
+          <i class="fa fa-ellipsis-v" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>时间轴</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友链</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>Medias</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/Musics">
+          
+          <i class="fas fa-music" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Musics</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Movies</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Books</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/galleries">
+          
+          <i class="fas fa-image" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Galleries</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
+        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BearBo</div>
+        <div class="logo-desc">
+            
+            这是BearBo搏兄，如货币般流通
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fa fa-bars"></i>
+			
+			文章
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/tags " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-tags" style="position: absolute;left:50px" ></i>
+			      
+		          <span>标签</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/categories " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-bookmark" style="position: absolute;left:50px" ></i>
+			      
+		          <span>分类</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/data " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-list-alt" style="position: absolute;left:50px" ></i>
+			      
+		          <span>统计</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-archive"></i>
+			
+			归档
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/archives " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-tasks" style="position: absolute;left:50px" ></i>
+			      
+		          <span>简约风</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/timeline " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-ellipsis-v" style="position: absolute;left:50px" ></i>
+			      
+		          <span>时间轴</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友链
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			Medias
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/Musics " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-music" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Musics</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/movies " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Movies</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/books " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Books</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/galleries " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-image" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Galleries</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+</header>
+
+    
+
+
+
+<!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')"> -->
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/13.jpg')">    
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Docker本地搭建Hadoop高可用,Hbase,Spark,Flink,Zookeeper集群</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 110px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Docker/">
+                                <span class="chip bg-color">Docker</span>
+                            </a>
+                        
+                            <a href="/tags/Hadoop/">
+                                <span class="chip bg-color">Hadoop</span>
+                            </a>
+                        
+                            <a href="/tags/Zookeeper/">
+                                <span class="chip bg-color">Zookeeper</span>
+                            </a>
+                        
+                            <a href="/tags/Flink/">
+                                <span class="chip bg-color">Flink</span>
+                            </a>
+                        
+                            <a href="/tags/Spark/">
+                                <span class="chip bg-color">Spark</span>
+                            </a>
+                        
+                            <a href="/tags/HBase/">
+                                <span class="chip bg-color">HBase</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Hadoop/" class="post-category">
+                                Hadoop
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-04-11
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    14 分
+                </div>
+                
+
+                
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h1><hr>
+<h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><h5 id="yum安装"><a href="#yum安装" class="headerlink" title="yum安装"></a>yum安装</h5><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#安装 Docker</span>
+$ yum -y <span class="token function">install</span> docker
+<span class="token comment" spellcheck="true">#启动 Docker 后台服务</span>
+$ <span class="token function">service</span> docker start</code></pre>
+<h5 id="脚本安装"><a href="#脚本安装" class="headerlink" title="脚本安装"></a>脚本安装</h5><pre class=" language-bash"><code class="language-bash">$ <span class="token function">sudo</span> yum update
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+<span class="token comment" spellcheck="true"># 执行这个脚本会添加 docker.repo 源并安装 Docker。</span>
+$ <span class="token function">sudo</span> sh get-docker.sh</code></pre>
+<hr>
+<h3 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 获取脚本</span>
+$ curl -L https://github.com/docker/compose/releases/download/1.25.0-rc2/docker-compose-<span class="token variable"><span class="token variable">`</span><span class="token function">uname</span> -s<span class="token variable">`</span></span>-<span class="token variable"><span class="token variable">`</span><span class="token function">uname</span> -m<span class="token variable">`</span></span> -o /usr/local/bin/docker-compose
+<span class="token comment" spellcheck="true"># 赋予执行权限</span>
+<span class="token variable">$chmod</span> +x /usr/local/bin/docker-compose</code></pre>
+<hr>
+<h3 id="镜像加速"><a href="#镜像加速" class="headerlink" title="镜像加速"></a>镜像加速</h3><p>打开/创建 /etc/docker/daemon.json 文件，添加以下内容：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">{</span>
+  <span class="token string">"registry-mirrors"</span><span class="token keyword">:</span> <span class="token punctuation">[</span><span class="token string">"http://hub-mirror.c.163.com"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<hr>
+<h3 id="搭建基本容器镜像"><a href="#搭建基本容器镜像" class="headerlink" title="搭建基本容器镜像"></a>搭建基本容器镜像</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#镜像拉取</span>
+docker pull centos7
+<span class="token comment" spellcheck="true">#创建一个容器，作为基础容器，后期制作为镜像</span>
+docker run -it --name hadoopimages centos /bin/bash
+<span class="token comment" spellcheck="true">#将scala和jdk的包拷贝到容器里</span>
+docker <span class="token function">cp</span> scala-2.11.12.tgz hadoopimages:/
+docker <span class="token function">cp</span> jdk-8u201-linux-x64.tar.gz hadoopimages:/
+<span class="token comment" spellcheck="true">#进入容器</span>
+docker <span class="token function">exec</span> -it hadoopimages /bin/bash
+</code></pre>
+<p><strong>然后将jdk和scala上传到docker</strong><br><img src="https://img-blog.csdnimg.cn/20200401222511141.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="配置JAVA环境变量"><a href="#配置JAVA环境变量" class="headerlink" title="配置JAVA环境变量"></a>配置JAVA环境变量</h5><p><img src="https://img-blog.csdnimg.cn/20200401223452920.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200401224740669.png" alt="在这里插入图片描述"><br><strong>小问题：这里可能会有退出容器后环境变量失效的问题，可以将环境变量配置在～/.bashrc文件或者使用DockerFile方式</strong></p>
+<pre class=" language-bash"><code class="language-bash">yum <span class="token function">install</span> net-tools
+yum <span class="token function">install</span> openssh-server
+yum -y <span class="token function">install</span> openssh-clients</code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#提交容器为镜像</span>
+<span class="token comment" spellcheck="true">#docker commit 容器名字或者id 自己要定义的镜像名</span>
+docker commit hadoopimages hadoop
+<span class="token comment" spellcheck="true">#查看一下镜像</span>
+docker images</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200402094845665.png" alt="在这里插入图片描述"></p>
+<h3 id="创建网络bigdata，供各种大数据应用共同一个网络"><a href="#创建网络bigdata，供各种大数据应用共同一个网络" class="headerlink" title="创建网络bigdata，供各种大数据应用共同一个网络"></a>创建网络bigdata，供各种大数据应用共同一个网络</h3><p><strong>这里指定的是172.25.0.0/16子网，注意不要和自己的其他子网相冲突，以免一些不必要的麻烦</strong></p>
+<pre class=" language-bash"><code class="language-bash">docker network create --driver bridge --subnet 172.25.0.0/16 --gateway 172.25.0.1 bigdata</code></pre>
+<hr>
+<h1 id="Zookeeper搭建"><a href="#Zookeeper搭建" class="headerlink" title="Zookeeper搭建"></a>Zookeeper搭建</h1><hr>
+<h5 id="拉取zookeeper镜像"><a href="#拉取zookeeper镜像" class="headerlink" title="拉取zookeeper镜像"></a>拉取zookeeper镜像</h5><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#选取自己合适的镜像即可</span>
+docker pull zookeeper:3.4.13</code></pre>
+<h4 id="使用docker-compose创建三个zookeeper容器"><a href="#使用docker-compose创建三个zookeeper容器" class="headerlink" title="使用docker-compose创建三个zookeeper容器"></a>使用docker-compose创建三个zookeeper容器</h4><pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'2'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">zoo1</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper<span class="token punctuation">:</span>3.4.13 <span class="token comment" spellcheck="true"># 镜像名称</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always <span class="token comment" spellcheck="true"># 当发生错误时自动重启</span>
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo1
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo1
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true"># 端口</span>
+      <span class="token punctuation">-</span> 2181<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true"># 挂载数据卷</span>
+      <span class="token punctuation">-</span> ./zoo1/data<span class="token punctuation">:</span>/data
+      <span class="token punctuation">-</span> ./zoo1/datalog<span class="token punctuation">:</span>/datalog
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">TZ</span><span class="token punctuation">:</span> Asia/Shanghai
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">1 </span><span class="token comment" spellcheck="true"># 节点ID</span>
+      <span class="token key atrule">ZOO_PORT</span><span class="token punctuation">:</span> <span class="token number">2181 </span><span class="token comment" spellcheck="true"># zookeeper端口号</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span><span class="token number">3888 </span><span class="token comment" spellcheck="true"># zookeeper节点列表</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.11
+
+
+  <span class="token key atrule">zoo2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper<span class="token punctuation">:</span>3.4.13
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo2
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo2
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 2182<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./zoo2/data<span class="token punctuation">:</span>/data
+      <span class="token punctuation">-</span> ./zoo2/datalog<span class="token punctuation">:</span>/datalog
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">TZ</span><span class="token punctuation">:</span> Asia/Shanghai
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">2</span>
+      <span class="token key atrule">ZOO_PORT</span><span class="token punctuation">:</span> <span class="token number">2181</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span><span class="token number">3888</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.12
+
+  <span class="token key atrule">zoo3</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper<span class="token punctuation">:</span>3.4.13
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo3
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo3
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> 2183<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./zoo3/data<span class="token punctuation">:</span>/data
+      <span class="token punctuation">-</span> ./zoo3/datalog<span class="token punctuation">:</span>/datalog
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">TZ</span><span class="token punctuation">:</span> Asia/Shanghai
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">3</span>
+      <span class="token key atrule">ZOO_PORT</span><span class="token punctuation">:</span> <span class="token number">2181</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span><span class="token number">3888</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.13
+
+<span class="token key atrule">networks</span><span class="token punctuation">:</span>
+  <span class="token key atrule">default</span><span class="token punctuation">:</span>
+    <span class="token key atrule">external</span><span class="token punctuation">:</span>
+      <span class="token key atrule">name</span><span class="token punctuation">:</span> bigdata</code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#运行命令</span>
+docker-compose up -d
+➜  zookeeper docker-compose up -d
+Recreating 44dad6cddccd_zoo1 <span class="token punctuation">..</span>. <span class="token keyword">done</span>
+Recreating 9b0f2cfe666f_zoo3 <span class="token punctuation">..</span>. <span class="token keyword">done</span>
+Creating zoo2                <span class="token punctuation">..</span>. <span class="token keyword">done</span></code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200401232922755.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200401231813368.png" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="Kafka集群搭建"><a href="#Kafka集群搭建" class="headerlink" title="Kafka集群搭建"></a>Kafka集群搭建</h1><hr>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#拉取Kafka镜像和kafka-manager镜像</span>
+docker pull wurstmeister/kafka:2.12-2.3.1
+docker pull sheepkiller/kafka-manager
+</code></pre>
+<h5 id="编辑docker-compose-yml文件"><a href="#编辑docker-compose-yml文件" class="headerlink" title="编辑docker-compose.yml文件"></a>编辑docker-compose.yml文件</h5><pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'2'</span>
+
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">broker1</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka<span class="token punctuation">:</span>2.12<span class="token punctuation">-</span>2.3.1
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always  <span class="token comment" spellcheck="true"># 出现错误时自动重启</span>
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> broker1<span class="token comment" spellcheck="true"># 节点主机</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> broker1 <span class="token comment" spellcheck="true"># 节点名称</span>
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true  </span><span class="token comment" spellcheck="true"># 可以在容器里面使用一些权限</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9091:9092"</span>   <span class="token comment" spellcheck="true"># 将容器的9092端口映射到宿主机的9091端口上</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">1</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker1<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker1<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> broker1
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> zoo1<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span>2181/kafka1
+      <span class="token key atrule">JMX_PORT</span><span class="token punctuation">:</span> <span class="token number">9988   </span><span class="token comment" spellcheck="true"># 负责kafkaManager的端口JMX通信</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> /var/run/docker.sock<span class="token punctuation">:</span>/var/run/docker.sock
+      <span class="token punctuation">-</span> ./broker1<span class="token punctuation">:</span>/kafka/kafka\<span class="token punctuation">-</span>logs\<span class="token punctuation">-</span>broker1
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> zoo1
+    <span class="token punctuation">-</span> zoo2
+    <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.14
+
+  <span class="token key atrule">broker2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka<span class="token punctuation">:</span>2.12<span class="token punctuation">-</span>2.3.1
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> broker2
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> broker2
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9092:9092"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">2</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker2<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker2<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> broker2
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> zoo1<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span>2181/kafka1
+      <span class="token key atrule">JMX_PORT</span><span class="token punctuation">:</span> <span class="token number">9988</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> /var/run/docker.sock<span class="token punctuation">:</span>/var/run/docker.sock
+      <span class="token punctuation">-</span> ./broker2<span class="token punctuation">:</span>/kafka/kafka\<span class="token punctuation">-</span>logs\<span class="token punctuation">-</span>broker2
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># 连接本compose文件以外的container</span>
+    <span class="token punctuation">-</span> zoo1
+    <span class="token punctuation">-</span> zoo2
+    <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.15
+<span class="token key atrule">broker3</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka<span class="token punctuation">:</span>2.12<span class="token punctuation">-</span>2.3.1
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> broker3
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> broker3
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9093:9092"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">3</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker3<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//broker3<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> broker3
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> zoo1<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span>2181/kafka1
+      <span class="token key atrule">JMX_PORT</span><span class="token punctuation">:</span> <span class="token number">9988</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> /var/run/docker.sock<span class="token punctuation">:</span>/var/run/docker.sock
+      <span class="token punctuation">-</span> ./broker3<span class="token punctuation">:</span>/kafka/kafka\<span class="token punctuation">-</span>logs\<span class="token punctuation">-</span>broker3
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>  <span class="token comment" spellcheck="true"># 连接本compose文件以外的container</span>
+    <span class="token punctuation">-</span> zoo1
+    <span class="token punctuation">-</span> zoo2
+    <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.16
+<span class="token key atrule">kafka-manager</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> sheepkiller/kafka<span class="token punctuation">-</span>manager<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka<span class="token punctuation">-</span>manager
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> kafka<span class="token punctuation">-</span>manager
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9000:9000"</span>
+    <span class="token key atrule">links</span><span class="token punctuation">:</span>            <span class="token comment" spellcheck="true"># 连接本compose文件创建的container</span>
+      <span class="token punctuation">-</span> broker1
+      <span class="token punctuation">-</span> broker2
+      <span class="token punctuation">-</span> broker3
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true"># 连接本compose文件以外的container</span>
+      <span class="token punctuation">-</span> zoo1
+      <span class="token punctuation">-</span> zoo2
+      <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ZK_HOSTS</span><span class="token punctuation">:</span> zoo1<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span>2181/kafka1<span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span>2181/kafka1
+      <span class="token key atrule">KAFKA_BROKERS</span><span class="token punctuation">:</span> broker1<span class="token punctuation">:</span><span class="token number">9092</span><span class="token punctuation">,</span>broker2<span class="token punctuation">:</span><span class="token number">9092</span><span class="token punctuation">,</span>broker3<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">APPLICATION_SECRET</span><span class="token punctuation">:</span> letmein
+      <span class="token key atrule">KM_ARGS</span><span class="token punctuation">:</span> <span class="token punctuation">-</span>Djava.net.preferIPv4Stack=true
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.10
+
+<span class="token key atrule">networks</span><span class="token punctuation">:</span>
+  <span class="token key atrule">default</span><span class="token punctuation">:</span>
+    <span class="token key atrule">external</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true"># 使用已创建的网络</span>
+      <span class="token key atrule">name</span><span class="token punctuation">:</span> bigdata</code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#运行命令</span>
+docker-compose up -d
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200401235440792.png" alt="在这里插入图片描述"><br>**看看本地端口9000也确实起来了<br><img src="https://img-blog.csdnimg.cn/20200401235459198.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200401235732298.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="Hadoop高可用集群搭建"><a href="#Hadoop高可用集群搭建" class="headerlink" title="Hadoop高可用集群搭建"></a>Hadoop高可用集群搭建</h1><hr>
+<h3 id="docker-compose创建集群"><a href="#docker-compose创建集群" class="headerlink" title="docker-compose创建集群"></a>docker-compose创建集群</h3><pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'2'</span>
+
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">master</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> hadoop<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always  <span class="token comment" spellcheck="true"># 出现错误时自动重启</span>
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> master<span class="token comment" spellcheck="true"># 节点主机</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> master <span class="token comment" spellcheck="true"># 节点名称</span>
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true  </span><span class="token comment" spellcheck="true"># 可以在容器里面使用一些权限</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.3
+
+  <span class="token key atrule">master_standby</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> hadoop<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> master_standby
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> master_standby
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.4
+
+  <span class="token key atrule">slave01</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> hadoop<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> slave01
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> slave01
+    <span class="token key atrule">privileged</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.5
+
+  <span class="token key atrule">slave02</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> hadoop<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> slave02
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> slave02
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.6
+  <span class="token key atrule">slave03</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> hadoop<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> slave03
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> slave03
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token key atrule">default</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ipv4_address</span><span class="token punctuation">:</span> 172.25.0.7</code></pre>
+<h3 id="命令行方式创建"><a href="#命令行方式创建" class="headerlink" title="命令行方式创建"></a>命令行方式创建</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#创建一个master节点</span>
+docker run -tid --name master --privileged<span class="token operator">=</span>true hadoop:latest /usr/sbin/init
+<span class="token comment" spellcheck="true">#创建热备master_standby节点</span>
+docker run -tid --name master_standby --privileged<span class="token operator">=</span>true hadoop:latest /usr/sbin/init
+<span class="token comment" spellcheck="true">#创建三个slave</span>
+docker run -tid --name slave01 --privileged<span class="token operator">=</span>true hadoop:latest /usr/sbin/init
+docker run -tid --name slave02 --privileged<span class="token operator">=</span>true hadoop:latest /usr/sbin/init
+docker run -tid --name slave03 --privileged<span class="token operator">=</span>true hadoop:latest /usr/sbin/init</code></pre>
+<h3 id="给每台节点配置免密码登陆"><a href="#给每台节点配置免密码登陆" class="headerlink" title="给每台节点配置免密码登陆"></a>给每台节点配置免密码登陆</h3><pre class=" language-bash"><code class="language-bash">ssh-keygen -t rsa
+<span class="token comment" spellcheck="true">#然后不断会车，最终如下图所示</span>
+<span class="token comment" spellcheck="true">#每台机器都是如此</span></code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200402095727572.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="将各自的公钥传到每台机器authorized-keys里面"><a href="#将各自的公钥传到每台机器authorized-keys里面" class="headerlink" title="将各自的公钥传到每台机器authorized_keys里面"></a>将各自的公钥传到每台机器authorized_keys里面</h5><p><strong>这里有个小问题：先检查安装了passwd没有，如果没有执行以下命令：</strong></p>
+<pre class=" language-bash"><code class="language-bash">yum <span class="token function">install</span> <span class="token function">passwd</span>
+<span class="token comment" spellcheck="true">#然后设置密码</span>
+<span class="token function">passwd</span></code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200402103504856.png" alt="在这里插入图片描述"></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#一台机器的公钥都要弄到自己和其他机器的authorized_keys</span>
+<span class="token comment" spellcheck="true">#以免以后安装其他东西减少不必要的麻烦</span>
+<span class="token function">cat</span> id_rsa.pub <span class="token operator">>></span> .ssh/authorized_keys</code></pre>
+<h5 id="编辑-etc-hosts"><a href="#编辑-etc-hosts" class="headerlink" title="编辑/etc/hosts"></a>编辑/etc/hosts</h5><p><strong>注意：这里的master_standby可能不允许带下划线，有的机器在hdfs格式化的时候会不合法，所以你配置最后不要带特殊字符</strong><br><img src="https://img-blog.csdnimg.cn/20200402104555308.png" alt="在这里插入图片描述"></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#将/etc/hosts复制到每台节点</span>
+<span class="token function">scp</span> /etc/hosts master_standby:/etc/
+<span class="token function">scp</span> /etc/hosts slave01:/etc/
+<span class="token function">scp</span> /etc/hosts slave02:/etc/
+<span class="token function">scp</span> /etc/hosts slave03:/etc/</code></pre>
+<h3 id="配置Hadoop"><a href="#配置Hadoop" class="headerlink" title="配置Hadoop"></a>配置Hadoop</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#解压hadoop包</span>
+<span class="token function">tar</span> -zxvf hadoop-2.8.5.tar.gz
+</code></pre>
+<h5 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h5><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#配置环境变量</span>
+vim ~/.bashrc
+<span class="token comment" spellcheck="true">#添加以下内容</span>
+<span class="token function">export</span> HADOOP_HOME<span class="token operator">=</span>/usr/local/hadoop-2.8.5
+<span class="token function">export</span> CLASSPATH<span class="token operator">=</span>.:<span class="token variable">$HADOOP_HOME</span>/lib:<span class="token variable">$CLASSPATH</span>
+<span class="token function">export</span> PATH<span class="token operator">=</span><span class="token variable">$PATH</span><span class="token keyword">:</span><span class="token variable">$HADOOP_HOME</span>/bin
+<span class="token function">export</span> PATH<span class="token operator">=</span><span class="token variable">$PATH</span><span class="token keyword">:</span><span class="token variable">$HADOOP_HOME</span>/sbin
+<span class="token function">export</span> HADOOP_MAPRED_HOME<span class="token operator">=</span><span class="token variable">$HADOOP_HOME</span>
+<span class="token function">export</span> HADOOP_COMMON_HOME<span class="token operator">=</span><span class="token variable">$HADOOP_HOME</span>
+<span class="token function">export</span> HADOOP_HDFS_HOME<span class="token operator">=</span><span class="token variable">$HADOOP_HOME</span>
+<span class="token function">export</span> YARN_HOME<span class="token operator">=</span><span class="token variable">$HADOOP_HOME</span>
+<span class="token function">export</span> HADOOP_ROOT_LOGGER<span class="token operator">=</span>INFO,console
+<span class="token function">export</span> HADOOP_COMMON_LIB_NATIVE_DIR<span class="token operator">=</span><span class="token variable">$HADOOP_HOME</span>/lib/native
+<span class="token function">export</span> HADOOP_OPTS<span class="token operator">=</span><span class="token string">"-Djava.library.path=<span class="token variable">$HADOOP_HOME</span>/lib"</span>
+<span class="token comment" spellcheck="true">#将这个文件拷到其他机器的下面</span>
+<span class="token function">scp</span> ~/.bashrc 机器名字:~/
+<span class="token comment" spellcheck="true">#hadoop命令验证一下</span></code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20200402105641627.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h5><p><strong>hdfs-site.xml</strong></p>
+<pre class=" language-yaml"><code class="language-yaml">&lt;configuration<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> same with core<span class="token punctuation">-</span>site.xml<span class="token punctuation">:</span>defaultFS<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+        &lt;name<span class="token punctuation">></span>dfs.nameservices&lt;/name<span class="token punctuation">></span>
+        &lt;value<span class="token punctuation">></span>mycluster&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> two NameNode<span class="token punctuation">,</span>nn1 and nn2<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+        &lt;name<span class="token punctuation">></span>dfs.ha.namenodes.mycluster&lt;/name<span class="token punctuation">></span>
+        &lt;value<span class="token punctuation">></span>nn1<span class="token punctuation">,</span>nn2&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> mycluster.nn1 Namenode's RPC Address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.namenode.rpc<span class="token punctuation">-</span>address.mycluster.nn1&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>master<span class="token punctuation">:</span>9000&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> mycluster.nn1 Namenode's Http Address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.namenode.http<span class="token punctuation">-</span>address.mycluster.nn1&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>master<span class="token punctuation">:</span>50070&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> mycluster.nn2 Namenode's RPC Address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.namenode.rpc<span class="token punctuation">-</span>address.mycluster.nn2&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>master_standby<span class="token punctuation">:</span>9000&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> mycluster.nn2 Namenode's Http Address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.namenode.http<span class="token punctuation">-</span>address.mycluster.nn2&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>master_standby<span class="token punctuation">:</span>50070&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> where the NameNode's metadata store in JournalNodes <span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.namenode.shared.edits.dir&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>qjournal<span class="token punctuation">:</span>//slave01<span class="token punctuation">:</span>8485;slave02<span class="token punctuation">:</span>8485;slave03<span class="token punctuation">:</span>8485/mycluster&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> where Journaldata store in its disk<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.journalnode.edits.dir&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>/usr/local/hadoop<span class="token punctuation">-</span>2.8.5/journaldata&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> open automatic<span class="token punctuation">-</span>failover when fail<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.ha.automatic<span class="token punctuation">-</span>failover.enabled&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>true&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> the way when fail  <span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.client.failover.proxy.provider.mycluster&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> set the methods which disdancy<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.ha.fencing.methods&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>sshfence&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> <span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.ha.fencing.ssh.private<span class="token punctuation">-</span>key<span class="token punctuation">-</span>files&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>/root/.ssh/id_rsa&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>dfs.ha.fencing.ssh.connect<span class="token punctuation">-</span>timeout&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>30000&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;/configuration<span class="token punctuation">></span></code></pre>
+<p><strong>core-site.xml</strong></p>
+<pre class=" language-yaml"><code class="language-yaml">&lt;configuration<span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>fs.defaultFS&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>hdfs<span class="token punctuation">:</span>//mycluster&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>hadoop.tmp.dir&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>/usr/local/hadoop<span class="token punctuation">-</span>2.8.5/tmp&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+
+&lt;property<span class="token punctuation">></span>
+&lt;name<span class="token punctuation">></span>ha.zookeeper.quorum&lt;/name<span class="token punctuation">></span>
+&lt;value<span class="token punctuation">></span>zoo1<span class="token punctuation">:</span><span class="token number">2181</span><span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span><span class="token number">2181</span><span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span>2181&lt;/value<span class="token punctuation">></span>
+&lt;/property<span class="token punctuation">></span>
+&lt;/configuration<span class="token punctuation">></span></code></pre>
+<p><strong>yarn-site.xml</strong></p>
+<pre class=" language-yaml"><code class="language-yaml">&lt;configuration<span class="token punctuation">></span>
+
+&lt;<span class="token tag">!--</span> Site specific YARN configuration properties <span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+   &lt;!--  open the yarn HA-->
+    &lt;property>
+        &lt;name>yarn.resourcemanager.ha.enabled&lt;/name>
+        &lt;value>true&lt;/value>
+    &lt;/property></span>
+&lt;<span class="token tag">!--</span> RM's cluster id<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+        &lt;name>yarn.resourcemanager.cluster-id&lt;/name>
+        &lt;value>mycluster&lt;/value>
+    &lt;/property></span>
+
+    &lt;<span class="token tag">!--</span> Rm's name<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+        &lt;name>yarn.resourcemanager.ha.rm-ids&lt;/name>
+        &lt;value>rm1,rm2&lt;/value>
+    &lt;/property></span>
+
+    &lt;<span class="token tag">!--</span> RM1's address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+        &lt;name>yarn.resourcemanager.hostname.rm1&lt;/name>
+        &lt;value>master&lt;/value>
+    &lt;/property>
+    &lt;!-- RM2's address-->
+    &lt;property>
+        &lt;name>yarn.resourcemanager.hostname.rm2&lt;/name>
+        &lt;value>master_standby&lt;/value>
+    &lt;/property></span>
+
+    &lt;<span class="token tag">!--</span> zookeeper cluster address<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+        &lt;name>yarn.resourcemanager.zk-address&lt;/name>
+        &lt;value>zoo1:2181,zoo2:2181,zoo3:2181&lt;/value>
+    &lt;/property></span>
+
+    &lt;<span class="token tag">!--</span> mapreduce<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+        &lt;name>yarn.nodemanager.aux-services&lt;/name>
+        &lt;value>mapreduce_shuffle&lt;/value>
+    &lt;/property></span>
+
+    &lt;property<span class="token punctuation">></span>
+        &lt;name<span class="token punctuation">></span>yarn.log<span class="token punctuation">-</span>aggregation<span class="token punctuation">-</span>enable&lt;/name<span class="token punctuation">></span>
+        &lt;value<span class="token punctuation">></span>true&lt;/value<span class="token punctuation">></span>
+    &lt;/property<span class="token punctuation">></span>
+&lt;<span class="token tag">!--</span> open RM restart<span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span>
+
+    &lt;property<span class="token punctuation">></span>
+            &lt;name<span class="token punctuation">></span>yarn.resourcemanager.webapp.address.rm1&lt;/name<span class="token punctuation">></span>
+            &lt;value<span class="token punctuation">></span>master<span class="token punctuation">:</span>8001&lt;/value<span class="token punctuation">></span>
+    &lt;/property<span class="token punctuation">></span>
+    &lt;property<span class="token punctuation">></span>
+            &lt;name<span class="token punctuation">></span>yarn.resourcemanager.webapp.address.rm2&lt;/name<span class="token punctuation">></span>
+            &lt;value<span class="token punctuation">></span>master_standby<span class="token punctuation">:</span>8001&lt;/value<span class="token punctuation">></span>
+    &lt;/property<span class="token punctuation">></span>
+    &lt;<span class="token tag">!--</span> RM1 <span class="token punctuation">-</span><span class="token punctuation">-</span><span class="token punctuation">></span><span class="token scalar string">
+    &lt;property>
+            &lt;name>yarn.resourcemanager.scheduler.address.rm1&lt;/name>
+            &lt;value>master:8030&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.resource-tracker.address.rm1&lt;/name>
+            &lt;value>master:8031&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.address.rm1&lt;/name>
+            &lt;value>master:8032&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.admin.address.rm1&lt;/name>
+            &lt;value>master:8033&lt;/value>
+    &lt;/property>
+    &lt;!-- RM2 -->
+    &lt;property>
+            &lt;name>yarn.resourcemanager.scheduler.address.rm2&lt;/name>
+            &lt;value>master_standby:8030&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.resource-tracker.address.rm2&lt;/name>
+            &lt;value>master_standby:8031&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.address.rm2&lt;/name>
+            &lt;value>master_standby:8032&lt;/value>
+    &lt;/property>
+    &lt;property>
+            &lt;name>yarn.resourcemanager.admin.address.rm2&lt;/name>
+            &lt;value>master_standby:8033&lt;/value>
+    &lt;/property>
+    &lt;!-- YARN ?~[~F群?~Z~D?~A~Z?~P~H?~W??~W?~\~@?~U??~]?~U~Y?~W??~U? -->
+    &lt;property>
+        &lt;name>yarn.log-aggregation.retain-seconds&lt;/name>
+        &lt;!--1天-->
+        &lt;value>86400&lt;/value>
+    &lt;/property></span>
+
+
+    &lt;property<span class="token punctuation">></span>
+        &lt;name<span class="token punctuation">></span>yarn.resourcemanager.recovery.enabled&lt;/name<span class="token punctuation">></span>
+    &lt;value<span class="token punctuation">></span>true&lt;/value<span class="token punctuation">></span>
+    &lt;/property<span class="token punctuation">></span>
+
+    &lt;property<span class="token punctuation">></span>
+        &lt;name<span class="token punctuation">></span>yarn.resourcemanager.store.class&lt;/name<span class="token punctuation">></span>
+        &lt;value<span class="token punctuation">></span>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore&lt;/value<span class="token punctuation">></span>
+    &lt;/property<span class="token punctuation">></span>
+&lt;/configuration<span class="token punctuation">></span>
+</code></pre>
+<p><strong>mapred-site.xml</strong></p>
+<pre class=" language-yaml"><code class="language-yaml">&lt;configuration<span class="token punctuation">></span>
+        &lt;property<span class="token punctuation">></span>
+                &lt;name<span class="token punctuation">></span>mapreduce.framework.name&lt;/name<span class="token punctuation">></span>
+                &lt;value<span class="token punctuation">></span>yarn&lt;/value<span class="token punctuation">></span>
+        &lt;/property<span class="token punctuation">></span>
+        &lt;property<span class="token punctuation">></span>
+                &lt;name<span class="token punctuation">></span>mapreduce.jobhistory.address&lt;/name<span class="token punctuation">></span>
+                &lt;value<span class="token punctuation">></span>master<span class="token punctuation">:</span>10020&lt;/value<span class="token punctuation">></span>
+        &lt;/property<span class="token punctuation">></span>
+        &lt;property<span class="token punctuation">></span>
+                 &lt;name<span class="token punctuation">></span>mapreduce.jobhistory.webapp.address&lt;/name<span class="token punctuation">></span>
+                 &lt;value<span class="token punctuation">></span>master<span class="token punctuation">:</span>19888&lt;/value<span class="token punctuation">></span>
+        &lt;/property<span class="token punctuation">></span>
+&lt;/configuration<span class="token punctuation">></span></code></pre>
+<p><strong>slaves</strong></p>
+<pre class=" language-bash"><code class="language-bash">
+slave01
+slave02
+slave03
+~      </code></pre>
+<p><strong>将配置文件分发到其他的每个节点</strong></p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#在三台slave上执行</span>
+sbin/hadoop-daemon.sh start journalnode
+<span class="token comment" spellcheck="true">#在master执行hdfs格式化</span>
+bin/hdfs namenode -format
+<span class="token comment" spellcheck="true">#在masterstandby上执行来同步元数据</span>
+<span class="token comment" spellcheck="true">#或者直接拷贝过去scp -r /usr/local/hadoop-2.8.5/tmp masterstandby:/usr/local/hadoop-2.8.5</span>
+hdfs namenode -bootstrapStandby
+<span class="token comment" spellcheck="true">#格式化zk</span>
+bin/hdfs zkfc -formatZK
+<span class="token comment" spellcheck="true">#之后启动hdfs</span>
+sbin/start-hdfs.sh
+<span class="token comment" spellcheck="true">#启动yarn</span>
+sbin/start-yarn.sh</code></pre>
+<p><strong>master进程</strong><br><img src="https://img-blog.csdnimg.cn/20200402133900388.png" alt="在这里插入图片描述"><br><strong>masterstandby进程</strong><br><img src="https://img-blog.csdnimg.cn/2020040213400653.png" alt="在这里插入图片描述"><br><strong>slave进程</strong><br><img src="https://img-blog.csdnimg.cn/20200402134037348.png" alt="在这里插入图片描述"></p>
+<h2 id="Spark集群搭建"><a href="#Spark集群搭建" class="headerlink" title="Spark集群搭建"></a>Spark集群搭建</h2><h2 id="Flink集群搭建"><a href="#Flink集群搭建" class="headerlink" title="Flink集群搭建"></a>Flink集群搭建</h2><h2 id="Flink集群搭建-1"><a href="#Flink集群搭建-1" class="headerlink" title="Flink集群搭建"></a>Flink集群搭建</h2><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io/2020/04/11/Docker%E6%9C%AC%E5%9C%B0%E6%90%AD%E5%BB%BAHadoop%E9%AB%98%E5%8F%AF%E7%94%A8,Hbase,Spark,Flink,Zookeeper%E9%9B%86%E7%BE%A4/">http://ongbo.github.io/2020/04/11/Docker%E6%9C%AC%E5%9C%B0%E6%90%AD%E5%BB%BAHadoop%E9%AB%98%E5%8F%AF%E7%94%A8,Hbase,Spark,Flink,Zookeeper%E9%9B%86%E7%BE%A4/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                       版权声明: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Docker/">
+                                    <span class="chip bg-color">Docker</span>
+                                </a>
+                            
+                                <a href="/tags/Hadoop/">
+                                    <span class="chip bg-color">Hadoop</span>
+                                </a>
+                            
+                                <a href="/tags/Zookeeper/">
+                                    <span class="chip bg-color">Zookeeper</span>
+                                </a>
+                            
+                                <a href="/tags/Flink/">
+                                    <span class="chip bg-color">Flink</span>
+                                </a>
+                            
+                                <a href="/tags/Spark/">
+                                    <span class="chip bg-color">Spark</span>
+                                </a>
+                            
+                                <a href="/tags/HBase/">
+                                    <span class="chip bg-color">HBase</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<!-- <script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'VtflbWzMEy8YMRyJlDtxYv1p-gzGzoHsz',
+        appKey: 'LSBh2zUTu4qeRQNL3FWDkelb',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mp',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/04/12/Flink%E5%AE%B9%E9%94%99%E4%B8%8E%E7%8A%B6%E6%80%81%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E8%AF%81/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Flink容错与状态一致性保证"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Flink容错与状态一致性保证">
+                        
+                        <span class="card-title">Flink容错与状态一致性保证</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            CheckPoint机制
+为了进行容错，我们在进行Flink的处理的时候，需要进行容错管理，难免我们的应用会发生故障的。而Flink提供了这样的一种容错机制CheckPoint，它能够保证Flink内部的一致性，实现内部Exact Once
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-04-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Flink/" class="post-category">
+                                    Flink
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Flink/">
+                        <span class="chip bg-color">Flink</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%AE%B9%E9%94%99/">
+                        <span class="chip bg-color">容错</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%B8%80%E8%87%B4%E6%80%A7%E5%8E%9F%E7%90%86/">
+                        <span class="chip bg-color">一致性原理</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/04/08/JVM%EF%BC%9AGarbage%20Collection%20GC/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="JVM:Garbage Collection GC"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="JVM:Garbage Collection GC">
+                        
+                        <span class="card-title">JVM:Garbage Collection GC</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+不管去哪里，都要记得这个图咯。今天重点看看GC垃圾回收是怎么搞的😄😄😄由于回收的主要区域是堆内存，我们需要重新看看堆内存到底是怎么样子的堆内存🌲
+
+
+Young Generation Survivor Space：新生代，包括了E
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-08
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java%E5%9F%BA%E7%A1%80/" class="post-category">
+                                    Java基础
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+                        <span class="chip bg-color">多线程</span>
+                    </a>
+                    
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+                        <span class="chip bg-color">垃圾回收</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+   
+        
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Design by&nbsp;<a href="https://blog.csdn.net/weixin_43272605" target="_blank">ongbo</a>
+            &nbsp|&nbsp&nbsp; You can add me QQ：1308161085
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
+                class="white-color">91.1k</span>&nbsp;字
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;点击量:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            <br>
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>&nbsp&nbsp|
+            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "4";
+                    var startDate = "10";
+                    var startHour = "13";
+                    var startMinute = "08";
+                    var startSecond = "11";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffDays + " 天 " + diffHours +
+                        //     " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                        //     " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="" target="_blank">湘ICP备19024234号-1</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ongbo" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="访问我的GitHub">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1308161085@qq.com" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="邮件联系我">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1308161085" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="QQ 联系我: 1308161085">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <!-- <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-tooltip="关注我的CSDN博客: https://blog.csdn.net/weixin_43272605" data-position="top" data-delay="50"> -->
+    <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="关注我的CSDN博客" >
+        <i class="fa fa-bold"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="RSS 订阅">
+        <i class="fas fa-rss"></i>
+    </a>
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<!-- <script src="/js/search.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <!-- <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/matery.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+        <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        <!-- src="/libs/background/canvas-nest.js"></script> -->
+        src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <script type="text/javascript"> 
+        var OriginTitile=document.title,st; 
+        document.addEventListener("visibilitychange",function(){ 
+            document.hidden?(document.title="ヽ(●-`Д´-)ノ风里雨里我在等你~",clearTimeout(st)):(document.title="(๑•̀ㅂ•́) ✧ 欢迎回来~~！",st=setTimeout(function(){document.title=OriginTitile},3e3)) 
+            })
+    </script>
+
+    <div id="he-plugin-simple"></div>
+    <script>
+    WIDGET = {
+    CONFIG: {
+        "modules": "01234",
+        "background": 5,
+        "tmpColor": "FFFFFF",
+        "tmpSize": 16,
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiSize": 16,
+        "weatherIconSize": "20",
+        "alertIconSize": 18,
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "fixed": "true",
+        "vertical": "top",
+        "horizontal": "right",
+        "right": 10,
+        "top": "60",
+        "key": "2ccd90212a1d41dea248662765a0fb9c"
+    }
+    }
+    </script>
+    <script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>

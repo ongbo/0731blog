@@ -1,0 +1,1808 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="手撕红黑树RedBlackTree    Right？带动画的哦, BearBo">
+    <meta name="description" content="首先这篇博客花了一点时间才总结出来，肯定还有错误，希望各位读者能够小心翼翼的看。尽量理解吧，因为我自己水平也很菜哈哈。还有就是因为看了很多篇博客其实图片都有问题，所以自己就在RedBlackTree上动手实验，然后搞成了gif图片，供大家参">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>手撕红黑树RedBlackTree    Right？带动画的哦 | BearBo</title>
+    <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/favicon.ico">
+
+    <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/jquery/jquery.min.js"></script>
+    
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+        <!-- <div id="navContainer" class="nav-wrapper head-container"> -->
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
+                    <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BearBo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/articles" class="waves-effect waves-light">
+
+      
+      <i class="fa fa-bars" style="zoom: 0.6;"></i>
+      
+      <span>文章</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/tags">
+          
+          <i class="fas fa-tags" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>标签</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/categories">
+          
+          <i class="fas fa-bookmark" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>分类</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/data">
+          
+          <i class="fa fa-list-alt" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>统计</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/archives">
+          
+          <i class="fa fa-tasks" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>简约风</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/timeline">
+          
+          <i class="fa fa-ellipsis-v" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>时间轴</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友链</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>Medias</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/Musics">
+          
+          <i class="fas fa-music" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Musics</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Movies</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Books</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/galleries">
+          
+          <i class="fas fa-image" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>Galleries</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
+        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BearBo</div>
+        <div class="logo-desc">
+            
+            这是BearBo搏兄，如货币般流通
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fa fa-bars"></i>
+			
+			文章
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/tags " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-tags" style="position: absolute;left:50px" ></i>
+			      
+		          <span>标签</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/categories " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-bookmark" style="position: absolute;left:50px" ></i>
+			      
+		          <span>分类</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/data " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-list-alt" style="position: absolute;left:50px" ></i>
+			      
+		          <span>统计</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-archive"></i>
+			
+			归档
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/archives " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-tasks" style="position: absolute;left:50px" ></i>
+			      
+		          <span>简约风</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/timeline " style="margin-left:75px";>
+				  
+				   <i class="fa fa fa-ellipsis-v" style="position: absolute;left:50px" ></i>
+			      
+		          <span>时间轴</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友链
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			Medias
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>   
+				
+                  <a href="/Musics " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-music" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Musics</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/movies " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Movies</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/books " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Books</span>
+                  </a>
+                </li>
+              
+                <li>   
+				
+                  <a href="/galleries " style="margin-left:75px";>
+				  
+				   <i class="fa fas fa-image" style="position: absolute;left:50px" ></i>
+			      
+		          <span>Galleries</span>
+                  </a>
+                </li>
+               
+            </ul>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+</header>
+
+    
+
+
+
+<!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')"> -->
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/12.jpg')">    
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">手撕红黑树RedBlackTree    Right？带动画的哦</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 110px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                                <span class="chip bg-color">数据结构</span>
+                            </a>
+                        
+                            <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">
+                                <span class="chip bg-color">红黑树</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%95%B0%E7%BB%84/">
+                                <span class="chip bg-color">数组</span>
+                            </a>
+                        
+                            <a href="/tags/%E9%93%BE%E8%A1%A8/">
+                                <span class="chip bg-color">链表</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
+                                数据结构与算法
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-03-13
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-04-21
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    19 分
+                </div>
+                
+
+                
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>首先这篇博客花了一点时间才总结出来，肯定还有错误，希望各位读者能够小心翼翼的看。尽量理解吧，因为我自己水平也很菜哈哈。还有就是因为看了很多篇博客其实图片都有问题，所以自己就在<a href="https://www.cs.usfca.edu/~galles/visualization/RedBlack.html" target="_blank" rel="noopener">RedBlackTree</a>上动手实验，然后搞成了gif图片，供大家参考。然后呢，这篇博客是自己看了WiKi后总结的，基本应该没有啥问题，就是稍微做了些改动吧。</p>
+<h4 id="首先红黑树是一个二叉查找树，就是加了各种限制，让他成为了一种自平衡的二叉树。首先来看看它的五大特性，这也是我们必须要牢记的，后面多次提到，但我还是会多次重复。"><a href="#首先红黑树是一个二叉查找树，就是加了各种限制，让他成为了一种自平衡的二叉树。首先来看看它的五大特性，这也是我们必须要牢记的，后面多次提到，但我还是会多次重复。" class="headerlink" title="首先红黑树是一个二叉查找树，就是加了各种限制，让他成为了一种自平衡的二叉树。首先来看看它的五大特性，这也是我们必须要牢记的，后面多次提到，但我还是会多次重复。"></a>首先红黑树是一个二叉查找树，就是加了各种限制，让他成为了一种自平衡的二叉树。首先来看看它的五大特性，这也是我们必须要牢记的，后面多次提到，但我还是会多次重复。</h4><p><strong><strong><strong><strong><strong><strong><strong>*****</strong></strong></strong></strong></strong></strong></strong>GO🌈黑🌲GO<strong><strong><strong><strong><strong><strong><strong>*****</strong></strong></strong></strong></strong></strong></strong></p>
+<hr>
+<ul>
+<li><h4 id="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）"><a href="#树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）" class="headerlink" title="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）"></a>树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）</h4></li>
+<li><h4 id="树的根节点一定是黑色的"><a href="#树的根节点一定是黑色的" class="headerlink" title="树的根节点一定是黑色的"></a>树的根节点一定是黑色的</h4></li>
+<li><h4 id="所有的叶子节点一定是黑色的，而且是空的节点。"><a href="#所有的叶子节点一定是黑色的，而且是空的节点。" class="headerlink" title="所有的叶子节点一定是黑色的，而且是空的节点。"></a>所有的叶子节点一定是黑色的，而且是空的节点。</h4></li>
+<li><h4 id="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻"><a href="#红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻" class="headerlink" title="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻"></a>红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻</h4></li>
+<li><h4 id="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同"><a href="#任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同" class="headerlink" title="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同"></a>任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同</h4></li>
+</ul>
+<hr>
+<p><strong><strong><strong><strong><strong><strong><strong>*****</strong></strong></strong></strong></strong></strong></strong>GO🌈黑🌲GO<strong><strong><strong><strong><strong><strong><strong>*****</strong></strong></strong></strong></strong></strong></strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20200219213529673.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="看！！！这就是典型的一个红黑树。注意！！！！！！！-有些博客很搞，互相抄来抄去，有些错误的图都被抄过去了，百度搜红黑树，10篇文章4篇文章用那个图，注意了，红黑树本身也是二叉查找树，右边的节点一定比左边的大。所以那些右边节点比左边节点小的，或者不满足上面五大特性的图都是错的。我这里这个图是正确的，不用担心。"><a href="#看！！！这就是典型的一个红黑树。注意！！！！！！！-有些博客很搞，互相抄来抄去，有些错误的图都被抄过去了，百度搜红黑树，10篇文章4篇文章用那个图，注意了，红黑树本身也是二叉查找树，右边的节点一定比左边的大。所以那些右边节点比左边节点小的，或者不满足上面五大特性的图都是错的。我这里这个图是正确的，不用担心。" class="headerlink" title="看！！！这就是典型的一个红黑树。注意！！！！！！！ 有些博客很搞，互相抄来抄去，有些错误的图都被抄过去了，百度搜红黑树，10篇文章4篇文章用那个图，注意了，红黑树本身也是二叉查找树，右边的节点一定比左边的大。所以那些右边节点比左边节点小的，或者不满足上面五大特性的图都是错的。我这里这个图是正确的，不用担心。"></a>看！！！这就是典型的一个红黑树。注意！！！！！！！ 有些博客很搞，互相抄来抄去，有些错误的图都被抄过去了，百度搜红黑树，10篇文章4篇文章用那个图，注意了，红黑树本身也是二叉查找树，右边的节点一定比左边的大。所以那些右边节点比左边节点小的，或者不满足上面五大特性的图都是错的。我这里这个图是正确的，不用担心。</h5><h4 id="了解完了红黑树基本性质，现在就要看看它的基操了对吧，所有的东西都要有基操才可以起飞对吧。你准备好了吗！！！"><a href="#了解完了红黑树基本性质，现在就要看看它的基操了对吧，所有的东西都要有基操才可以起飞对吧。你准备好了吗！！！" class="headerlink" title="了解完了红黑树基本性质，现在就要看看它的基操了对吧，所有的东西都要有基操才可以起飞对吧。你准备好了吗！！！"></a>了解完了红黑树基本性质，现在就要看看它的基操了对吧，所有的东西都要有基操才可以起飞对吧。你准备好了吗！！！</h4><h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://img-blog.csdnimg.cn/20200220221013814.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></h2><h1 id="😄红黑树的基操✌️🐂👃"><a href="#😄红黑树的基操✌️🐂👃" class="headerlink" title="😄红黑树的基操✌️🐂👃"></a>😄红黑树的基操✌️🐂👃</h1><h3 id="变色"><a href="#变色" class="headerlink" title="变色"></a>变色</h3><p>变色很简单，我们刚插入的节点一定是红色的</p>
+<h5 id="注意！！！再强调一遍，为了插入的节点尽量少影响红黑树的性质，一定是刚插入的节点填充为红色。不信你先复习一下五大特性："><a href="#注意！！！再强调一遍，为了插入的节点尽量少影响红黑树的性质，一定是刚插入的节点填充为红色。不信你先复习一下五大特性：" class="headerlink" title="注意！！！再强调一遍，为了插入的节点尽量少影响红黑树的性质，一定是刚插入的节点填充为红色。不信你先复习一下五大特性："></a>注意！！！再强调一遍，为了插入的节点尽量少影响红黑树的性质，一定是刚插入的节点填充为红色。不信你先复习一下五大特性：</h5><hr>
+<ul>
+<li><h4 id="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）-1"><a href="#树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）-1" class="headerlink" title="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）"></a>树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）</h4></li>
+<li><h4 id="树的根节点一定是黑色的-1"><a href="#树的根节点一定是黑色的-1" class="headerlink" title="树的根节点一定是黑色的"></a>树的根节点一定是黑色的</h4></li>
+<li><h4 id="所有的叶子节点一定是黑色的，而且是空的节点。-1"><a href="#所有的叶子节点一定是黑色的，而且是空的节点。-1" class="headerlink" title="所有的叶子节点一定是黑色的，而且是空的节点。"></a>所有的叶子节点一定是黑色的，而且是空的节点。</h4></li>
+<li><h4 id="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻-1"><a href="#红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻-1" class="headerlink" title="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻"></a>红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻</h4></li>
+<li><h4 id="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同-1"><a href="#任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同-1" class="headerlink" title="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同"></a>任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同</h4></li>
+</ul>
+<p>如果填充为黑色：不会违背特性1，2，3对吧，都是废话。虽然没有违背特性4，但是呢那还要红色节点有什么用呢，因为只说红色节点不能相邻，有没有说黑色节点不能相邻，那么这样就退化成了二叉查找树了。特性5就更可能违背了。</p>
+<p>如果填充为红色：特性1，2，3，5都不会违背，只要看特性4，而且很适合红黑树的性质。</p>
+<h5 id="记住了，所谓变色就是红变成黑，黑变成红。好像是废话。那不看了吧。"><a href="#记住了，所谓变色就是红变成黑，黑变成红。好像是废话。那不看了吧。" class="headerlink" title="记住了，所谓变色就是红变成黑，黑变成红。好像是废话。那不看了吧。"></a>记住了，所谓变色就是红变成黑，黑变成红。好像是废话。那不看了吧。</h5><hr>
+<h3 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h3><p><img src="https://img-blog.csdnimg.cn/20200219214817459.gif" alt="在这里插入图片描述"></p>
+<h6 id="看好上图了，哥哥姐姐们😄，这就是左旋，用你的余光看它，他就是在往左边转。-具体的就是：我们以待旋转的节点-E节点-为中心，将它的右节点-S节点-的左子树，变成自己的右子树，并且之前的右子树成为自己的父节点。"><a href="#看好上图了，哥哥姐姐们😄，这就是左旋，用你的余光看它，他就是在往左边转。-具体的就是：我们以待旋转的节点-E节点-为中心，将它的右节点-S节点-的左子树，变成自己的右子树，并且之前的右子树成为自己的父节点。" class="headerlink" title="看好上图了，哥哥姐姐们😄，这就是左旋，用你的余光看它，他就是在往左边转。 具体的就是：我们以待旋转的节点(E节点)为中心，将它的右节点(S节点)的左子树，变成自己的右子树，并且之前的右子树成为自己的父节点。"></a>看好上图了，哥哥姐姐们😄，这就是左旋，用你的余光看它，他就是在往左边转。 具体的就是：我们以待旋转的节点(E节点)为中心，将它的右节点(S节点)的左子树，变成自己的右子树，并且之前的右子树成为自己的父节点。</h6><hr>
+<h3 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h3><p><img src="https://img-blog.csdnimg.cn/2020021921514350.gif" alt="在这里插入图片描述"></p>
+<h6 id="看这个图也很明显了吧，用你的余光去看，它整体就是往右边转的。具体就是：以待旋转的点-S节点-，整体向右旋转，将左节点-E节点-的右子树变成自己的左子树，并且原来的左节点-E节点-变成自己的父节点。"><a href="#看这个图也很明显了吧，用你的余光去看，它整体就是往右边转的。具体就是：以待旋转的点-S节点-，整体向右旋转，将左节点-E节点-的右子树变成自己的左子树，并且原来的左节点-E节点-变成自己的父节点。" class="headerlink" title="看这个图也很明显了吧，用你的余光去看，它整体就是往右边转的。具体就是：以待旋转的点(S节点)，整体向右旋转，将左节点(E节点)的右子树变成自己的左子树，并且原来的左节点(E节点)变成自己的父节点。"></a>看这个图也很明显了吧，用你的余光去看，它整体就是往右边转的。具体就是：以待旋转的点(S节点)，整体向右旋转，将左节点(E节点)的右子树变成自己的左子树，并且原来的左节点(E节点)变成自己的父节点。</h6><hr>
+<h3 id="你可以休息一下，因为等下会用到上面所有的东西，很复杂！！！！！"><a href="#你可以休息一下，因为等下会用到上面所有的东西，很复杂！！！！！" class="headerlink" title="你可以休息一下，因为等下会用到上面所有的东西，很复杂！！！！！"></a>你可以休息一下，因为等下会用到上面所有的东西，很复杂！！！！！</h3><hr>
+<p><img src="https://img-blog.csdnimg.cn/20200220221047332.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="😷😄🐂🐶🐱🎩🐸红黑树的插入和删除😷😄🐂🐶🐱🎩🐸"><a href="#😷😄🐂🐶🐱🎩🐸红黑树的插入和删除😷😄🐂🐶🐱🎩🐸" class="headerlink" title="😷😄🐂🐶🐱🎩🐸红黑树的插入和删除😷😄🐂🐶🐱🎩🐸"></a>😷😄🐂🐶🐱🎩🐸红黑树的插入和删除😷😄🐂🐶🐱🎩🐸</h1><hr>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><h6 id="我们之前说过了，刚插入的节点一定是红色的。那么就会根据上面的五大特性，一旦违背了某一个特性，就要用一些基操来弥补。"><a href="#我们之前说过了，刚插入的节点一定是红色的。那么就会根据上面的五大特性，一旦违背了某一个特性，就要用一些基操来弥补。" class="headerlink" title="我们之前说过了，刚插入的节点一定是红色的。那么就会根据上面的五大特性，一旦违背了某一个特性，就要用一些基操来弥补。"></a>我们之前说过了，刚插入的节点一定是红色的。那么就会根据上面的五大特性，一旦违背了某一个特性，就要用一些基操来弥补。</h6><h6 id="1⃣️：插入的节点是根节点，那么不要任何左旋右旋，就是变色，将其变成黑色即可。"><a href="#1⃣️：插入的节点是根节点，那么不要任何左旋右旋，就是变色，将其变成黑色即可。" class="headerlink" title="1⃣️：插入的节点是根节点，那么不要任何左旋右旋，就是变色，将其变成黑色即可。"></a>1⃣️：插入的节点是根节点，那么不要任何左旋右旋，就是变色，将其变成黑色即可。</h6><h6 id="2⃣️：插入的节点的父节点刚好是黑色，这时候就不需要变色，因为不违背任何一条特性。"><a href="#2⃣️：插入的节点的父节点刚好是黑色，这时候就不需要变色，因为不违背任何一条特性。" class="headerlink" title="2⃣️：插入的节点的父节点刚好是黑色，这时候就不需要变色，因为不违背任何一条特性。"></a>2⃣️：插入的节点的父节点刚好是黑色，这时候就不需要变色，因为不违背任何一条特性。</h6><p><img src="https://img-blog.csdnimg.cn/20200220132653294.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>当我插入12<br><img src="https://img-blog.csdnimg.cn/20200220132715114.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h6 id="3⃣️：但是插入的节点父节点是红色的话，就要又要分几种情况了。但是总的原理就是要把红色节点一直弄到根结点再把根结点弄成黑色，当然，半路可能遇到了连续的黑节点，当把一个节点弄成红色了，就不会有连续的红色节点了。不用担心，等会儿去看看。首先看看不同情况："><a href="#3⃣️：但是插入的节点父节点是红色的话，就要又要分几种情况了。但是总的原理就是要把红色节点一直弄到根结点再把根结点弄成黑色，当然，半路可能遇到了连续的黑节点，当把一个节点弄成红色了，就不会有连续的红色节点了。不用担心，等会儿去看看。首先看看不同情况：" class="headerlink" title="3⃣️：但是插入的节点父节点是红色的话，就要又要分几种情况了。但是总的原理就是要把红色节点一直弄到根结点再把根结点弄成黑色，当然，半路可能遇到了连续的黑节点，当把一个节点弄成红色了，就不会有连续的红色节点了。不用担心，等会儿去看看。首先看看不同情况："></a>3⃣️：但是插入的节点父节点是红色的话，就要又要分几种情况了。但是总的原理就是要把红色节点一直弄到根结点再把根结点弄成黑色，当然，半路可能遇到了连续的黑节点，当把一个节点弄成红色了，就不会有连续的红色节点了。不用担心，等会儿去看看。首先看看不同情况：</h6><h5 id="叔叔节点：即父亲节点的兄弟节点，例如上面14和38就是兄弟节点，12的叔叔节点是38"><a href="#叔叔节点：即父亲节点的兄弟节点，例如上面14和38就是兄弟节点，12的叔叔节点是38" class="headerlink" title="叔叔节点：即父亲节点的兄弟节点，例如上面14和38就是兄弟节点，12的叔叔节点是38."></a>叔叔节点：即父亲节点的兄弟节点，例如上面14和38就是兄弟节点，12的叔叔节点是38.</h5><p><img src="https://img-blog.csdnimg.cn/2020022013510870.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="Case1-父亲节点是红色，而且叔叔节点也是红色"><a href="#Case1-父亲节点是红色，而且叔叔节点也是红色" class="headerlink" title="Case1:父亲节点是红色，而且叔叔节点也是红色"></a>Case1:父亲节点是红色，而且叔叔节点也是红色</h3><h6 id="这个时候就是将父亲节点设置成黑色，叔叔节点设置成黑色，祖父节点设置成红色，然后以祖父节点为当前节点，继续向上操作（感觉就像变成祖父节点刚插入一样）。"><a href="#这个时候就是将父亲节点设置成黑色，叔叔节点设置成黑色，祖父节点设置成红色，然后以祖父节点为当前节点，继续向上操作（感觉就像变成祖父节点刚插入一样）。" class="headerlink" title="这个时候就是将父亲节点设置成黑色，叔叔节点设置成黑色，祖父节点设置成红色，然后以祖父节点为当前节点，继续向上操作（感觉就像变成祖父节点刚插入一样）。"></a>这个时候就是将父亲节点设置成黑色，叔叔节点设置成黑色，祖父节点设置成红色，然后以祖父节点为当前节点，继续向上操作（感觉就像变成祖父节点刚插入一样）。</h6><p>原因：首先，我们要知道，如果父亲节点也是红色节点，那么在我们插入新节点之前，这棵红黑树是已经平衡好的了，所以既然父亲节点是红色，那么祖父节点一定是黑色(因为两个红色节点不能连续)。然后当我们插入红色节点，将父亲节点染成黑色，但是这时候对祖父节点来说，它由父亲这边就会比叔叔节点那边多一个黑色节点，所以我们不得不把叔叔也变成黑色。那么为什么又要将祖父节点变成红色呢。其实道理是一样的，因为父节点和叔叔节点变成了黑色，那么对于祖父节点的父节点来说，祖父节点这边的黑色节点会比祖父节点的兄弟节点的黑色节点要多，所以我们必须把祖父节点变成红色来抵消掉叔叔和父亲节点的颜色变化。。有人又有疑问，明明是两个节点变成黑色，为什么只有祖父节点一个节点变成红色？注意了，是任意一个节点到自己叶子节点路径经过的黑色节点相同，所以对祖父节点的父亲节点来说，它经过祖父节点-&gt;父节点，和祖父节点-&gt;叔叔节点是两种不同路径，他们经历的黑色节点是一样的。<br><img src="https://img-blog.csdnimg.cn/2020022013595148.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>当我插入60</p>
+<p><img src="https://img-blog.csdnimg.cn/20200220143431600.gif" alt="在这里插入图片描述"></p>
+<h3 id="Case2-父亲节点是红色，但是叔叔节点是黑色，而且当前节点是父亲节点的右孩子"><a href="#Case2-父亲节点是红色，但是叔叔节点是黑色，而且当前节点是父亲节点的右孩子" class="headerlink" title="Case2:父亲节点是红色，但是叔叔节点是黑色，而且当前节点是父亲节点的右孩子"></a>Case2:父亲节点是红色，但是叔叔节点是黑色，而且当前节点是父亲节点的右孩子</h3><h6 id="这个时候是先将父亲节点作为当前节点，然后以当前节点为轴进行左旋。注意，左旋之后可能会出现Case3，所以两个case可以串起来看，相应的，case3后也可能出现case2。大家凑合着看。"><a href="#这个时候是先将父亲节点作为当前节点，然后以当前节点为轴进行左旋。注意，左旋之后可能会出现Case3，所以两个case可以串起来看，相应的，case3后也可能出现case2。大家凑合着看。" class="headerlink" title="这个时候是先将父亲节点作为当前节点，然后以当前节点为轴进行左旋。注意，左旋之后可能会出现Case3，所以两个case可以串起来看，相应的，case3后也可能出现case2。大家凑合着看。"></a>这个时候是先将父亲节点作为当前节点，然后以当前节点为轴进行左旋。注意，左旋之后可能会出现Case3，所以两个case可以串起来看，相应的，case3后也可能出现case2。大家凑合着看。</h6><p>原因：一般来说，我们一切的左旋右旋都是为了将插入的红色节点上浮一直到根结点，或者中途有连续的黑节点阻拦。但是呢，我们可以仔细看看这种情况，一旦当前节点是红色，父亲节点黑色，叔叔节点黑色，当进行左旋之后，是不是原来的当前节点变成了现在父节点，原来的父节点变成了现在的当前节点了。（注意这里当前节点已经变了，不要还在想之前的当前节点了），这时候就是Case3的情况了，所以应该又要根据Case3进行操作了。<br>首先看看Case2<br><img src="https://img-blog.csdnimg.cn/20200220150859611.gif" alt="在这里插入图片描述"></p>
+<h6 id="看清楚最后了吗，左旋之后，一共两个红色点连在一起了，对不对。这样子"><a href="#看清楚最后了吗，左旋之后，一共两个红色点连在一起了，对不对。这样子" class="headerlink" title="看清楚最后了吗，左旋之后，一共两个红色点连在一起了，对不对。这样子"></a>看清楚最后了吗，左旋之后，一共两个红色点连在一起了，对不对。这样子</h6><p><img src="https://img-blog.csdnimg.cn/20200220151048668.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h6 id="此时的当前节点是60，对不对？有人有疑问了，为啥当前节点是60，自己看清楚上面的Case2的处理逻辑，我们说好了先将当前节点变成父节点，然后以父亲节点进行左旋，所以左旋之后当前节点应该是60-60是原来的父节点对吧-。"><a href="#此时的当前节点是60，对不对？有人有疑问了，为啥当前节点是60，自己看清楚上面的Case2的处理逻辑，我们说好了先将当前节点变成父节点，然后以父亲节点进行左旋，所以左旋之后当前节点应该是60-60是原来的父节点对吧-。" class="headerlink" title="此时的当前节点是60，对不对？有人有疑问了，为啥当前节点是60，自己看清楚上面的Case2的处理逻辑，我们说好了先将当前节点变成父节点，然后以父亲节点进行左旋，所以左旋之后当前节点应该是60(60是原来的父节点对吧)。"></a>此时的当前节点是60，对不对？有人有疑问了，为啥当前节点是60，自己看清楚上面的Case2的处理逻辑，我们说好了先将当前节点变成父节点，然后以父亲节点进行左旋，所以左旋之后当前节点应该是60(60是原来的父节点对吧)。</h6><h6 id="如果你理清了当前节点是60的话，那么我们在来看现在的情况，就是说60是红色，它的父亲节点64是红色，而叔叔节点是Nil也就是黑色节点，那么很明显就满足了Case3，那么我们就来看看Case3"><a href="#如果你理清了当前节点是60的话，那么我们在来看现在的情况，就是说60是红色，它的父亲节点64是红色，而叔叔节点是Nil也就是黑色节点，那么很明显就满足了Case3，那么我们就来看看Case3" class="headerlink" title="如果你理清了当前节点是60的话，那么我们在来看现在的情况，就是说60是红色，它的父亲节点64是红色，而叔叔节点是Nil也就是黑色节点，那么很明显就满足了Case3，那么我们就来看看Case3"></a>如果你理清了当前节点是60的话，那么我们在来看现在的情况，就是说60是红色，它的父亲节点64是红色，而叔叔节点是Nil也就是黑色节点，那么很明显就满足了Case3，那么我们就来看看Case3</h6><h3 id="Case3-当前节点是红色节点，父亲节点也是红色，但是叔叔节点是黑色节点，这时候要将父亲节点设为黑色，然后将祖父节点设为红色，并且以祖父节点为轴进行右旋"><a href="#Case3-当前节点是红色节点，父亲节点也是红色，但是叔叔节点是黑色节点，这时候要将父亲节点设为黑色，然后将祖父节点设为红色，并且以祖父节点为轴进行右旋" class="headerlink" title="Case3:当前节点是红色节点，父亲节点也是红色，但是叔叔节点是黑色节点，这时候要将父亲节点设为黑色，然后将祖父节点设为红色，并且以祖父节点为轴进行右旋"></a>Case3:当前节点是红色节点，父亲节点也是红色，但是叔叔节点是黑色节点，这时候要将父亲节点设为黑色，然后将祖父节点设为红色，并且以祖父节点为轴进行右旋</h3><p>原因：我们遇到了种种情况，是要把父节点染成黑色的，但是对于祖父节点来说，父节点这边就多了一个黑色节点，又因为叔叔节点本身就是黑色的，无法像Case1一样染黑和父节点平衡。只能通过将祖父节点染成红色，然后以祖父节点为轴右旋，就如下面的gif图像所示。<br><img src="https://img-blog.csdnimg.cn/20200220151822974.gif" alt="在这里插入图片描述"><br>最终是不是这个样子<br><img src="https://img-blog.csdnimg.cn/20200220151842328.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>以上就是红黑树的插入，注意了，一定要弄清楚当前节点是什么，理论上你可以把当前节点看作一个插入节点来看的，因为它一般是红的。不过还是按照上面的Case比较好。只要你掌握当前节点，然后以当前节点判断上面三种情况，自下而上不断操作，最后就会颜色平衡，其树的高度也能够自平衡。<br><img src="https://img-blog.csdnimg.cn/20200220152601320.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="好了，👍暂且可以休息一下♨️，因为我们才把红黑树的插入搞完，还有删除呢。之后还要实现代码。如果你休息完了直接开始把"><a href="#好了，👍暂且可以休息一下♨️，因为我们才把红黑树的插入搞完，还有删除呢。之后还要实现代码。如果你休息完了直接开始把" class="headerlink" title="好了，👍暂且可以休息一下♨️，因为我们才把红黑树的插入搞完，还有删除呢。之后还要实现代码。如果你休息完了直接开始把"></a>好了，👍暂且可以休息一下♨️，因为我们才把红黑树的插入搞完，还有删除呢。之后还要实现代码。如果你休息完了直接开始把</h3><p><img src="https://img-blog.csdnimg.cn/20200220221126770.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h1 id="红黑树的删除"><a href="#红黑树的删除" class="headerlink" title="红黑树的删除"></a>红黑树的删除</h1><h6 id="删除节点和普通的查找二叉树差不多，删除过程是一样的，只是后来多了一个自平衡的过程。不要担心，体谅体谅吧。复习一下删除节点过程："><a href="#删除节点和普通的查找二叉树差不多，删除过程是一样的，只是后来多了一个自平衡的过程。不要担心，体谅体谅吧。复习一下删除节点过程：" class="headerlink" title="删除节点和普通的查找二叉树差不多，删除过程是一样的，只是后来多了一个自平衡的过程。不要担心，体谅体谅吧。复习一下删除节点过程："></a>删除节点和普通的查找二叉树差不多，删除过程是一样的，只是后来多了一个自平衡的过程。不要担心，体谅体谅吧。复习一下删除节点过程：</h6><blockquote>
+<ul>
+<li><strong>1⃣️如果这个要删除的节点是最后一个节点，也就是叶子节点，但是在红黑树里面叶子节点是NIL的空节点，这里就理解成子节点是NIL的节点吧。这种情况下直接删除即可。</strong></li>
+<li><strong>2⃣️如果要删除的节点有一个子节点，那么直接用子节点替代掉自己就行。</strong></li>
+<li><strong>3⃣️这个就比较巧妙了，前面的情况要么是没儿子，要么只有一个儿子，那现在就是有两个儿子的情况了，这时候就是先找到带删除节点的后继节点(后继节点就是比当前大的下一个节点，注意这里并不一定是子节点。像下面这个图54的后继节点就是60。懂了吧)。找到之后，将后继节点的内容替代掉待删除节点的内容，然后我们就要删除后继节点。这个后继节点有个特点，它一定是某个节点的左节点，这是查找树的特质，因为左子节点一定比自己小。正因为这样，我们找54的后继节点就一定是在它的右子树找，然后一直往右子树的左节点找，最终的那个左节点才是后继节点。那么后继节点是肯定没有左节点的，可能有右节点，所以我们复制完后继节点后，就要将后继节点删除，这时候根据儿子的数量就去情况1⃣️或2⃣️</strong><br><img src="https://img-blog.csdnimg.cn/20200220160146495.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ul>
+</blockquote>
+<h3 id="删除后的自平衡"><a href="#删除后的自平衡" class="headerlink" title="删除后的自平衡"></a>删除后的自平衡</h3><h6 id="不管怎么样，总不能违背那五个特性，所以我们需要通过旋转，变色来维持那五个特性。"><a href="#不管怎么样，总不能违背那五个特性，所以我们需要通过旋转，变色来维持那五个特性。" class="headerlink" title="不管怎么样，总不能违背那五个特性，所以我们需要通过旋转，变色来维持那五个特性。"></a>不管怎么样，总不能违背那五个特性，所以我们需要通过旋转，变色来维持那五个特性。</h6><hr>
+<blockquote>
+<ul>
+<li><h6 id="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）-2"><a href="#树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）-2" class="headerlink" title="树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）"></a>树的节点要么是红色的，要么就是黑色的（这是废话，不然怎么叫红黑树）</h6></li>
+<li><h6 id="树的根节点一定是黑色的-2"><a href="#树的根节点一定是黑色的-2" class="headerlink" title="树的根节点一定是黑色的"></a>树的根节点一定是黑色的</h6></li>
+<li><h6 id="所有的叶子节点一定是黑色的，而且是空的节点。-2"><a href="#所有的叶子节点一定是黑色的，而且是空的节点。-2" class="headerlink" title="所有的叶子节点一定是黑色的，而且是空的节点。"></a>所有的叶子节点一定是黑色的，而且是空的节点。</h6></li>
+<li><h6 id="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻-2"><a href="#红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻-2" class="headerlink" title="红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻"></a>红色节点的两个子节点一定是黑色的，换个方式说，任何两个红色节点都不可能相邻</h6></li>
+<li><h6 id="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同-2"><a href="#任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同-2" class="headerlink" title="任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同"></a>任意一个节点到他所有叶子节点所经过的黑色节点个数一定相同</h6></li>
+</ul>
+</blockquote>
+<hr>
+<h6 id="前面说了，要删除一个节点，如果有一个孩子或者没有孩子，可以直接拿孩子节点替代对吧。但是如果有两个孩子的话，找到这个节点的后继节点，颜色还是不变，只是把后继节点的内容复制过来就行，这样就不会影响颜色，然后转而去删除后继节点，这样后继节点也只有一个孩子或者没有孩子，从而可以将整个问题转变成删除一个最多只有一个孩子的节点。这里一定要弄清楚！！！！弄清楚再往后看。"><a href="#前面说了，要删除一个节点，如果有一个孩子或者没有孩子，可以直接拿孩子节点替代对吧。但是如果有两个孩子的话，找到这个节点的后继节点，颜色还是不变，只是把后继节点的内容复制过来就行，这样就不会影响颜色，然后转而去删除后继节点，这样后继节点也只有一个孩子或者没有孩子，从而可以将整个问题转变成删除一个最多只有一个孩子的节点。这里一定要弄清楚！！！！弄清楚再往后看。" class="headerlink" title="前面说了，要删除一个节点，如果有一个孩子或者没有孩子，可以直接拿孩子节点替代对吧。但是如果有两个孩子的话，找到这个节点的后继节点，颜色还是不变，只是把后继节点的内容复制过来就行，这样就不会影响颜色，然后转而去删除后继节点，这样后继节点也只有一个孩子或者没有孩子，从而可以将整个问题转变成删除一个最多只有一个孩子的节点。这里一定要弄清楚！！！！弄清楚再往后看。"></a>前面说了，要删除一个节点，如果有一个孩子或者没有孩子，可以直接拿孩子节点替代对吧。但是如果有两个孩子的话，找到这个节点的后继节点，颜色还是不变，只是把后继节点的内容复制过来就行，这样就不会影响颜色，然后转而去删除后继节点，这样后继节点也只有一个孩子或者没有孩子，从而可以将整个问题转变成删除一个最多只有一个孩子的节点。这里一定要弄清楚！！！！弄清楚再往后看。</h6><p><img src="https://img-blog.csdnimg.cn/20200220171501870.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="那么就开始进入真正的删除过程。这个真正的删除过程的删除的节点是最多只有一个孩子的节点！！还是再强调，整个问题已经转成了删除最多只有一个孩子的节点。OK。如果删除的节点是红色，我们直接拿孩子节点补上就行，但是如果删除的是黑色，那就麻烦了。"><a href="#那么就开始进入真正的删除过程。这个真正的删除过程的删除的节点是最多只有一个孩子的节点！！还是再强调，整个问题已经转成了删除最多只有一个孩子的节点。OK。如果删除的节点是红色，我们直接拿孩子节点补上就行，但是如果删除的是黑色，那就麻烦了。" class="headerlink" title="那么就开始进入真正的删除过程。这个真正的删除过程的删除的节点是最多只有一个孩子的节点！！还是再强调，整个问题已经转成了删除最多只有一个孩子的节点。OK。如果删除的节点是红色，我们直接拿孩子节点补上就行，但是如果删除的是黑色，那就麻烦了。"></a>那么就开始进入真正的删除过程。这个真正的删除过程的删除的节点是最多只有一个孩子的节点！！还是再强调，整个问题已经转成了删除最多只有一个孩子的节点。OK。如果删除的节点是红色，我们直接拿孩子节点补上就行，但是如果删除的是黑色，那就麻烦了。</h5><h4 id="但是不管怎么样，我们直接将删除节点用它的孩子替换掉，并将替换之后的节点作为N，删除节点的父节点也就是替换节点N的父节点作为P，而删除节点的兄弟节点也就是替换节点N的兄弟节点作为B，且兄弟节点的左节点为BL，右节点为BR。！！！！！！！而且注意了，下面情况中都没有删除节点的表示了，只有替换节点N！！！！"><a href="#但是不管怎么样，我们直接将删除节点用它的孩子替换掉，并将替换之后的节点作为N，删除节点的父节点也就是替换节点N的父节点作为P，而删除节点的兄弟节点也就是替换节点N的兄弟节点作为B，且兄弟节点的左节点为BL，右节点为BR。！！！！！！！而且注意了，下面情况中都没有删除节点的表示了，只有替换节点N！！！！" class="headerlink" title="但是不管怎么样，我们直接将删除节点用它的孩子替换掉，并将替换之后的节点作为N，删除节点的父节点也就是替换节点N的父节点作为P，而删除节点的兄弟节点也就是替换节点N的兄弟节点作为B，且兄弟节点的左节点为BL，右节点为BR。！！！！！！！而且注意了，下面情况中都没有删除节点的表示了，只有替换节点N！！！！"></a>但是不管怎么样，我们直接将删除节点用它的孩子替换掉，并将替换之后的节点作为N，删除节点的父节点也就是替换节点N的父节点作为P，而删除节点的兄弟节点也就是替换节点N的兄弟节点作为B，且兄弟节点的左节点为BL，右节点为BR。！！！！！！！而且注意了，下面情况中都没有删除节点的表示了，只有替换节点N！！！！</h4><p>那么我们就要分别去区分不同的情况了，各位老板们。</p>
+<h4 id="Case1"><a href="#Case1" class="headerlink" title="Case1"></a>Case1</h4><ul>
+<li><h6 id="如果删除的节点是红色的，那么我们可以直接将孩子节点N补位，因为孩子节点一定是黑色的，并没有影响任何五大特性。"><a href="#如果删除的节点是红色的，那么我们可以直接将孩子节点N补位，因为孩子节点一定是黑色的，并没有影响任何五大特性。" class="headerlink" title="如果删除的节点是红色的，那么我们可以直接将孩子节点N补位，因为孩子节点一定是黑色的，并没有影响任何五大特性。"></a>如果删除的节点是红色的，那么我们可以直接将孩子节点N补位，因为孩子节点一定是黑色的，并没有影响任何五大特性。</h6>这种情况不要说了吧，很明显应该没有问题，红色节点一定只有黑色孩子，这里因为找不到黑色非空孩子节点的情况，就将NIL叶子节点当作黑色节点吧，这也是算法导论里面为了让算法表达更容易从而加入NIL黑色空节点的原因。可以看到整个没有影响到平衡的。<br><img src="https://img-blog.csdnimg.cn/20200220173042506.gif" alt="在这里插入图片描述"><h4 id="Case2"><a href="#Case2" class="headerlink" title="Case2"></a>Case2</h4></li>
+<li><h6 id="如果删除节点是黑色，且它的孩子是红色，那么直接拿红色孩子替换删除节点就行了。并且把孩子节点染成黑色。"><a href="#如果删除节点是黑色，且它的孩子是红色，那么直接拿红色孩子替换删除节点就行了。并且把孩子节点染成黑色。" class="headerlink" title="如果删除节点是黑色，且它的孩子是红色，那么直接拿红色孩子替换删除节点就行了。并且把孩子节点染成黑色。"></a>如果删除节点是黑色，且它的孩子是红色，那么直接拿红色孩子替换删除节点就行了。并且把孩子节点染成黑色。</h6><img src="https://img-blog.csdnimg.cn/20200220180003562.gif" alt="在这里插入图片描述"></li>
+</ul>
+<h4 id="以上两种情况都还好的，下面就是黑色删除节点-黑色N的各种情况了。而且下面的情况更为复杂，因为涉及到左旋右旋，所以下面情况可能是以删除节点作为其父节点的左孩子所做的操作，如果作为有孩子的操作就会相反。"><a href="#以上两种情况都还好的，下面就是黑色删除节点-黑色N的各种情况了。而且下面的情况更为复杂，因为涉及到左旋右旋，所以下面情况可能是以删除节点作为其父节点的左孩子所做的操作，如果作为有孩子的操作就会相反。" class="headerlink" title="以上两种情况都还好的，下面就是黑色删除节点+黑色N的各种情况了。而且下面的情况更为复杂，因为涉及到左旋右旋，所以下面情况可能是以删除节点作为其父节点的左孩子所做的操作，如果作为有孩子的操作就会相反。"></a>以上两种情况都还好的，下面就是黑色删除节点+黑色N的各种情况了。而且下面的情况更为复杂，因为涉及到左旋右旋，所以下面情况可能是以删除节点作为其父节点的左孩子所做的操作，如果作为有孩子的操作就会相反。</h4><h3 id="Case3"><a href="#Case3" class="headerlink" title="Case3"></a>Case3</h3><ul>
+<li><h6 id="替换节点N是左节点：如果删除的节点是黑色，而删除的孩子节点N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲节点P变为红色，然后将兄弟节点B变为黑色，再以父亲节点P为轴进行左旋。"><a href="#替换节点N是左节点：如果删除的节点是黑色，而删除的孩子节点N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲节点P变为红色，然后将兄弟节点B变为黑色，再以父亲节点P为轴进行左旋。" class="headerlink" title="替换节点N是左节点：如果删除的节点是黑色，而删除的孩子节点N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲节点P变为红色，然后将兄弟节点B变为黑色，再以父亲节点P为轴进行左旋。"></a>替换节点N是左节点：如果删除的节点是黑色，而删除的孩子节点N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲节点P变为红色，然后将兄弟节点B变为黑色，再以父亲节点P为轴进行左旋。</h6></li>
+<li><h6 id="替换节点N是右节点：如果删除的节点是黑色，而删除节点孩子N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲接待你变成红色，然后兄弟节点B变成黑色，再以父亲节点P为轴进行右旋。"><a href="#替换节点N是右节点：如果删除的节点是黑色，而删除节点孩子N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲接待你变成红色，然后兄弟节点B变成黑色，再以父亲节点P为轴进行右旋。" class="headerlink" title="替换节点N是右节点：如果删除的节点是黑色，而删除节点孩子N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲接待你变成红色，然后兄弟节点B变成黑色，再以父亲节点P为轴进行右旋。"></a>替换节点N是右节点：如果删除的节点是黑色，而删除节点孩子N也是黑色。父节点P也是黑色，但是兄弟节点B是红色，兄弟节点的孩子BR和BL是黑色节点。那么这种情况就是当孩子节点N替代掉删除节点后，先将父亲接待你变成红色，然后兄弟节点B变成黑色，再以父亲节点P为轴进行右旋。</h6><img src="https://img-blog.csdnimg.cn/2020022019393585.gif" alt="在这里插入图片描述"><br>这里对于节点14，它的父节点23是黑色的，它的兄弟节点是红色的，这时候操作就是将14删除后，它的子节点或者空节点成为23的子节点，然后父亲节点变成红色，兄弟节点47变成黑色，最后以父亲节点23为中心进行左旋。<h6 id="注意一下，与14相同的还有最右边的99，只是14是作为23的做孩子，99作为90的右孩子，所以对99来说，旋转操作是右旋！！注意了，上图是作为左孩子才是左旋，如果是右孩子就是右旋。"><a href="#注意一下，与14相同的还有最右边的99，只是14是作为23的做孩子，99作为90的右孩子，所以对99来说，旋转操作是右旋！！注意了，上图是作为左孩子才是左旋，如果是右孩子就是右旋。" class="headerlink" title="注意一下，与14相同的还有最右边的99，只是14是作为23的做孩子，99作为90的右孩子，所以对99来说，旋转操作是右旋！！注意了，上图是作为左孩子才是左旋，如果是右孩子就是右旋。"></a>注意一下，与14相同的还有最右边的99，只是14是作为23的做孩子，99作为90的右孩子，所以对99来说，旋转操作是右旋！！注意了，上图是作为左孩子才是左旋，如果是右孩子就是右旋。</h6><h6 id="然后看看最后状态图，现在的N是23的左节点NULL-LEAF空节点，那么可以看见23的左右节点明显不平衡对吧，黑色节点多了。所以这时候就要看Case4了。"><a href="#然后看看最后状态图，现在的N是23的左节点NULL-LEAF空节点，那么可以看见23的左右节点明显不平衡对吧，黑色节点多了。所以这时候就要看Case4了。" class="headerlink" title="然后看看最后状态图，现在的N是23的左节点NULL LEAF空节点，那么可以看见23的左右节点明显不平衡对吧，黑色节点多了。所以这时候就要看Case4了。"></a>然后看看最后状态图，现在的N是23的左节点NULL LEAF空节点，那么可以看见23的左右节点明显不平衡对吧，黑色节点多了。所以这时候就要看Case4了。</h6></li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200220201152122.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="Case4"><a href="#Case4" class="headerlink" title="Case4"></a>Case4</h4><ul>
+<li><h6 id="如果当前节点作为左孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的右孩子BR是红色，兄弟节点的左孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为黑色，将N兄弟节点的右子节点设为黑色，之后以N的父节点P为轴进行左旋。"><a href="#如果当前节点作为左孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的右孩子BR是红色，兄弟节点的左孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为黑色，将N兄弟节点的右子节点设为黑色，之后以N的父节点P为轴进行左旋。" class="headerlink" title="如果当前节点作为左孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的右孩子BR是红色，兄弟节点的左孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为黑色，将N兄弟节点的右子节点设为黑色，之后以N的父节点P为轴进行左旋。"></a>如果当前节点作为左孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的右孩子BR是红色，兄弟节点的左孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为黑色，将N兄弟节点的右子节点设为黑色，之后以N的父节点P为轴进行左旋。</h6></li>
+<li><h6 id="如果当前节点作为右孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的左孩子BL是红色，兄弟节点的右孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为给色，将N兄弟节点的左节点BL设为黑色，之后以N的父节点P为轴进行右旋。"><a href="#如果当前节点作为右孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的左孩子BL是红色，兄弟节点的右孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为给色，将N兄弟节点的左节点BL设为黑色，之后以N的父节点P为轴进行右旋。" class="headerlink" title="如果当前节点作为右孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的左孩子BL是红色，兄弟节点的右孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为给色，将N兄弟节点的左节点BL设为黑色，之后以N的父节点P为轴进行右旋。"></a>如果当前节点作为右孩子，如果当前节点N是黑色，父节点颜色无所谓，兄弟节点B是黑色，兄弟节点的左孩子BL是红色，兄弟节点的右孩子BR无所谓，那么这时候就要将当前节点N的父亲节点P的颜色给兄弟节点B，然后将父节点设为给色，将N兄弟节点的左节点BL设为黑色，之后以N的父节点P为轴进行右旋。</h6><img src="https://img-blog.csdnimg.cn/20200220201720706.gif" alt="在这里插入图片描述"><br>看看这个，可以看到N(NULL LEAF)的父节点P(23)的颜色红色给了N的兄弟节点B(45)，然后父节点P(23)变成了红色，之后兄弟节点B的右孩子BR(45)变成黑色，最后将以父节点P(23)为轴进行了左旋。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200220202034708.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="Case5"><a href="#Case5" class="headerlink" title="Case5"></a>Case5</h4><ul>
+<li><h6 id="如果N节点作为左孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。"><a href="#如果N节点作为左孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。" class="headerlink" title="如果N节点作为左孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。"></a>如果N节点作为左孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。</h6></li>
+<li><h6 id="如果N节点作为右孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。"><a href="#如果N节点作为右孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。" class="headerlink" title="如果N节点作为右孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。"></a>如果N节点作为右孩子，如果N节点也是黑色，那么如果N的兄弟节点B是黑色，而且兄弟节点的两个孩子也是黑色的，而且父亲节点是红色的，那么直接将兄弟节点B和父亲节点颜色互换就行。</h6><img src="https://img-blog.csdnimg.cn/20200220205229954.gif" alt="在这里插入图片描述"><br>为什么互换就可以了，我们想一想，我们删除了21，是不是23-&gt;21-&gt;NULL 这条路就少了一个黑色节点，但是23-&gt;34-&gt;NULL却没有问题，这时候将兄弟节点和父亲节点颜色互换就OK了。前提是兄弟节点的两个子节点也是黑色的。</li>
+</ul>
+<h4 id="Case6：官方的可能没有这种情况，但是我还是列举出来，因为和Case5其实差不多去。"><a href="#Case6：官方的可能没有这种情况，但是我还是列举出来，因为和Case5其实差不多去。" class="headerlink" title="Case6：官方的可能没有这种情况，但是我还是列举出来，因为和Case5其实差不多去。"></a>Case6：官方的可能没有这种情况，但是我还是列举出来，因为和Case5其实差不多去。</h4><ul>
+<li><h6 id="这个就是N节点的兄弟节点是黑色，两个子节点也是黑色的，但是父亲节点是黑色的。这种情况下只能将兄弟节点变为红色，这样两边黑色节点个数就相同了。N节点作为左孩子右孩子无所谓"><a href="#这个就是N节点的兄弟节点是黑色，两个子节点也是黑色的，但是父亲节点是黑色的。这种情况下只能将兄弟节点变为红色，这样两边黑色节点个数就相同了。N节点作为左孩子右孩子无所谓" class="headerlink" title="这个就是N节点的兄弟节点是黑色，两个子节点也是黑色的，但是父亲节点是黑色的。这种情况下只能将兄弟节点变为红色，这样两边黑色节点个数就相同了。N节点作为左孩子右孩子无所谓"></a>这个就是N节点的兄弟节点是黑色，两个子节点也是黑色的，但是父亲节点是黑色的。这种情况下只能将兄弟节点变为红色，这样两边黑色节点个数就相同了。N节点作为左孩子右孩子无所谓</h6><img src="https://img-blog.csdnimg.cn/20200220210257127.gif" alt="在这里插入图片描述"><br>但是呢，虽说这样但是42-&gt;47还有42-&gt;23的黑色点明显就不同了，明显就少了一个，所以现在要对47进行平衡，也就是令47为N了，接下来就看Case7</li>
+</ul>
+<h4 id="Case7"><a href="#Case7" class="headerlink" title="Case7"></a>Case7</h4><h5 id="如果N是黑色左节点：那么不管父亲节点是什么颜色，如果兄弟节点B是黑色的，且兄弟节点B的左节点BL是红色，右节点BR是黑色，那么就以B为轴进行右旋操作，然后互换B和BL的颜色。"><a href="#如果N是黑色左节点：那么不管父亲节点是什么颜色，如果兄弟节点B是黑色的，且兄弟节点B的左节点BL是红色，右节点BR是黑色，那么就以B为轴进行右旋操作，然后互换B和BL的颜色。" class="headerlink" title="如果N是黑色左节点：那么不管父亲节点是什么颜色，如果兄弟节点B是黑色的，且兄弟节点B的左节点BL是红色，右节点BR是黑色，那么就以B为轴进行右旋操作，然后互换B和BL的颜色。"></a>如果N是黑色左节点：那么不管父亲节点是什么颜色，如果兄弟节点B是黑色的，且兄弟节点B的左节点BL是红色，右节点BR是黑色，那么就以B为轴进行右旋操作，然后互换B和BL的颜色。</h5><h5 id="如果N是黑色右节点：那么不管父亲节点什么颜色，如果兄弟节点B是黑色的，而且兄弟节点的右节点BR是红色，左节点BL是黑色，那么就以B为轴进行左旋操作，然后互换B和BR的颜色"><a href="#如果N是黑色右节点：那么不管父亲节点什么颜色，如果兄弟节点B是黑色的，而且兄弟节点的右节点BR是红色，左节点BL是黑色，那么就以B为轴进行左旋操作，然后互换B和BR的颜色" class="headerlink" title="如果N是黑色右节点：那么不管父亲节点什么颜色，如果兄弟节点B是黑色的，而且兄弟节点的右节点BR是红色，左节点BL是黑色，那么就以B为轴进行左旋操作，然后互换B和BR的颜色"></a>如果N是黑色右节点：那么不管父亲节点什么颜色，如果兄弟节点B是黑色的，而且兄弟节点的右节点BR是红色，左节点BL是黑色，那么就以B为轴进行左旋操作，然后互换B和BR的颜色</h5><p><img src="https://img-blog.csdnimg.cn/20200220212923188.gif" alt="在这里插入图片描述"><br>看看这个，接着上一个的，因为47那个点的黑色节点明显少了。所以以它为N，它作为父节点的右节点，然后它的兄弟节点是黑色，兄弟节点的右孩子是红色，左孩子是黑色，所以以23为中心进行左旋。至此Case6已经执行完毕。c x<br>这时候我们可以看到47这边还是少了，然后我们看看47的兄弟节点34是黑色的，34的左孩子是红色，不管34的右孩子啥颜色，也不管47的父节点什么颜色，现在满足的是Case4了，这时候应该以父节点42为轴进行右旋，并且将父节点颜色给兄弟节点34，然后父节点设置为黑色，将兄弟节点的左孩子变成黑色。结果如下<br><img src="https://img-blog.csdnimg.cn/20200220214240723.gif" alt="在这里插入图片描述"></p>
+<h5 id="最终的树结构就是这样子了。"><a href="#最终的树结构就是这样子了。" class="headerlink" title="最终的树结构就是这样子了。"></a>最终的树结构就是这样子了。</h5><p><img src="https://img-blog.csdnimg.cn/20200220214259233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="这样，所有的删除情况就列举出来了，当然，我列举的有一部分其实可以归于一类，但是我还是分成了几种，大家可以去看官方的操作。下面总结一下删除"><a href="#这样，所有的删除情况就列举出来了，当然，我列举的有一部分其实可以归于一类，但是我还是分成了几种，大家可以去看官方的操作。下面总结一下删除" class="headerlink" title="这样，所有的删除情况就列举出来了，当然，我列举的有一部分其实可以归于一类，但是我还是分成了几种，大家可以去看官方的操作。下面总结一下删除"></a>这样，所有的删除情况就列举出来了，当然，我列举的有一部分其实可以归于一类，但是我还是分成了几种，大家可以去看官方的操作。下面总结一下删除</h4><p><img src="https://img-blog.csdnimg.cn/20200220220658745.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI3MjYwNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="代码实现红黑树"><a href="#代码实现红黑树" class="headerlink" title="代码实现红黑树"></a>代码实现红黑树</h2><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://ongbo.github.io/2020/03/13/%E6%89%8B%E6%92%95%E7%BA%A2%E9%BB%91%E6%A0%91RedBlackTree%20%20%20%20Right%EF%BC%9F%E5%B8%A6%E5%8A%A8%E7%94%BB%E7%9A%84%E5%93%A6/">http://ongbo.github.io/2020/03/13/%E6%89%8B%E6%92%95%E7%BA%A2%E9%BB%91%E6%A0%91RedBlackTree%20%20%20%20Right%EF%BC%9F%E5%B8%A6%E5%8A%A8%E7%94%BB%E7%9A%84%E5%93%A6/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                       版权声明: &nbsp;
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                                    <span class="chip bg-color">数据结构</span>
+                                </a>
+                            
+                                <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">
+                                    <span class="chip bg-color">红黑树</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%95%B0%E7%BB%84/">
+                                    <span class="chip bg-color">数组</span>
+                                </a>
+                            
+                                <a href="/tags/%E9%93%BE%E8%A1%A8/">
+                                    <span class="chip bg-color">链表</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<!-- <script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'VtflbWzMEy8YMRyJlDtxYv1p-gzGzoHsz',
+        appKey: 'LSBh2zUTu4qeRQNL3FWDkelb',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mp',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/03/18/%E6%92%A9%E4%B8%80%E6%92%A9Redis%EF%BC%9A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="撩一撩Redis：数据类型"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="撩一撩Redis：数据类型">
+                        
+                        <span class="card-title">撩一撩Redis：数据类型</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Redis有5种常见的基础数据结构：string，list，set（集合），hash，zset（有序集合）。在了解这些Redis的数据结构之前，我们必须清楚，Redis是采用key—Value格式存储的。在存进去之前采用序列化的方式，返回来
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-18
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Redis/" class="post-category">
+                                    Redis
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">
+                        <span class="chip bg-color">分布式存储</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BC%93%E5%AD%98/">
+                        <span class="chip bg-color">缓存</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/03/12/%E7%BB%99%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%BA%8F%E5%88%97%EF%BC%8C%E8%BE%93%E5%87%BA%E6%97%A0%E9%87%8D%E5%A4%8D%EF%BC%8C%E4%B8%94%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E7%9A%84%E5%85%A8%E6%8E%92%E5%88%97%E2%80%94%E2%80%94%E5%AD%97%E5%85%B8%E5%BA%8F%E7%AE%97%E6%B3%95/">
+                    <div class="card-image">
+                        
+                        
+                        <!-- <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="给定一个序列，输出无重复，且按字典序的全排列——字典序算法"> -->
+                        <img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="给定一个序列，输出无重复，且按字典序的全排列——字典序算法">
+                        
+                        <span class="card-title">给定一个序列，输出无重复，且按字典序的全排列——字典序算法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            题目描述
+题目描述输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。输入描述:输入一个字符串,长度不超过9(可能有字
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-category">
+                                    数据结构与算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/LeetCode/">
+                        <span class="chip bg-color">LeetCode</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+   
+        
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Design by&nbsp;<a href="https://blog.csdn.net/weixin_43272605" target="_blank">ongbo</a>
+            &nbsp|&nbsp&nbsp; You can add me QQ：1308161085
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
+                class="white-color">91.1k</span>&nbsp;字
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;点击量:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            <br>
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>&nbsp&nbsp|
+            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2020";
+                    var startMonth = "4";
+                    var startDate = "10";
+                    var startHour = "13";
+                    var startMinute = "08";
+                    var startSecond = "11";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffDays + " 天 " + diffHours +
+                        //     " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                            " 天 " ;
+                        // document.getElementById("sitetime").innerHTML = "本站已充电 " + diffYears + " 年 " + diffDays +
+                        //     " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="" target="_blank">湘ICP备19024234号-1</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/ongbo" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="访问我的GitHub">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1308161085@qq.com" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="邮件联系我">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1308161085" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="QQ 联系我: 1308161085">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <!-- <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-tooltip="关注我的CSDN博客: https://blog.csdn.net/weixin_43272605" data-position="top" data-delay="50"> -->
+    <a href="https://blog.csdn.net/weixin_43272605" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="关注我的CSDN博客" >
+        <i class="fa fa-bold"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-toggle="tooltip" data-placement="top" title="RSS 订阅">
+        <i class="fas fa-rss"></i>
+    </a>
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<!-- <script src="/js/search.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <!-- <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/js/matery.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+        <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
+        <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        <!-- src="/libs/background/canvas-nest.js"></script> -->
+        src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+    <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/hongweifuture/hongweifuture.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <script type="text/javascript"> 
+        var OriginTitile=document.title,st; 
+        document.addEventListener("visibilitychange",function(){ 
+            document.hidden?(document.title="ヽ(●-`Д´-)ノ风里雨里我在等你~",clearTimeout(st)):(document.title="(๑•̀ㅂ•́) ✧ 欢迎回来~~！",st=setTimeout(function(){document.title=OriginTitile},3e3)) 
+            })
+    </script>
+
+    <div id="he-plugin-simple"></div>
+    <script>
+    WIDGET = {
+    CONFIG: {
+        "modules": "01234",
+        "background": 5,
+        "tmpColor": "FFFFFF",
+        "tmpSize": 16,
+        "cityColor": "FFFFFF",
+        "citySize": "16",
+        "aqiSize": 16,
+        "weatherIconSize": "20",
+        "alertIconSize": 18,
+        "padding": "10px 10px 10px 10px",
+        "shadow": "0",
+        "language": "auto",
+        "fixed": "true",
+        "vertical": "top",
+        "horizontal": "right",
+        "right": 10,
+        "top": "60",
+        "key": "2ccd90212a1d41dea248662765a0fb9c"
+    }
+    }
+    </script>
+    <script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/js-base64/base64.min.js"></script>
+        <script>
+        $('a').each(function() {
+          const $this = $(this);
+          const href = $this.attr('href');
+          if (href && href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
+            const strs = href.split('/');
+            if (strs.length >= 3) {
+                const host = strs[2];
+                if (host !== 'your_domain' || window.location.host) {
+                    $this.attr('href', '/go.html?u='+Base64.encode(href)+'').attr('rel', 'external nofollow noopener noreferrer');
+                    if (true) {
+                        $this.attr('target', '_blank');
+                    }
+                }
+            }
+          }
+        });
+        </script></body>
+
+</html>

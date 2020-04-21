@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>BearBo</title>
+  
+  <subtitle>混迹零柒叁壹</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://ongbo.github.io/"/>
+  <updated>2020-04-21T14:18:16.534Z</updated>
+  <id>http://ongbo.github.io/</id>
+  
+  <author>
+    <name>ongbo</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hive on Tez</title>
+    <link href="http://ongbo.github.io/2020/04/21/Hive%20on%20Tez/"/>
+    <id>http://ongbo.github.io/2020/04/21/Hive%20on%20Tez/</id>
+    <published>2020-04-21T14:18:16.534Z</published>
+    <updated>2020-04-21T14:18:16.534Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;Downlond&quot;&gt;&lt;a href=&quot;#Downlond&quot; class=&quot;headerlink&quot; title=&quot;Downlond&quot;&gt;&lt;/a&gt;Downlond&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://tez.apache.org&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop压缩配置</title>
+    <link href="http://ongbo.github.io/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/"/>
+    <id>http://ongbo.github.io/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/</id>
+    <published>2020-04-21T14:18:10.674Z</published>
+    <updated>2020-04-21T14:18:10.674Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;下载LZO支持包&quot;&gt;&lt;a href=&quot;#下载LZO支持包&quot; class=&quot;headerlink&quot; title=&quot;下载LZO支持包&quot;&gt;&lt;/a&gt;下载LZO&lt;a
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Kafka压力测试</title>
+    <link href="http://ongbo.github.io/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/"/>
+    <id>http://ongbo.github.io/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</id>
+    <published>2020-04-21T14:17:35.820Z</published>
+    <updated>2020-04-21T14:17:35.827Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;Producer生产情况&quot;&gt;&lt;a href=&quot;#Producer生产情况&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java多线程-线程间的通信</title>
+    <link href="http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/"/>
+    <id>http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/</id>
+    <published>2020-04-21T14:16:41.197Z</published>
+    <updated>2020-04-21T14:16:41.197Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;pre class=&quot; language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;package&lt;/span&gt; Thread&lt;span class=&quot;token
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java多线程：Volatile关键字</title>
+    <link href="http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/"/>
+    <id>http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/</id>
+    <published>2020-04-21T14:16:33.800Z</published>
+    <updated>2020-04-21T14:16:33.807Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;看几个示例&quot;&gt;&lt;a href=&quot;#看几个示例&quot; class=&quot;headerlink&quot; title=&quot;看几个示例&quot;&gt;&lt;/a&gt;看几个示例&lt;/h2&gt;&lt;pre class=&quot; language-java&quot;&gt;&lt;code
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Flume采集日志到HDFS出现大量小文件</title>
+    <link href="http://ongbo.github.io/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/"/>
+    <id>http://ongbo.github.io/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/</id>
+    <published>2020-04-21T14:16:18.285Z</published>
+    <updated>2020-04-21T14:16:18.288Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;一边是配置，一边在执行。&lt;br&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Flink行走江湖Operators：底层API-Process Function</title>
+    <link href="http://ongbo.github.io/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/"/>
+    <id>http://ongbo.github.io/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/</id>
+    <published>2020-04-21T14:15:57.078Z</published>
+    <updated>2020-04-21T14:15:57.085Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;我们知道，Flink把API分成了好几层，每一层所能够看到的都各不相同。&lt;br&gt;最底层的就是Process
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Flume怎么操作</title>
+    <link href="http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/"/>
+    <id>http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/</id>
+    <published>2020-04-21T14:13:42.536Z</published>
+    <updated>2020-04-21T14:13:42.536Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;先来个小简例&quot;&gt;&lt;a href=&quot;#先来个小简例&quot; class=&quot;headerlink&quot; title=&quot;先来个小简例&quot;&gt;&lt;/a&gt;先来个小简例&lt;/h3&gt;&lt;p&gt;我们将本地文件的内容用flume搞到HDFS上面去。&lt;br&gt;直接上配置文件吧&lt;/p&gt;
+&lt;pre
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>java中泛型的使用（一）</title>
+    <link href="http://ongbo.github.io/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://ongbo.github.io/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <published>2020-04-21T14:08:07.776Z</published>
+    <updated>2020-04-21T14:08:07.776Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4 id=&quot;泛型，顾名思义，广泛的使用呗，所以不确定用到的是哪一块了，是具体的哪一个东西，给你一个范围一个东西自己去选&quot;&gt;&lt;a href=&quot;#泛型，顾名思义，广泛的使用呗，所以不确定用到的是哪一块了，是具体的哪一个东西，给你一个范围一个东西自己去选&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>java中class类文件结构</title>
+    <link href="http://ongbo.github.io/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/"/>
+    <id>http://ongbo.github.io/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</id>
+    <published>2020-04-21T14:07:59.743Z</published>
+    <updated>2020-04-21T14:07:59.752Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4 id=&quot;类文件是java程序编译后产生的文件，要了解java虚拟机，了解它的类文件结构是必不可少的。&quot;&gt;&lt;a href=&quot;#类文件是java程序编译后产生的文件，要了解java虚拟机，了解它的类文件结构是必不可少的。&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>String和StringBuffer，StringBuilder</title>
+    <link href="http://ongbo.github.io/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/"/>
+    <id>http://ongbo.github.io/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/</id>
+    <published>2020-04-21T14:07:40.053Z</published>
+    <updated>2020-04-21T14:07:40.053Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;今天看了看String，又对比了StringBuffer和StringBuilder看了看，感觉里面的知识点还挺多的，而且String的使用我还不是很熟练，包括他们之间的区别，又是面试中经常问到的，这里我就来分享分享自己的想法吧。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>spark(三)-spark算子</title>
+    <link href="http://ongbo.github.io/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/"/>
+    <id>http://ongbo.github.io/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/</id>
+    <published>2020-04-21T14:07:31.742Z</published>
+    <updated>2020-04-21T14:07:31.747Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;• RDD（Resilient Distributed Dataset )• 五大特性：&lt;br&gt;– A list of partitions&lt;br&gt;– A function for computing each partition&lt;br&gt;– A list of
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spark(一)-spark安装与配置</title>
+    <link href="http://ongbo.github.io/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
+    <id>http://ongbo.github.io/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/</id>
+    <published>2020-04-21T14:06:34.845Z</published>
+    <updated>2020-04-21T14:06:34.852Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;   &lt;strong&gt;Spark是整个BDAS的核心组件，是一个大数据分布式编程框架，不仅实现了MapReduce的算子map
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>spark在windows端与在linux端的虚拟机分布式集群通信问题</title>
+    <link href="http://ongbo.github.io/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/"/>
+    <id>http://ongbo.github.io/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/</id>
+    <published>2020-04-21T14:06:27.042Z</published>
+    <updated>2020-04-21T14:06:27.047Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;Could not locate executable null\bin\winutils.exe in the Hadoop binaries.问题&lt;br&gt;加入代码：System.setProperty(“hadoop.home.dir”,
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>java集合之家——LinkList(源码)</title>
+    <link href="http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/"/>
+    <id>http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/</id>
+    <published>2020-04-21T14:06:10.712Z</published>
+    <updated>2020-04-21T14:06:10.713Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;前面分析了ArrayList，可知它的底层实现就是一个普通数组而已，用到的数据结构就是顺序表。虽然说对于随机访问效率是还可以的，但是如果要进行插入删除的的话，因为要移动大批的元素，导致性能非常地差，所以我们不得不研究出另一种数据结构，可以高效率的实现插入删除，这个数据结构就
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因</title>
+    <link href="http://ongbo.github.io/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/"/>
+    <id>http://ongbo.github.io/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/</id>
+    <published>2020-04-21T14:05:45.471Z</published>
+    <updated>2020-04-21T14:05:45.471Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因&lt;/p&gt;
+&lt;p&gt;前几天，一直在学习Spark的计算引擎，但是刚开始学习，很多地方都摸不清方向，网上又找不着相关的解决办法。从今天开始就记录自己学习过程中所有不知名
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>链表</title>
+    <link href="http://ongbo.github.io/2020/04/21/%E9%93%BE%E8%A1%A8/"/>
+    <id>http://ongbo.github.io/2020/04/21/%E9%93%BE%E8%A1%A8/</id>
+    <published>2020-04-21T14:05:35.762Z</published>
+    <updated>2020-04-21T14:34:21.238Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;hr&gt;
+&lt;p&gt;title: 链表&lt;br&gt;date: 2019-10-29 17:46:41&lt;br&gt;author: ongbo&lt;br&gt;categories: 数据结构与算法&lt;br&gt;cover:
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MIT 6.824 lab1 mapreduce</title>
+    <link href="http://ongbo.github.io/2020/04/21/MIT%206.824%20lab1%20mapreduce/"/>
+    <id>http://ongbo.github.io/2020/04/21/MIT%206.824%20lab1%20mapreduce/</id>
+    <published>2020-04-21T14:05:28.130Z</published>
+    <updated>2020-04-21T14:05:28.137Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;   经过一段时间的了解这个MIT 6.824，真的深深感觉，见识越多，就越知道自己有多菜。我登入6.824网站，可以看到别人一周的安排是怎样的，一周之内学会go语言，并完成lab 1，其中lab 1
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>CurrentHashMap源码分析</title>
+    <link href="http://ongbo.github.io/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>http://ongbo.github.io/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
+    <published>2020-04-19T04:08:27.000Z</published>
+    <updated>2020-04-21T14:40:42.447Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;基础概念&quot;&gt;&lt;a href=&quot;#基础概念&quot; class=&quot;headerlink&quot; title=&quot;基础概念&quot;&gt;&lt;/a&gt;基础概念&lt;/h1&gt;&lt;pre class=&quot; language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+    
+      <category term="数据结构与算法" scheme="http://ongbo.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="多线程安全" scheme="http://ongbo.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="HashMap" scheme="http://ongbo.github.io/tags/HashMap/"/>
+    
+      <category term="源码分析" scheme="http://ongbo.github.io/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用Java撸一下LFU简易版本</title>
+    <link href="http://ongbo.github.io/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/"/>
+    <id>http://ongbo.github.io/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/</id>
+    <published>2020-04-16T07:55:21.000Z</published>
+    <updated>2020-04-21T14:38:34.211Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;最近在别人文章看到一片关于LFU的题目，个人觉得实现可以不同，他用的c，那我用java写一下，毕竟c已经忘的差不多了。&lt;br&gt;那个题就是让我们来设计一个数据结构，使其能够按照key-value的方式来实现put和get，而且要满足LFU，而且在空间满了之后，又要满足最近最少
+        
+      
+    
+    </summary>
+    
+    
+      <category term="数据结构与算法" scheme="http://ongbo.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="Java" scheme="http://ongbo.github.io/tags/Java/"/>
+    
+      <category term="LFU" scheme="http://ongbo.github.io/tags/LFU/"/>
+    
+  </entry>
+  
+</feed>
