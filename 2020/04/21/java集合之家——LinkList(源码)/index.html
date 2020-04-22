@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>java集合之家——LinkList(源码) | BearBo</title>
     <!-- <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico"> -->
-    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/favicon.ico">
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/favicon.ico">
 
     <!-- <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
     <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
@@ -25,17 +25,17 @@
     <link rel="stylesheet" type="text/css" href="/css/matery.css">
     <link rel="stylesheet" type="text/css" href="/css/my.css"> -->
     
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/awesome/css/all.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/materialize/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/aos/aos.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/animate/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/lightGallery/css/lightgallery.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/css/matery.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/css/my.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/css/my.css">
 
     <script src="/libs/jquery/jquery.min.js"></script>
     <!-- <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script> -->
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/jquery/jquery.min.js"></script>
     
 <meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="BearBo" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
@@ -50,7 +50,7 @@
                 <a href="/" class="waves-effect waves-light">
                     
                     <!-- <img src="/medias/logo.png" class="logo-img" alt="LOGO"> -->
-                    <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/logo.png" class="logo-img" alt="LOGO">
+                    <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/logo.png" class="logo-img" alt="LOGO">
                     
                     <span class="logo-span">BearBo</span>
                 </a>
@@ -245,7 +245,7 @@
     <div class="mobile-head bg-color">
         
         <!-- <img src="/medias/logo.png" class="logo-img circle responsive-img"> -->
-        <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/logo.png" class="logo-img circle responsive-img">
+        <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/logo.png" class="logo-img circle responsive-img">
         
         <div class="logo-name">BearBo</div>
         <div class="logo-desc">
@@ -453,7 +453,7 @@
 
 
 <!-- <div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')"> -->
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/featureimages/7.jpg')">    
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/featureimages/7.jpg')">    
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
@@ -472,7 +472,7 @@
 
     
     <!-- <link rel="stylesheet" href="/libs/tocbot/tocbot.css"> -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/tocbot/tocbot.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/tocbot/tocbot.css">
 <style>
     #articleContent h1::before,
     #articleContent h2::before,
@@ -622,92 +622,24 @@
             <div id="articleContent">
                 <p>前面分析了ArrayList，可知它的底层实现就是一个普通数组而已，用到的数据结构就是顺序表。虽然说对于随机访问效率是还可以的，但是如果要进行插入删除的的话，因为要移动大批的元素，导致性能非常地差，所以我们不得不研究出另一种数据结构，可以高效率的实现插入删除，这个数据结构就是链表。而今天的LinkList就利用了双向循环链表实现了这个数据结构。下面我们就来看看源码。</p>
 <blockquote>
-<p><strong>类声明：</strong><br>public class LinkedList<e><br>    extends AbstractSequentialList<e><br>    implements List<e>, Deque<e>, Cloneable, java.io.Serializable<br>    继承了AbstractSequentialList，实现了List，Deque（这个就是一个双端队列），Cloneable。java.io.Serializable。<br>    这里就只说一下AbstractSequentialList，Deque以后另写。</e></e></e></e></p>
+<p><strong>类声明：</strong><br>public class LinkedList<E><br>    extends AbstractSequentialList<E><br>    implements List<E>, Deque<E>, Cloneable, java.io.Serializable<br>    继承了AbstractSequentialList，实现了List，Deque（这个就是一个双端队列），Cloneable。java.io.Serializable。<br>    这里就只说一下AbstractSequentialList，Deque以后另写。</p>
 </blockquote>
 <blockquote>
-<p><strong>AbstractSequentialList</strong>、<br><strong>类声明：</strong><br>public abstract class AbstractSequentialList<e> extends AbstractList<e> {<br>继承了AbstractList，ArrayList的父类也有类似的继承关系<br><strong>构造方法：</strong><br>    protected AbstractSequentialList() {   }<br>    <strong>获取index元素</strong><br>     public E get(int index) {<br>        try {<br>            return listIterator(index).next();/<strong>/调用lslitlterator</strong><br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    public abstract ListIterator<e> listIterator(int index);<strong>//这个方法由子类实现</strong><br>    <strong>设置元素：</strong><br>    public E set(int index, E element) {<br>        try {<br>            ListIterator<e> e = listIterator(index);<strong>//调用listlterator方法</strong><br>            E oldVal = e.next();<br>            e.set(element);<br>            return oldVal;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    <strong>添加元素：</strong><br>     public void add(int index, E element) {<br>        try {<br>            listIterator(index).add(element);<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    <strong>删除元素：</strong><br>    public E remove(int index) {<br>        try {<br>            ListIterator<e> e = listIterator(index);<br>            E outCast = e.next();<br>            e.remove();<br>            return outCast;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {<br>        try {<br>            boolean modified = false;<br>            ListIterator<e> e1 = listIterator(index);<br>            Iterator&lt;? extends E&gt; e2 = c.iterator();<br>            while (e2.hasNext()) {<br>                e1.add(e2.next());<br>                modified = true;<br>            }<br>            return modified;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>     public Iterator<e> iterator() {<br>        return listIterator();<br>    }<br>    其实上面这些方法在子类LinkList都有类似的实现。</e></e></e></e></e></e></e></p>
+<p><strong>AbstractSequentialList</strong>、<br><strong>类声明：</strong><br>public abstract class AbstractSequentialList<E> extends AbstractList<E> {<br>继承了AbstractList，ArrayList的父类也有类似的继承关系<br><strong>构造方法：</strong><br>    protected AbstractSequentialList() {   }<br>    <strong>获取index元素</strong><br>     public E get(int index) {<br>        try {<br>            return listIterator(index).next();/<strong>/调用lslitlterator</strong><br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    public abstract ListIterator<E> listIterator(int index);<strong>//这个方法由子类实现</strong><br>    <strong>设置元素：</strong><br>    public E set(int index, E element) {<br>        try {<br>            ListIterator<E> e = listIterator(index);<strong>//调用listlterator方法</strong><br>            E oldVal = e.next();<br>            e.set(element);<br>            return oldVal;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    <strong>添加元素：</strong><br>     public void add(int index, E element) {<br>        try {<br>            listIterator(index).add(element);<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    <strong>删除元素：</strong><br>    public E remove(int index) {<br>        try {<br>            ListIterator<E> e = listIterator(index);<br>            E outCast = e.next();<br>            e.remove();<br>            return outCast;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {<br>        try {<br>            boolean modified = false;<br>            ListIterator<E> e1 = listIterator(index);<br>            Iterator&lt;? extends E&gt; e2 = c.iterator();<br>            while (e2.hasNext()) {<br>                e1.add(e2.next());<br>                modified = true;<br>            }<br>            return modified;<br>        } catch (NoSuchElementException exc) {<br>            throw new IndexOutOfBoundsException(“Index: “+index);<br>        }<br>    }<br>     public Iterator<E> iterator() {<br>        return listIterator();<br>    }<br>    其实上面这些方法在子类LinkList都有类似的实现。</p>
 </blockquote>
 <hr>
 <h2 id="LinkList源码"><a href="#LinkList源码" class="headerlink" title="LinkList源码"></a>LinkList源码</h2><hr>
 <blockquote>
-<p><strong>变量：</strong><br>transient int size = 0;//这个linklist的大小<br>    transient Node<e> first;//头结点，永远指向第一个元素<br>    transient Node<e> last;//尾节点，永远指向最后一个元素<br>    <strong>构造方法：</strong><br>public LinkedList() {  }<strong>无参构造方法</strong><br>    public LinkedList(Collection&lt;? extends E&gt; c) {将集合变成一个双向链表linklist<br>        this();<br>        addAll(c);<br>    }<br>    <strong>————————————————————————————————————————<br>    **将元素插入到第一个结点前面</strong><br>    private void linkFirst(E e) {<br>        final Node<e> f = first;<strong>将头结点赋给f，也就是说f指向了第一个结点</strong><br>        final Node<e> newNode = new Node&lt;&gt;(null, e, f)；<strong>建立一个新的newNode，这里的Node是后面结点的包装，这个新结点就是传过来的e</strong><br>        first = newNode;<strong>将first指向这个新节点</strong><br>        if (f == null)<strong>如果f指向的第一个结点为空，也就是这个链表为空的时候就应该让头结点尾节点都只想newNode</strong><br>            last = newNode;<br>        else<br>            f.prev = newNode;<strong>否则第一个结点不是空，这样就将newNode插入到第一个结点的前面</strong><br>        size++;<strong>长度+1*</strong><br>        modCount++;//<strong>修改次数+1</strong><br>    }<br>    —————————————————————————————————————————<br>    void linkLast(E e) ：<strong>和linkfirst差不多，就是插入到尾节点</strong><br>    <strong>添加节点方法：</strong>默认添加到尾部，代用linkLast<br>    public boolean add(E e) {<br>        linkLast(e);<br>        return true;<br>    }<br>    —————————————————————————————————————————<br>    <strong>将e插入到succ前面：</strong><br>    void linkBefore(E e, Node<e> succ) {<br>        final Node<e> pred = succ.prev;//<strong>将succ结点的前驱赋给pred</strong><br>        final Node<e> newNode = new Node&lt;&gt;(pred, e, succ);//<strong>根据e和succ得到一个新节点</strong><br>        succ.prev = newNode;//<strong>succ.prev就是succ的前驱就是这个新节点</strong><br>        if (pred == null)//<strong>如果前驱为空说明succ是第一个结点。相当于要插入到第一个结点，也就是实现linkfirst</strong><br>            first = newNode;<br>        else<br>            pred.next = newNode;//<strong>不是空说明就是中间的点，这样直接让succ的前驱结点的后继等于newNode即可，而pred，newNode，succ的其他关系都在Node里面实现了<br>        size++;<br>        modCount++;<br>    }<br>    —————————————————————————————————————————<br>    **删除第一个元素：</strong><br>     private E unlinkFirst(Node<e> f) {<br>        final E element = f.item;<br>        final Node<e> next = f.next;<br>        f.item = null;<br>        f.next = null; // 依靠GC回收<br>        first = next;//指向第一个结点的下一个，因为第一个结点已经删除了。<br>        if (next == null)//如果这个节点没有后继，说明整个表只有一个节点，那么last也只能为空<br>            last = null;<br>        else<br>            next.prev = null;<br>        size–;<br>        modCount++;<br>        return element;<br>    }<br>    private E unlinkLast(Node<e> l)同理，删除出最后一个元素<br>    —————————————————————————————————————————<br>    <strong><em>删除某一个元素x：</em></strong><br>     E unlink(Node<e> x) {<br>        final E element = x.item;<br>        final Node<e> next = x.next;/<strong>/先取出x的下一个元素</strong><br>        final Node<e> prev = x.prev;<strong>//先取出x的上一个元素</strong><br>        if (prev == null) {<strong>//前驱为空说明是第一个元素，另first指向第一个元素后继就可以了</strong><br>            first = next;<br>        } else {/<strong>/前驱不是空，就是让prev的后继指向删除元素x的后继next</strong><br>            prev.next = next;<br>            x.prev = null;<br>        }<br>        if (next == null) {<strong>//如果next为空说明x是最后一个元素，另last指向x的前驱就可以了。</strong><br>            last = prev;<br>        } else {<br>            next.prev = prev;//<strong>后继不是空，就让后继的前驱指向删除元素x的前驱prev</strong><br>            x.next = null;<br>        }<br>        x.item = null;<br>        size–;<br>        modCount++;<br>        return element;<br>    }<br>    <strong>供对象调用的删除方法：</strong><br>    public boolean remove(Object o) {<br>        if (o == null) {<br>            for (Node<e> x = first; x != null; x = x.next) {//<strong>遍历聊表找到null</strong>，<br>                if (x.item == null) {<br>                    unlink(x);//<strong>调用上面的unlink删除元素</strong><br>                    return true;<br>                }<br>            }<br>        } else {<br>            for (Node<e> x = first; x != null; x = x.next) {<strong>//遍历链表找到对象o</strong><br>                if (o.equals(x.item)) {<br>                    unlink(x);//<br>                    return true;<br>                }<br>            }<br>        }<br>        return false;<br>    }<br>    —————————————————————————————————————————<br>    <strong>获取第一个元素</strong><br>    public E getFirst() {<br>        final Node<e> f = first;<br>        if (f == null)<br>            throw new NoSuchElementException();<br>        return f.item;<br>    }<br>    <strong>获取最后一个元素</strong><br>     public E getLast() {<br>        final Node<e> l = last;<br>        if (l == null)<br>            throw new NoSuchElementException();<br>        return l.item;<br>    }<br>    —————————————————————————————————————————<br>    <strong>删除第一个元素，调用unlinkFirst实现</strong><br>    public E removeFirst() {<br>        final Node<e> f = first;<br>        if (f == null)<br>            throw new NoSuchElementException();<br>        return unlinkFirst(f);<br>    }<br>    —————————————————————————————————————————<br>    <strong>删除最后一个元素，调用unlinkLast实现</strong><br>    public E removeLast() {<br>        final Node<e> l = last;<br>        if (l == null)<br>            throw new NoSuchElementException();<br>        return unlinkLast(l);<br>    }<br>    —————————————————————————————————————————<br>    <strong>添加第一个或者最后一个元素</strong><br>    public void addFirst(E e) {<br>        linkFirst(e);<br>    }<br> public void addLast(E e) {<br>        linkLast(e);<br>    }   —————————————————————————————————————————<br>    <strong>是否包含某个元素o</strong><br>    public boolean contains(Object o) {<br>        return indexOf(o) != -1;调用下面的indexof<br>    }<br>    <strong>indexof方法：</strong><br>    public int indexOf(Object o) {<br>        int index = 0;<br>        if (o == null) {<br>            for (Node<e> x = first; x != null; x = x.next) {//从前往后遍历，找到第一个空的<br>                if (x.item == null)<br>                    return index;<br>                index++;<br>            }<br>        } else {<br>            for (Node<e> x = first; x != null; x = x.next) {//从前往后遍历，找到第一个o<br>                if (o.equals(x.item))<br>                    return index;<br>                index++;<br>            }<br>        }<br>        return -1;<br>    }—————————————————————————————————————————<br>    <strong>返回链表大小</strong><br>    public int size() {<br>        return size;<br>    }<br>    —————————————————————————————————————————<br>    <strong>向链表中添加一个集合中的元素：</strong><br>    public boolean addAll(Collection&lt;? extends E&gt; c) {<br>        return addAll(size, c);//调用下面的addAll<br>    }<br>    <strong>真正的添加方法：</strong><br>    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {<br>        checkPositionIndex(index);<strong>//检查index是否越界</strong><br>        Object[] a = c.toArray();//<strong>将集合转换成一个数组</strong><br>        int numNew = a.length;<br>        if (numNew == 0)<br>            return false;<br>        Node<e> pred, succ;<br>        if (index == size) {//如果要插入的位置是最后面，那么前驱就是last节点，后继暂时为空<br>            succ = null;<br>            pred = last;<br>        } else {<br>            succ = node(index);//否则后继就是第index个节点<br>            pred = succ.prev;//要插入的点的前驱<br>        }<br>        for (Object o : a) {<br>            @SuppressWarnings(“unchecked”) E e = (E) o;<br>            Node<e> newNode = new Node&lt;&gt;(pred, e, null);<br>            if (pred == null)<br>                first = newNode;<br>            else<br>                pred.next = newNode;<br>            pred = newNode;<br>        }<br>        if (succ == null) {<br>            last = pred;<br>        } else {<br>            pred.next = succ;<br>            succ.prev = pred;<br>        }<br>        size += numNew;<br>        modCount++;<br>        return true;<br>    }—————————————————————————————————————————<br>    <strong>清除链表</strong><br>     public void clear() {<br>        // Clearing all of the links between nodes is “unnecessary”, but:<br>        // - helps a generational GC if the discarded nodes inhabit<br>        //   more than one generation<br>        // - is sure to free memory even if there is a reachable Iterator<br>        for (Node<e> x = first; x != null; ) {<br>            Node<e> next = x.next;<br>            x.item = null;<br>            x.next = null;<br>            x.prev = null;<br>            x = next;<br>        }<br>        first = last = null;<br>        size = 0;<br>        modCount++;<br>    }<br>    —————————————————————————————————————————<br>    <strong>获取第index个节点<br>     public E get(int index) {<br>        checkElementIndex(index);<br>        return node(index).item;//调用node方法<br>    }<br>    **node方法：这里采用了索引分开搜索的方法，缩小一半的搜寻量</strong><br>     Node<e> node(int index) {<br>        if (index &lt; (size &gt;&gt; 1)) {//如果索引index小于size的一半<br>            Node<e> x = first;<br>            for (int i = 0; i &lt; index; i++)<br>                x = x.next;<br>            return x;<br>        } else {//如果索引index大于size的一半<br>            Node<e> x = last;<br>            for (int i = size - 1; i &gt; index; i–)<br>                x = x.prev;<br>            return x;<br>        }<br>    }<br>    —————————————————————————————————————————<br>    <strong>从后往前索引</strong><br>    public int lastIndexOf(Object o) {<br>        int index = size;<br>        if (o == null) {<br>            for (Node<e> x = last; x != null; x = x.prev) {<br>                index–;<br>                if (x.item == null)<br>                    return index;<br>            }<br>        } else {<br>            for (Node<e> x = last; x != null; x = x.prev) {<br>                index–;<br>                if (o.equals(x.item))<br>                    return index;<br>            }<br>        }<br>        return -1;<br>    }<br>    —————————————————————————————————————————<br>    栈模拟操作<br>    public void push(E e) {入栈<br>        addFirst(e);<br>    }<br>  public E pop() {出栈<br>        return removeFirst();<br>    }   —————————————————————————————————————————<br>   返回一个迭代器<br> public ListIterator<e> listIterator(int index) {<br>        checkPositionIndex(index);//检查是否越界<br>        return new ListItr(index);/<strong>/直接new一个Listltr对象，就是下面这个类</strong><br>    }<br>    —————————————————<br>    private class ListItr implements ListIterator<e> {<br>        private Node<e> lastReturned;<br>        private Node<e> next;<br>        private int nextIndex;<br>        private int expectedModCount = modCount;<br>        ListItr(int index) {<br>            next = (index == size) ? null : node(index);<strong>//如果索引是最后一个，那么就是null的迭代了，否则就返回索引的那个元素，以他为迭代器的首位元素。</strong><br>            nextIndex = index;<br>        }<br>        public boolean hasNext() {/<strong>/是否有下一个元素</strong><br>            return nextIndex &lt; size;<br>        }<br>        public E next() {<strong>//获取下一个元素</strong><br>            checkForComodification();<strong>//检查当前操作是否一样，一面线程不安全</strong><br>            if (!hasNext())<br>                throw new NoSuchElementException();<br>            lastReturned = next;<br>            next = next.next;<br>            nextIndex++;<br>            return lastReturned.item;<br>        }<br>        public boolean hasPrevious() {<br>            return nextIndex &gt; 0;<br>        }<br>        public E previous() {<strong>//获取前一个元素</strong><br>            checkForComodification();<br>            if (!hasPrevious())<br>                throw new NoSuchElementException();<br>            lastReturned = next = (next == null) ? last : next.prev;<br>            nextIndex–;<br>            return lastReturned.item;<br>        }<br>        public int nextIndex() {<br>            return nextIndex;<br>        }<br>        public int previousIndex() {<br>            return nextIndex - 1;<br>        }<br>        public void remove() {//移除<br>            checkForComodification();<br>            if (lastReturned == null)<br>                throw new IllegalStateException();<br>            Node<e> lastNext = lastReturned.next;<br>            unlink(lastReturned);<br>            if (next == lastReturned)<br>                next = lastNext;<br>            else<br>                nextIndex–;<br>            lastReturned = null;<br>            expectedModCount++;<br>        }<br>        public void set(E e) {<br>            if (lastReturned == null)<br>                throw new IllegalStateException();<br>            checkForComodification();<br>            lastReturned.item = e;<br>        }<br>        public void add(E e) {<br>            checkForComodification();<br>            lastReturned = null;<br>            if (next == null)<br>                linkLast(e);<br>            else<br>                linkBefore(e, next);<br>            nextIndex++;<br>            expectedModCount++;<br>        }<br>        public void forEachRemaining(Consumer&lt;? super E&gt; action) {<br>            Objects.requireNonNull(action);<br>            while (modCount == expectedModCount &amp;&amp; nextIndex &lt; size) {<br>                action.accept(next.item);<br>                lastReturned = next;<br>                next = next.next;<br>                nextIndex++;<br>            }<br>            checkForComodification();<br>        }<br>        final void checkForComodification() {<br>            if (modCount != expectedModCount)<br>                throw new ConcurrentModificationException();<br>        }<br>    }<br>    —————————————————————————————————————————<br>    <strong>节点包装类</strong><br>    private static class Node<e> {<br>        E item;<br>        Node<e> next;//后继<br>        Node<e> prev;//前驱<br>        Node(Node<e> prev, E element, Node<e> next) {<br>            this.item = element;<br>            this.next = next;<br>            this.prev = prev;<br>        }<br>    }<br>    —————————————————————————————————————————<br>    还有一些方法我就没有列举了，基本和ArrayList差不多，还有就是调用父类的方法，然后实现了克隆，序列化等等，不是主要的我就不仔细介绍了。<br>    —————————————————————————————————————————</e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></e></p>
+<p><strong>变量：</strong><br>transient int size = 0;//这个linklist的大小<br>    transient Node<E> first;//头结点，永远指向第一个元素<br>    transient Node<E> last;//尾节点，永远指向最后一个元素<br>    <strong>构造方法：</strong><br>public LinkedList() {  }<strong>无参构造方法</strong><br>    public LinkedList(Collection&lt;? extends E&gt; c) {将集合变成一个双向链表linklist<br>        this();<br>        addAll(c);<br>    }<br>    <strong>————————————————————————————————————————<br>    **将元素插入到第一个结点前面</strong><br>    private void linkFirst(E e) {<br>        final Node<E> f = first;<strong>将头结点赋给f，也就是说f指向了第一个结点</strong><br>        final Node<E> newNode = new Node&lt;&gt;(null, e, f)；<strong>建立一个新的newNode，这里的Node是后面结点的包装，这个新结点就是传过来的e</strong><br>        first = newNode;<strong>将first指向这个新节点</strong><br>        if (f == null)<strong>如果f指向的第一个结点为空，也就是这个链表为空的时候就应该让头结点尾节点都只想newNode</strong><br>            last = newNode;<br>        else<br>            f.prev = newNode;<strong>否则第一个结点不是空，这样就将newNode插入到第一个结点的前面</strong><br>        size++;<strong>长度+1*</strong><br>        modCount++;//<strong>修改次数+1</strong><br>    }<br>    —————————————————————————————————————————<br>    void linkLast(E e) ：<strong>和linkfirst差不多，就是插入到尾节点</strong><br>    <strong>添加节点方法：</strong>默认添加到尾部，代用linkLast<br>    public boolean add(E e) {<br>        linkLast(e);<br>        return true;<br>    }<br>    —————————————————————————————————————————<br>    <strong>将e插入到succ前面：</strong><br>    void linkBefore(E e, Node<E> succ) {<br>        final Node<E> pred = succ.prev;//<strong>将succ结点的前驱赋给pred</strong><br>        final Node<E> newNode = new Node&lt;&gt;(pred, e, succ);//<strong>根据e和succ得到一个新节点</strong><br>        succ.prev = newNode;//<strong>succ.prev就是succ的前驱就是这个新节点</strong><br>        if (pred == null)//<strong>如果前驱为空说明succ是第一个结点。相当于要插入到第一个结点，也就是实现linkfirst</strong><br>            first = newNode;<br>        else<br>            pred.next = newNode;//<strong>不是空说明就是中间的点，这样直接让succ的前驱结点的后继等于newNode即可，而pred，newNode，succ的其他关系都在Node里面实现了<br>        size++;<br>        modCount++;<br>    }<br>    —————————————————————————————————————————<br>    **删除第一个元素：</strong><br>     private E unlinkFirst(Node<E> f) {<br>        final E element = f.item;<br>        final Node<E> next = f.next;<br>        f.item = null;<br>        f.next = null; // 依靠GC回收<br>        first = next;//指向第一个结点的下一个，因为第一个结点已经删除了。<br>        if (next == null)//如果这个节点没有后继，说明整个表只有一个节点，那么last也只能为空<br>            last = null;<br>        else<br>            next.prev = null;<br>        size–;<br>        modCount++;<br>        return element;<br>    }<br>    private E unlinkLast(Node<E> l)同理，删除出最后一个元素<br>    —————————————————————————————————————————<br>    <strong><em>删除某一个元素x：</em></strong><br>     E unlink(Node<E> x) {<br>        final E element = x.item;<br>        final Node<E> next = x.next;/<strong>/先取出x的下一个元素</strong><br>        final Node<E> prev = x.prev;<strong>//先取出x的上一个元素</strong><br>        if (prev == null) {<strong>//前驱为空说明是第一个元素，另first指向第一个元素后继就可以了</strong><br>            first = next;<br>        } else {/<strong>/前驱不是空，就是让prev的后继指向删除元素x的后继next</strong><br>            prev.next = next;<br>            x.prev = null;<br>        }<br>        if (next == null) {<strong>//如果next为空说明x是最后一个元素，另last指向x的前驱就可以了。</strong><br>            last = prev;<br>        } else {<br>            next.prev = prev;//<strong>后继不是空，就让后继的前驱指向删除元素x的前驱prev</strong><br>            x.next = null;<br>        }<br>        x.item = null;<br>        size–;<br>        modCount++;<br>        return element;<br>    }<br>    <strong>供对象调用的删除方法：</strong><br>    public boolean remove(Object o) {<br>        if (o == null) {<br>            for (Node<E> x = first; x != null; x = x.next) {//<strong>遍历聊表找到null</strong>，<br>                if (x.item == null) {<br>                    unlink(x);//<strong>调用上面的unlink删除元素</strong><br>                    return true;<br>                }<br>            }<br>        } else {<br>            for (Node<E> x = first; x != null; x = x.next) {<strong>//遍历链表找到对象o</strong><br>                if (o.equals(x.item)) {<br>                    unlink(x);//<br>                    return true;<br>                }<br>            }<br>        }<br>        return false;<br>    }<br>    —————————————————————————————————————————<br>    <strong>获取第一个元素</strong><br>    public E getFirst() {<br>        final Node<E> f = first;<br>        if (f == null)<br>            throw new NoSuchElementException();<br>        return f.item;<br>    }<br>    <strong>获取最后一个元素</strong><br>     public E getLast() {<br>        final Node<E> l = last;<br>        if (l == null)<br>            throw new NoSuchElementException();<br>        return l.item;<br>    }<br>    —————————————————————————————————————————<br>    <strong>删除第一个元素，调用unlinkFirst实现</strong><br>    public E removeFirst() {<br>        final Node<E> f = first;<br>        if (f == null)<br>            throw new NoSuchElementException();<br>        return unlinkFirst(f);<br>    }<br>    —————————————————————————————————————————<br>    <strong>删除最后一个元素，调用unlinkLast实现</strong><br>    public E removeLast() {<br>        final Node<E> l = last;<br>        if (l == null)<br>            throw new NoSuchElementException();<br>        return unlinkLast(l);<br>    }<br>    —————————————————————————————————————————<br>    <strong>添加第一个或者最后一个元素</strong><br>    public void addFirst(E e) {<br>        linkFirst(e);<br>    }<br> public void addLast(E e) {<br>        linkLast(e);<br>    }   —————————————————————————————————————————<br>    <strong>是否包含某个元素o</strong><br>    public boolean contains(Object o) {<br>        return indexOf(o) != -1;调用下面的indexof<br>    }<br>    <strong>indexof方法：</strong><br>    public int indexOf(Object o) {<br>        int index = 0;<br>        if (o == null) {<br>            for (Node<E> x = first; x != null; x = x.next) {//从前往后遍历，找到第一个空的<br>                if (x.item == null)<br>                    return index;<br>                index++;<br>            }<br>        } else {<br>            for (Node<E> x = first; x != null; x = x.next) {//从前往后遍历，找到第一个o<br>                if (o.equals(x.item))<br>                    return index;<br>                index++;<br>            }<br>        }<br>        return -1;<br>    }—————————————————————————————————————————<br>    <strong>返回链表大小</strong><br>    public int size() {<br>        return size;<br>    }<br>    —————————————————————————————————————————<br>    <strong>向链表中添加一个集合中的元素：</strong><br>    public boolean addAll(Collection&lt;? extends E&gt; c) {<br>        return addAll(size, c);//调用下面的addAll<br>    }<br>    <strong>真正的添加方法：</strong><br>    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {<br>        checkPositionIndex(index);<strong>//检查index是否越界</strong><br>        Object[] a = c.toArray();//<strong>将集合转换成一个数组</strong><br>        int numNew = a.length;<br>        if (numNew == 0)<br>            return false;<br>        Node<E> pred, succ;<br>        if (index == size) {//如果要插入的位置是最后面，那么前驱就是last节点，后继暂时为空<br>            succ = null;<br>            pred = last;<br>        } else {<br>            succ = node(index);//否则后继就是第index个节点<br>            pred = succ.prev;//要插入的点的前驱<br>        }<br>        for (Object o : a) {<br>            @SuppressWarnings(“unchecked”) E e = (E) o;<br>            Node<E> newNode = new Node&lt;&gt;(pred, e, null);<br>            if (pred == null)<br>                first = newNode;<br>            else<br>                pred.next = newNode;<br>            pred = newNode;<br>        }<br>        if (succ == null) {<br>            last = pred;<br>        } else {<br>            pred.next = succ;<br>            succ.prev = pred;<br>        }<br>        size += numNew;<br>        modCount++;<br>        return true;<br>    }—————————————————————————————————————————<br>    <strong>清除链表</strong><br>     public void clear() {<br>        // Clearing all of the links between nodes is “unnecessary”, but:<br>        // - helps a generational GC if the discarded nodes inhabit<br>        //   more than one generation<br>        // - is sure to free memory even if there is a reachable Iterator<br>        for (Node<E> x = first; x != null; ) {<br>            Node<E> next = x.next;<br>            x.item = null;<br>            x.next = null;<br>            x.prev = null;<br>            x = next;<br>        }<br>        first = last = null;<br>        size = 0;<br>        modCount++;<br>    }<br>    —————————————————————————————————————————<br>    <strong>获取第index个节点<br>     public E get(int index) {<br>        checkElementIndex(index);<br>        return node(index).item;//调用node方法<br>    }<br>    **node方法：这里采用了索引分开搜索的方法，缩小一半的搜寻量</strong><br>     Node<E> node(int index) {<br>        if (index &lt; (size &gt;&gt; 1)) {//如果索引index小于size的一半<br>            Node<E> x = first;<br>            for (int i = 0; i &lt; index; i++)<br>                x = x.next;<br>            return x;<br>        } else {//如果索引index大于size的一半<br>            Node<E> x = last;<br>            for (int i = size - 1; i &gt; index; i–)<br>                x = x.prev;<br>            return x;<br>        }<br>    }<br>    —————————————————————————————————————————<br>    <strong>从后往前索引</strong><br>    public int lastIndexOf(Object o) {<br>        int index = size;<br>        if (o == null) {<br>            for (Node<E> x = last; x != null; x = x.prev) {<br>                index–;<br>                if (x.item == null)<br>                    return index;<br>            }<br>        } else {<br>            for (Node<E> x = last; x != null; x = x.prev) {<br>                index–;<br>                if (o.equals(x.item))<br>                    return index;<br>            }<br>        }<br>        return -1;<br>    }<br>    —————————————————————————————————————————<br>    栈模拟操作<br>    public void push(E e) {入栈<br>        addFirst(e);<br>    }<br>  public E pop() {出栈<br>        return removeFirst();<br>    }   —————————————————————————————————————————<br>   返回一个迭代器<br> public ListIterator<E> listIterator(int index) {<br>        checkPositionIndex(index);//检查是否越界<br>        return new ListItr(index);/<strong>/直接new一个Listltr对象，就是下面这个类</strong><br>    }<br>    —————————————————<br>    private class ListItr implements ListIterator<E> {<br>        private Node<E> lastReturned;<br>        private Node<E> next;<br>        private int nextIndex;<br>        private int expectedModCount = modCount;<br>        ListItr(int index) {<br>            next = (index == size) ? null : node(index);<strong>//如果索引是最后一个，那么就是null的迭代了，否则就返回索引的那个元素，以他为迭代器的首位元素。</strong><br>            nextIndex = index;<br>        }<br>        public boolean hasNext() {/<strong>/是否有下一个元素</strong><br>            return nextIndex &lt; size;<br>        }<br>        public E next() {<strong>//获取下一个元素</strong><br>            checkForComodification();<strong>//检查当前操作是否一样，一面线程不安全</strong><br>            if (!hasNext())<br>                throw new NoSuchElementException();<br>            lastReturned = next;<br>            next = next.next;<br>            nextIndex++;<br>            return lastReturned.item;<br>        }<br>        public boolean hasPrevious() {<br>            return nextIndex &gt; 0;<br>        }<br>        public E previous() {<strong>//获取前一个元素</strong><br>            checkForComodification();<br>            if (!hasPrevious())<br>                throw new NoSuchElementException();<br>            lastReturned = next = (next == null) ? last : next.prev;<br>            nextIndex–;<br>            return lastReturned.item;<br>        }<br>        public int nextIndex() {<br>            return nextIndex;<br>        }<br>        public int previousIndex() {<br>            return nextIndex - 1;<br>        }<br>        public void remove() {//移除<br>            checkForComodification();<br>            if (lastReturned == null)<br>                throw new IllegalStateException();<br>            Node<E> lastNext = lastReturned.next;<br>            unlink(lastReturned);<br>            if (next == lastReturned)<br>                next = lastNext;<br>            else<br>                nextIndex–;<br>            lastReturned = null;<br>            expectedModCount++;<br>        }<br>        public void set(E e) {<br>            if (lastReturned == null)<br>                throw new IllegalStateException();<br>            checkForComodification();<br>            lastReturned.item = e;<br>        }<br>        public void add(E e) {<br>            checkForComodification();<br>            lastReturned = null;<br>            if (next == null)<br>                linkLast(e);<br>            else<br>                linkBefore(e, next);<br>            nextIndex++;<br>            expectedModCount++;<br>        }<br>        public void forEachRemaining(Consumer&lt;? super E&gt; action) {<br>            Objects.requireNonNull(action);<br>            while (modCount == expectedModCount &amp;&amp; nextIndex &lt; size) {<br>                action.accept(next.item);<br>                lastReturned = next;<br>                next = next.next;<br>                nextIndex++;<br>            }<br>            checkForComodification();<br>        }<br>        final void checkForComodification() {<br>            if (modCount != expectedModCount)<br>                throw new ConcurrentModificationException();<br>        }<br>    }<br>    —————————————————————————————————————————<br>    <strong>节点包装类</strong><br>    private static class Node<E> {<br>        E item;<br>        Node<E> next;//后继<br>        Node<E> prev;//前驱<br>        Node(Node<E> prev, E element, Node<E> next) {<br>            this.item = element;<br>            this.next = next;<br>            this.prev = prev;<br>        }<br>    }<br>    —————————————————————————————————————————<br>    还有一些方法我就没有列举了，基本和ArrayList差不多，还有就是调用父类的方法，然后实现了克隆，序列化等等，不是主要的我就不仔细介绍了。<br>    —————————————————————————————————————————</p>
 </blockquote>
 <hr>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><hr>
 <p>和ArrayList比较起来，LinkList更适用于插入删除，它作为双向链表来实现的。<br>所以插入和删除操作明显效率要高于ArrayList，索引查找的话虽然不如ArrayList，但是也提供了索引减半的优化了，缩小了一般的搜寻量。和ArrayList一样，他也是线程不安全的，容易被多个线程修改访问，尽量要避免这种情况，采用同步或者锁的方法。<br>好了这篇文章就写到这里了。</p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
             </div>
             <hr/>
 
             
-
-    <div class="reprint" id="reprint-statement">
-        
-            <div class="reprint__author">
-                <span class="reprint-meta" style="font-weight: bold;">
-                    <i class="fas fa-user">
-                        文章作者: &nbsp;
-                    </i>
-                </span>
-                <span class="reprint-info">
-                    <a href="http://ongbo.github.io" rel="external nofollow noreferrer">ongbo</a>
-                </span>
-            </div>
-            <div class="reprint__type">
-                <span class="reprint-meta" style="font-weight: bold;">
-                    <i class="fas fa-link">
-                        文章链接: &nbsp;
-                    </i>
-                </span>
-                <span class="reprint-info">
-                    <a href="http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/">http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/</a>
-                </span>
-            </div>
-            <div class="reprint__notice">
-                <span class="reprint-meta" style="font-weight: bold;">
-                    <i class="fas fa-copyright">
-                       版权声明: &nbsp;
-                    </i>
-                </span>
-                <span class="reprint-info">
-                    本博客所有文章除特別声明外，均采用
-                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
-                    许可协议。转载请注明来源
-                    <a href="http://ongbo.github.io" target="_blank">ongbo</a>
-                    !
-                </span>
-            </div>
-        
-    </div>
-
-    <script async defer>
-      document.addEventListener("copy", function (e) {
-        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
-        M.toast({html: toastHTML})
-      });
-
-      function navToReprintStatement() {
-        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
-      }
-    </script>
 
 
 
@@ -721,14 +653,14 @@
                 </div>
                 <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
                     <!-- <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css"> -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/share/css/share.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/share/css/share.min.css">
 
 <div id="article-share">
     
     
     <div class="social-share" data-sites="qq,weibo,douban,google,wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
     <!-- <script src="/libs/share/js/social-share.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/share/js/social-share.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/share/js/social-share.min.js"></script>
     
 
     
@@ -846,12 +778,12 @@
                         <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
                     </ul>
                     <div id="alipay">
-                        <!-- <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
-                        <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                        <img src="/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码">
+                        <!-- <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/reward/ali.jpg" class="reward-img" alt="支付宝打赏二维码"> -->
                     </div>
                     <div id="wechat">
-                        <!-- <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
-                        <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                        <!-- <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码"> -->
                     </div>
                 </div>
             </div>
@@ -1124,8 +1056,8 @@
 
 <!-- <script src="/libs/valine/av-min.js"></script>
 <script src="/libs/valine/Valine.min.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/valine/av-min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/valine/Valine.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/valine/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/valine/Valine.min.js"></script>
 <script>
     new Valine({
         el: '#vcomments',
@@ -1157,7 +1089,7 @@
                         
                         
                         <!-- <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="spark在windows端与在linux端的虚拟机分布式集群通信问题"> -->
-                        <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/featureimages/12.jpg" class="responsive-img" alt="spark在windows端与在linux端的虚拟机分布式集群通信问题">
+                        <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="spark在windows端与在linux端的虚拟机分布式集群通信问题">
                         
                         <span class="card-title">spark在windows端与在linux端的虚拟机分布式集群通信问题</span>
                     </div>
@@ -1195,7 +1127,7 @@
                         
                         
                         <!-- <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因"> -->
-                        <img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/featureimages/3.jpg" class="responsive-img" alt="Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因">
+                        <img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因">
                         
                         <span class="card-title">Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因</span>
                     </div>
@@ -1232,24 +1164,24 @@
 
 <!-- 代码块功能依赖 -->
 <!-- <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script> -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/codeBlock/codeBlockFuction.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/codeBlock/codeBlockFuction.js"></script>
 
 <!-- 代码语言 -->
 
 <!-- <script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script> -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/codeBlock/codeLang.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/codeBlock/codeLang.js"></script>
 
 
 <!-- 代码块复制 -->
 
 <!-- <script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script> -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/codeBlock/codeCopy.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/codeBlock/codeCopy.js"></script>
 
 
 <!-- 代码块收缩 -->
 
 <!-- <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script> -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/codeBlock/codeShrink.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/codeBlock/codeShrink.js"></script>
 
 
 <!-- 代码块折行 -->
@@ -1278,7 +1210,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
 
 <!-- <script src="/libs/tocbot/tocbot.min.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/tocbot/tocbot.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/tocbot/tocbot.min.js"></script>
 <script>
     $(function () {
         tocbot.init({
@@ -1370,7 +1302,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;总字数:&nbsp;<span
-                class="white-color">91.1k</span>&nbsp;字
+                class="white-color">88.8k</span>&nbsp;字
             
             
             
@@ -1389,7 +1321,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             Copyright&nbsp;&copy;
             <span id="year">2020</span>&nbsp&nbsp|
-            &nbsp;<a href="http://ongbo.github.io/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
+            &nbsp;<a href="http://blog.ongbo.top/sitemap.xml" target="_blank">Sitemap</a>&nbsp;&nbsp;|&nbsp;
             
             <span id="sitetime">载入运行时间...</span>
             <script>
@@ -1442,7 +1374,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             <!-- <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" /> -->
-            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/medias/icp.png" style="vertical-align: text-bottom;" />
+            <span id="icp"><img src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/medias/icp.png" style="vertical-align: text-bottom;" />
                 <a href="" target="_blank">湘ICP备19024234号-1</a>
             </span>
             
@@ -1508,11 +1440,11 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </div>
 
 <!-- <script src="/js/search.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/js/search.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/js/search.js"></script>
 <script type="text/javascript">
 $(function () {
     // searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
-    searchFunc("https://cdn.jsdelivr.net/gh/ongbo/0731blog/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/" + "search.xml", 'searchInput', 'searchResult');
 });
 </script>
     <!-- 回到顶部按钮 -->
@@ -1530,12 +1462,12 @@ $(function () {
     <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
     <script src="/js/matery.js"></script> -->
 
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/materialize/materialize.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/masonry/masonry.pkgd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/aos/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/scrollprogress/scrollProgress.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/lightGallery/js/lightgallery-all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/js/matery.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/js/matery.js"></script>
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -1571,7 +1503,7 @@ $(function () {
 
     
         <!-- <script src="/libs/others/clicklove.js" async="async"></script> -->
-        <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/others/clicklove.js" async="async"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/others/clicklove.js" async="async"></script>
     
     
     
@@ -1588,20 +1520,19 @@ $(function () {
     <script type="text/javascript" color="0,0,255"
         pointColor="0,0,255" opacity='0.7'
         zIndex="-1" count="99"
-        <!-- src="/libs/background/canvas-nest.js"></script> -->
-        src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/background/canvas-nest.js"></script>
+        src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/background/canvas-nest.js"></script>
     
 
     
 
     
     <!-- <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script> -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/background/ribbon-dynamic.js" async="async"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
     
     
     
     <!-- <script src="/libs/instantpage/instantpage.js" type="module"></script> -->
-    <script src="https://cdn.jsdelivr.net/gh/ongbo/0731blog/libs/instantpage/instantpage.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ongbo/ongbo.github.io/libs/instantpage/instantpage.js" type="module"></script>
     
 
     <script type="text/javascript"> 

@@ -5,9 +5,9 @@
   <subtitle>混迹零柒叁壹</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://ongbo.github.io/"/>
+  <link href="http://blog.ongbo.top/"/>
   <updated>2020-04-21T14:18:16.534Z</updated>
-  <id>http://ongbo.github.io/</id>
+  <id>http://blog.ongbo.top/</id>
   
   <author>
     <name>ongbo</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hive on Tez</title>
-    <link href="http://ongbo.github.io/2020/04/21/Hive%20on%20Tez/"/>
-    <id>http://ongbo.github.io/2020/04/21/Hive%20on%20Tez/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Hive%20on%20Tez/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Hive%20on%20Tez/</id>
     <published>2020-04-21T14:18:16.534Z</published>
     <updated>2020-04-21T14:18:16.534Z</updated>
     
@@ -41,8 +41,8 @@
   
   <entry>
     <title>Hadoop压缩配置</title>
-    <link href="http://ongbo.github.io/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/"/>
-    <id>http://ongbo.github.io/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Hadoop%E5%8E%8B%E7%BC%A9%E9%85%8D%E7%BD%AE/</id>
     <published>2020-04-21T14:18:10.674Z</published>
     <updated>2020-04-21T14:18:10.674Z</updated>
     
@@ -64,8 +64,8 @@
   
   <entry>
     <title>Kafka压力测试</title>
-    <link href="http://ongbo.github.io/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/"/>
-    <id>http://ongbo.github.io/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Kafka%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</id>
     <published>2020-04-21T14:17:35.820Z</published>
     <updated>2020-04-21T14:17:35.827Z</updated>
     
@@ -87,8 +87,8 @@
   
   <entry>
     <title>Java多线程-线程间的通信</title>
-    <link href="http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/"/>
-    <id>http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/</id>
     <published>2020-04-21T14:16:41.197Z</published>
     <updated>2020-04-21T14:16:41.197Z</updated>
     
@@ -110,8 +110,8 @@
   
   <entry>
     <title>Java多线程：Volatile关键字</title>
-    <link href="http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/"/>
-    <id>http://ongbo.github.io/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9AVolatile%E5%85%B3%E9%94%AE%E5%AD%97/</id>
     <published>2020-04-21T14:16:33.800Z</published>
     <updated>2020-04-21T14:16:33.807Z</updated>
     
@@ -133,8 +133,8 @@
   
   <entry>
     <title>Flume采集日志到HDFS出现大量小文件</title>
-    <link href="http://ongbo.github.io/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/"/>
-    <id>http://ongbo.github.io/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Flume%E9%87%87%E9%9B%86%E6%97%A5%E5%BF%97%E5%88%B0HDFS%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F%E5%B0%8F%E6%96%87%E4%BB%B6/</id>
     <published>2020-04-21T14:16:18.285Z</published>
     <updated>2020-04-21T14:16:18.288Z</updated>
     
@@ -156,8 +156,8 @@
   
   <entry>
     <title>Flink行走江湖Operators：底层API-Process Function</title>
-    <link href="http://ongbo.github.io/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/"/>
-    <id>http://ongbo.github.io/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Flink%E8%A1%8C%E8%B5%B0%E6%B1%9F%E6%B9%96Operators%EF%BC%9A%E5%BA%95%E5%B1%82API-Process%20Function/</id>
     <published>2020-04-21T14:15:57.078Z</published>
     <updated>2020-04-21T14:15:57.085Z</updated>
     
@@ -179,8 +179,8 @@
   
   <entry>
     <title>Flume怎么操作</title>
-    <link href="http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/"/>
-    <id>http://ongbo.github.io/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Flume%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C/</id>
     <published>2020-04-21T14:13:42.536Z</published>
     <updated>2020-04-21T14:13:42.536Z</updated>
     
@@ -203,8 +203,8 @@
   
   <entry>
     <title>java中泛型的使用（一）</title>
-    <link href="http://ongbo.github.io/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://ongbo.github.io/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://blog.ongbo.top/2020/04/21/java%E4%B8%AD%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%88%E4%B8%80%EF%BC%89/</id>
     <published>2020-04-21T14:08:07.776Z</published>
     <updated>2020-04-21T14:08:07.776Z</updated>
     
@@ -226,8 +226,8 @@
   
   <entry>
     <title>java中class类文件结构</title>
-    <link href="http://ongbo.github.io/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/"/>
-    <id>http://ongbo.github.io/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/"/>
+    <id>http://blog.ongbo.top/2020/04/21/java%E4%B8%ADclass%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</id>
     <published>2020-04-21T14:07:59.743Z</published>
     <updated>2020-04-21T14:07:59.752Z</updated>
     
@@ -249,8 +249,8 @@
   
   <entry>
     <title>String和StringBuffer，StringBuilder</title>
-    <link href="http://ongbo.github.io/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/"/>
-    <id>http://ongbo.github.io/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/"/>
+    <id>http://blog.ongbo.top/2020/04/21/String%E5%92%8CStringBuffer%EF%BC%8CStringBuilder/</id>
     <published>2020-04-21T14:07:40.053Z</published>
     <updated>2020-04-21T14:07:40.053Z</updated>
     
@@ -274,8 +274,8 @@
   
   <entry>
     <title>spark(三)-spark算子</title>
-    <link href="http://ongbo.github.io/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/"/>
-    <id>http://ongbo.github.io/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/"/>
+    <id>http://blog.ongbo.top/2020/04/21/spark(%E4%B8%89)-spark%E7%AE%97%E5%AD%90/</id>
     <published>2020-04-21T14:07:31.742Z</published>
     <updated>2020-04-21T14:07:31.747Z</updated>
     
@@ -297,8 +297,8 @@
   
   <entry>
     <title>Spark(一)-spark安装与配置</title>
-    <link href="http://ongbo.github.io/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
-    <id>http://ongbo.github.io/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Spark(%E4%B8%80)-spark%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/</id>
     <published>2020-04-21T14:06:34.845Z</published>
     <updated>2020-04-21T14:06:34.852Z</updated>
     
@@ -308,7 +308,7 @@
       
         
         
-          &lt;p&gt;   &lt;strong&gt;Spark是整个BDAS的核心组件，是一个大数据分布式编程框架，不仅实现了MapReduce的算子map
+          &lt;p&gt;&amp;emsp;&amp;emsp;&amp;emsp;&lt;strong&gt;Spark是整个BDAS的核心组件，是一个大数据分布式编程框架，不仅实现了MapReduce的算子map
         
       
     
@@ -320,8 +320,8 @@
   
   <entry>
     <title>spark在windows端与在linux端的虚拟机分布式集群通信问题</title>
-    <link href="http://ongbo.github.io/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/"/>
-    <id>http://ongbo.github.io/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/"/>
+    <id>http://blog.ongbo.top/2020/04/21/spark%E5%9C%A8windows%E7%AB%AF%E4%B8%8E%E5%9C%A8linux%E7%AB%AF%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98/</id>
     <published>2020-04-21T14:06:27.042Z</published>
     <updated>2020-04-21T14:06:27.047Z</updated>
     
@@ -343,8 +343,8 @@
   
   <entry>
     <title>java集合之家——LinkList(源码)</title>
-    <link href="http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/"/>
-    <id>http://ongbo.github.io/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/"/>
+    <id>http://blog.ongbo.top/2020/04/21/java%E9%9B%86%E5%90%88%E4%B9%8B%E5%AE%B6%E2%80%94%E2%80%94LinkList(%E6%BA%90%E7%A0%81)/</id>
     <published>2020-04-21T14:06:10.712Z</published>
     <updated>2020-04-21T14:06:10.713Z</updated>
     
@@ -366,8 +366,8 @@
   
   <entry>
     <title>Spark关于在IDEA中使用maven创建scala项目时不能使用makeRDD和parallerize的原因</title>
-    <link href="http://ongbo.github.io/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/"/>
-    <id>http://ongbo.github.io/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/"/>
+    <id>http://blog.ongbo.top/2020/04/21/Spark%E5%85%B3%E4%BA%8E%E5%9C%A8IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8maven%E5%88%9B%E5%BB%BAscala%E9%A1%B9%E7%9B%AE%E6%97%B6%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8makeRDD%E5%92%8Cparallerize%E7%9A%84%E5%8E%9F%E5%9B%A0/</id>
     <published>2020-04-21T14:05:45.471Z</published>
     <updated>2020-04-21T14:05:45.471Z</updated>
     
@@ -390,8 +390,8 @@
   
   <entry>
     <title>链表</title>
-    <link href="http://ongbo.github.io/2020/04/21/%E9%93%BE%E8%A1%A8/"/>
-    <id>http://ongbo.github.io/2020/04/21/%E9%93%BE%E8%A1%A8/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/%E9%93%BE%E8%A1%A8/"/>
+    <id>http://blog.ongbo.top/2020/04/21/%E9%93%BE%E8%A1%A8/</id>
     <published>2020-04-21T14:05:35.762Z</published>
     <updated>2020-04-21T14:34:21.238Z</updated>
     
@@ -414,8 +414,8 @@
   
   <entry>
     <title>MIT 6.824 lab1 mapreduce</title>
-    <link href="http://ongbo.github.io/2020/04/21/MIT%206.824%20lab1%20mapreduce/"/>
-    <id>http://ongbo.github.io/2020/04/21/MIT%206.824%20lab1%20mapreduce/</id>
+    <link href="http://blog.ongbo.top/2020/04/21/MIT%206.824%20lab1%20mapreduce/"/>
+    <id>http://blog.ongbo.top/2020/04/21/MIT%206.824%20lab1%20mapreduce/</id>
     <published>2020-04-21T14:05:28.130Z</published>
     <updated>2020-04-21T14:05:28.137Z</updated>
     
@@ -437,8 +437,8 @@
   
   <entry>
     <title>CurrentHashMap源码分析</title>
-    <link href="http://ongbo.github.io/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>http://ongbo.github.io/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
+    <link href="http://blog.ongbo.top/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>http://blog.ongbo.top/2020/04/19/CurrentHashMap%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
     <published>2020-04-19T04:08:27.000Z</published>
     <updated>2020-04-21T14:40:42.447Z</updated>
     
@@ -455,21 +455,21 @@
     </summary>
     
     
-      <category term="数据结构与算法" scheme="http://ongbo.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+      <category term="数据结构与算法" scheme="http://blog.ongbo.top/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="多线程安全" scheme="http://ongbo.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
+      <category term="多线程安全" scheme="http://blog.ongbo.top/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
     
-      <category term="HashMap" scheme="http://ongbo.github.io/tags/HashMap/"/>
+      <category term="HashMap" scheme="http://blog.ongbo.top/tags/HashMap/"/>
     
-      <category term="源码分析" scheme="http://ongbo.github.io/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+      <category term="源码分析" scheme="http://blog.ongbo.top/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
   <entry>
     <title>用Java撸一下LFU简易版本</title>
-    <link href="http://ongbo.github.io/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/"/>
-    <id>http://ongbo.github.io/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/</id>
+    <link href="http://blog.ongbo.top/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/"/>
+    <id>http://blog.ongbo.top/2020/04/16/%E7%94%A8Java%E6%92%B8%E4%B8%80%E4%B8%8BLFU%E7%AE%80%E6%98%93%E7%89%88%E6%9C%AC/</id>
     <published>2020-04-16T07:55:21.000Z</published>
     <updated>2020-04-21T14:38:34.211Z</updated>
     
@@ -486,12 +486,12 @@
     </summary>
     
     
-      <category term="数据结构与算法" scheme="http://ongbo.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+      <category term="数据结构与算法" scheme="http://blog.ongbo.top/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="Java" scheme="http://ongbo.github.io/tags/Java/"/>
+      <category term="Java" scheme="http://blog.ongbo.top/tags/Java/"/>
     
-      <category term="LFU" scheme="http://ongbo.github.io/tags/LFU/"/>
+      <category term="LFU" scheme="http://blog.ongbo.top/tags/LFU/"/>
     
   </entry>
   
